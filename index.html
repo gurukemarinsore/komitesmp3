@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#ffffff" />
   <meta name="color-scheme" content="light" />
   <title>Komite SMP Negeri 3 Jayapura</title>
+  <link rel="icon" type="image/png" href="https://i.imgur.com/GO3QUoB.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
@@ -380,7 +381,7 @@
       .hero-stats { margin-top: 15px; }
     }
 
-    /* ===== Revisi 1.01: periode, refresh, sinkronisasi, toast gesture ===== */
+    /* ===== Revisi 1.02: kelas ringkas, slider smooth, periode lokal, pembayaran multi-bulan ===== */
     .status-pill.sync { background: #edf6ff; color: var(--blue); }
 
     .refresh-btn.spinning svg { animation: spin .75s linear infinite; }
@@ -453,6 +454,53 @@
       .brand-title { max-width: 170px; }
     }
 
+    /* Rev 1.02: profil seragam + sliding indicator */
+    .user-pill { border-radius: 16px; padding: 5px 10px 5px 5px; gap: 9px; min-width: 0; }
+    .user-avatar {
+      width: 34px; height: 34px; flex: 0 0 34px; border-radius: 11px; display:grid; place-items:center;
+      color: var(--blue); background:#eef6ff; border:1px solid #d8ebff;
+    }
+    .user-avatar svg { width:18px; height:18px; }
+    .user-copy { min-width:0; line-height:1.12; }
+    .user-copy strong { display:block; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+    .user-copy span { display:block; margin-top:3px; color:var(--muted); font-size:10px; white-space:nowrap; }
+
+    [data-sliding-group] { position:relative; isolation:isolate; }
+    [data-sliding-group] > button { position:relative; z-index:2; background:transparent !important; transition:color .2s ease, transform .2s ease; }
+    .slide-indicator {
+      position:absolute; z-index:1; pointer-events:none; border-radius:12px;
+      transition:transform .28s cubic-bezier(.22,.8,.2,1), width .28s cubic-bezier(.22,.8,.2,1), height .28s cubic-bezier(.22,.8,.2,1), opacity .18s ease;
+      will-change:transform,width,height;
+    }
+    .desktop-nav .slide-indicator, .bottom-nav .slide-indicator { background:#eef6ff; }
+    .segment .slide-indicator, .period-segment .slide-indicator { background:#fff; box-shadow:0 4px 14px rgba(25,65,110,.08); }
+    .segment button.active, .period-segment button.active, .nav-chip.active, .bottom-nav button.active { background:transparent !important; color:var(--blue); }
+
+    .month-card.selectable { cursor:pointer; transition:border-color .16s ease, background .16s ease, transform .16s ease, box-shadow .16s ease; }
+    .month-card.selectable:hover { border-color:#8fc2f4; background:#f8fbff; transform:translateY(-1px); }
+    .month-card.selected { border-color:#5aa8ee; background:#eef7ff; box-shadow:0 0 0 3px rgba(23,105,210,.08); }
+    .month-card.selected .month-name { color:var(--blue); }
+    .payment-selection {
+      margin-top:14px; display:grid; grid-template-columns:minmax(0,1fr) 180px auto; gap:10px; align-items:end;
+      padding:14px; border:1px solid #d8ebff; background:#f7fbff; border-radius:17px;
+    }
+    .payment-selection-summary { min-width:0; }
+    .payment-selection-summary strong { display:block; font-size:14px; }
+    .payment-selection-summary span { display:block; color:var(--muted); font-size:11px; margin-top:4px; }
+    .payment-date-wrap .input { min-height:44px; }
+    .payment-selection .btn { min-height:44px; }
+
+    @media (max-width:860px) {
+      .user-pill { display:flex; max-width:210px; }
+      .payment-selection { grid-template-columns:1fr 155px; }
+      .payment-selection .btn { grid-column:1/-1; }
+    }
+    @media (max-width:600px) {
+      .user-pill { display:none; }
+      .payment-selection { grid-template-columns:1fr; }
+      .payment-selection .btn { grid-column:auto; width:100%; }
+    }
+
   </style>
 </head>
 <body>
@@ -468,7 +516,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Revisi 1.01';
+    const APP_REVISION = 'Revisi 1.02';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -481,7 +529,7 @@
       appName: 'Komite SMP Negeri 3 Jayapura',
       schoolName: 'SMP Negeri 3 Jayapura',
       schoolYear: '2026/2027',
-      level: 'VII',
+      level: '7',
       amount: 50000,
       startMonth: 'JULI 2026',
       endMonth: 'JUNI 2027',
@@ -489,9 +537,9 @@
         ['JULI',2026],['AGUSTUS',2026],['SEPTEMBER',2026],['OKTOBER',2026],['NOVEMBER',2026],['DESEMBER',2026],
         ['JANUARI',2027],['FEBRUARI',2027],['MARET',2027],['APRIL',2027],['MEI',2027],['JUNI',2027]
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
-      classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'VII '+x})),
+      classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.01'
+      revision: '1.02'
     };
 
     const state = {
@@ -511,7 +559,10 @@
       scopeClass: '',
       syncing: false,
       refreshBusy: false,
-      silentRefreshTimer: null
+      silentRefreshTimer: null,
+      paymentSelection: [],
+      paymentSelectionStudent: '',
+      paymentDate: ''
     };
 
     const icons = {
@@ -558,6 +609,20 @@
     function titleCase(text) {
       const s = String(text || '').toLowerCase();
       return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+    }
+
+    function normalizeClassLabel(value) {
+      let s = String(value || '').toUpperCase().trim().replace(/[._-]+/g,' ').replace(/\s+/g,' ');
+      let m = s.match(/^VII\s*([A-J])$/);
+      if (m) return '7' + m[1];
+      m = s.match(/^7\s*([A-J])$/);
+      return m ? '7' + m[1] : s;
+    }
+
+    function todayJayapuraIso() {
+      const parts = new Intl.DateTimeFormat('en-US', {timeZone:'Asia/Jayapura', year:'numeric', month:'2-digit', day:'2-digit'}).formatToParts(new Date());
+      const o = Object.fromEntries(parts.filter(x=>x.type!=='literal').map(x=>[x.type,x.value]));
+      return `${o.year}-${o.month}-${o.day}`;
     }
 
     function money(value) {
@@ -709,10 +774,12 @@
     function closeModal() { document.getElementById('modalRoot').innerHTML = ''; }
 
     function setSession(token, user) {
+      const normalizedUser = Object.assign({}, user || {});
+      if (normalizedUser.kelas) normalizedUser.kelas = normalizeClassLabel(normalizedUser.kelas);
       state.token = token;
-      state.user = user;
+      state.user = normalizedUser;
       localStorage.setItem(STORAGE.TOKEN, token);
-      localStorage.setItem(STORAGE.USER, JSON.stringify(user));
+      localStorage.setItem(STORAGE.USER, JSON.stringify(normalizedUser));
     }
 
     function clearSession(showToast=true) {
@@ -800,7 +867,7 @@
       return `TRX-LOCAL-${Date.now().toString(36)}-${random}`.toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,64);
     }
 
-    function enqueuePayment(idSiswa, bulan, tahun, student) {
+    function enqueuePayment(idSiswa, bulan, tahun, student, paymentDate) {
       const queue = getPaymentQueue();
       const existing = queue.find(x => x.idSiswa === idSiswa && x.bulan === bulan && Number(x.tahun) === Number(tahun));
       if (existing) return {item:existing, duplicate:true};
@@ -809,7 +876,8 @@
         idSiswa,
         bulan,
         tahun:Number(tahun),
-        student: {nama:student?.nama || '', nisn:student?.nisn || '', kelas:student?.kelas || ''},
+        tanggalPembayaran: paymentDate || todayJayapuraIso(),
+        student: {nama:student?.nama || '', nisn:student?.nisn || '', kelas:normalizeClassLabel(student?.kelas || '')},
         createdAt: Date.now(),
         attempts: 0,
         lastError: ''
@@ -862,7 +930,6 @@
         return 0;
       }
       if (!navigator.onLine) {
-        if (manual) toast(`${queue.length} pembayaran tetap aman di perangkat dan akan dikirim saat internet tersedia.`, 'warning', 'Masih offline');
         updateSyncIndicator();
         return 0;
       }
@@ -870,7 +937,7 @@
       state.syncing = true;
       updateSyncIndicator();
       let synced = 0;
-      let hadNetworkFailure = false;
+      const confirmed = [];
       try {
         for (const item of getPaymentQueue()) {
           try {
@@ -879,19 +946,19 @@
               idSiswa: item.idSiswa,
               bulan: item.bulan,
               tahun: item.tahun,
+              tanggalPembayaran: item.tanggalPembayaran,
               clientTransactionId: item.clientId
             }, {silent:true, timeout:10000});
 
             removeQueueItem(item.clientId);
             synced++;
+            confirmed.push(tx);
             applyServerPaymentLocally(tx);
-            toast(`Pembayaran ${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} sudah tersimpan di server.`, 'success', 'Tersimpan di server', 4300);
           } catch (err) {
             const message = err?.message || 'Gagal mengirim pembayaran.';
             if (/sudah tercatat lunas/i.test(message)) {
               removeQueueItem(item.clientId);
               synced++;
-              toast(`${item.student.nama || 'Siswa'} • ${titleCase(item.bulan)} ${item.tahun} sudah tercatat di server.`, 'info', 'Sudah tercatat');
               continue;
             }
             updateQueueFailure(item.clientId, message);
@@ -899,10 +966,7 @@
               toast(message, 'error');
               break;
             }
-            if (isNetworkLikeError(err)) hadNetworkFailure = true;
-            if (manual || Number(item.attempts || 0) === 0) {
-              toast('Pembayaran belum sampai ke server. Data tetap tersimpan di perangkat dan akan dicoba lagi otomatis.', 'warning', 'Menunggu sinkronisasi', 5200);
-            }
+            if (manual && isNetworkLikeError(err)) toast('Pembayaran belum sampai ke server. Data tetap aman di perangkat.', 'warning', 'Sinkronisasi belum selesai');
             break;
           }
         }
@@ -911,15 +975,27 @@
         updateSyncIndicator();
       }
 
-      if (synced > 0 && queueCount() === 0) scheduleSilentStaffRefresh();
-      if (manual && hadNetworkFailure) toast('Koneksi belum stabil. Pembayaran yang belum terkirim tetap tersimpan di perangkat.', 'warning', 'Sinkronisasi belum selesai');
+      if (confirmed.length === 1) {
+        const tx = confirmed[0];
+        toast(`Pembayaran ${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} sudah tersimpan di server.`, 'success', 'Tersimpan di server', 4300);
+      } else if (confirmed.length > 1) {
+        toast(`${confirmed.length} pembayaran sudah tersimpan di server.`, 'success', 'Tersimpan di server', 4300);
+      }
       return synced;
     }
 
     function applyServerPaymentLocally(tx) {
       if (!tx?.student?.idSiswa) return;
       delete state.detailCache[tx.student.idSiswa];
-      state.summaryCache = {};
+      const key = `${tx.bulan}-${tx.tahun}`;
+      const listStudent = state.students.find(s=>s.idSiswa===tx.student.idSiswa);
+      if (listStudent) {
+        listStudent.kelas = normalizeClassLabel(listStudent.kelas);
+        if (!Array.isArray(listStudent.paidPeriods)) listStudent.paidPeriods=[];
+        if (!listStudent.paidPeriods.includes(key)) listStudent.paidPeriods.push(key);
+        listStudent.paidMonths = listStudent.paidPeriods.length;
+        listStudent.unpaidMonths = Math.max(0,(state.config.periods||[]).length-listStudent.paidMonths);
+      }
       if (state.selectedStudentDetail?.student?.idSiswa === tx.student.idSiswa) {
         const d = state.selectedStudentDetail;
         const p = d.periods.find(x => x.bulan === tx.bulan && Number(x.tahun) === Number(tx.tahun));
@@ -935,6 +1011,12 @@
           d.paidAmount = d.history.reduce((sum,h)=>sum+Number(h.nominal||0),0);
         }
       }
+      const local=buildLocalSummaryData();
+      state.summary=local;
+      state.dashboard={user:state.user,scope:local.scope,stats:summaryStatsFromSummary(local.summary),config:state.config};
+      state.summaryCache={};
+      saveStaffSnapshot();
+      if (state.currentView==='home' || state.currentView==='summary') renderCurrentStaffView();
     }
 
     function scheduleSilentStaffRefresh() {
@@ -965,9 +1047,9 @@
             </div>
             <div class="login-copy">
               <h1>Ringkas.<br>Aman.<br>Mudah dipantau.</h1>
-              <p>Pembayaran Komite kelas VII dalam satu aplikasi yang ringan untuk bendahara, wali kelas, dan siswa.</p>
+              <p>Pembayaran Komite kelas 7 dalam satu aplikasi yang ringan untuk bendahara, wali kelas, dan siswa.</p>
             </div>
-            <div class="login-mini"><span>Juli 2026 — Juni 2027</span><span>${money(state.config.amount)} / bulan</span><span>Kelas VII A — VII J</span></div>
+            <div class="login-mini"><span>Juli 2026 — Juni 2027</span><span>${money(state.config.amount)} / bulan</span><span>Kelas 7A — 7J</span></div>
           </section>
           <section class="login-panel">
             <div class="login-box">
@@ -977,10 +1059,11 @@
               </div>
               <h2>Selamat datang</h2>
               <p>${student ? 'Masukkan NISN untuk melihat status dan riwayat Pembayaran Komite.' : 'Masuk menggunakan akun yang tersimpan pada spreadsheet.'}</p>
-              <div class="segment">
-                <button class="${role==='BENDAHARA'?'active':''}" onclick="switchLoginRole('BENDAHARA')">Bendahara</button>
-                <button class="${role==='WALI'?'active':''}" onclick="switchLoginRole('WALI')">Wali Kelas</button>
-                <button class="${role==='SISWA'?'active':''}" onclick="switchLoginRole('SISWA')">Siswa</button>
+              <div class="segment" data-sliding-group>
+                <span class="slide-indicator"></span>
+                <button data-key="BENDAHARA" class="${role==='BENDAHARA'?'active':''}" onclick="switchLoginRole('BENDAHARA')">Bendahara</button>
+                <button data-key="WALI" class="${role==='WALI'?'active':''}" onclick="switchLoginRole('WALI')">Wali Kelas</button>
+                <button data-key="SISWA" class="${role==='SISWA'?'active':''}" onclick="switchLoginRole('SISWA')">Siswa</button>
               </div>
               ${student ? `
                 <form class="form-stack" onsubmit="loginStudent(event)">
@@ -1007,14 +1090,26 @@
             </div>
           </section>
         </div>`;
-
+      requestAnimationFrame(syncSlidingIndicators);
       if (!isApiConfigured()) setTimeout(() => toast('Pasang URL Web App Apps Script pada konstanta API_URL sebelum digunakan.', 'warning', 'Backend belum dihubungkan'), 250);
     }
 
     function switchLoginRole(role) {
-      state.loginRole = role;
-      renderLogin();
-      setTimeout(() => document.querySelector('.input')?.focus(), 30);
+      if (role === state.loginRole) return;
+      const group = document.querySelector('.segment[data-sliding-group]');
+      const target = group?.querySelector(`button[data-key="${role}"]`);
+      if (group && target) {
+        group.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b===target));
+        syncSlidingGroup(group);
+        setTimeout(() => {
+          state.loginRole = role;
+          renderLogin();
+          setTimeout(() => document.querySelector('.input')?.focus(), 30);
+        }, 150);
+      } else {
+        state.loginRole = role;
+        renderLogin();
+      }
     }
 
     async function loginStaff(e) {
@@ -1043,6 +1138,7 @@
       try {
         const data = await api('loginStudent', {nisn: document.getElementById('nisn').value.trim()}, {loadingText:'Mencari data siswa…'});
         state.config = Object.assign({}, state.config, data.config || {});
+        state.config.classes = (state.config.classes || []).map(c=>Object.assign({},c,{nama:normalizeClassLabel(c.nama)}));
         setSession(data.token, data.user);
         state.selectedStudentDetail = data.detail;
         state.detailCache[data.detail.student.idSiswa] = data.detail;
@@ -1057,6 +1153,8 @@
     // ========================= SHELL / REFRESH =========================
 
     function topbar() {
+      const role = state.user?.role || '';
+      const meta = role === 'BENDAHARA' ? 'Bendahara' : role === 'WALI' ? `Wali Kelas • ${normalizeClassLabel(state.user?.kelas || '')}` : `Siswa • ${normalizeClassLabel(state.user?.kelas || '')}`;
       return `<div class="topbar-wrap"><div class="page topbar">
         <div class="brand">
           <div class="brand-mark">${icon('shield')}</div>
@@ -1064,7 +1162,7 @@
         </div>
         <div class="top-actions">
           ${syncChipHtml()}
-          <div class="user-pill">${icon('user')}<div><strong>${escapeHtml(state.user?.nama || '')}</strong>${state.user?.kelas ? ' • '+escapeHtml(state.user.kelas) : ''}</div></div>
+          <div class="user-pill"><span class="user-avatar">${icon('user')}</span><div class="user-copy"><strong>${escapeHtml(state.user?.nama || '')}</strong><span>${escapeHtml(meta)}</span></div></div>
           <button id="refreshBtn" class="icon-btn refresh-btn ${state.refreshBusy?'spinning':''}" onclick="refreshCurrentData()" title="Perbarui data" aria-label="Perbarui data">${icon('refresh')}</button>
           <button class="icon-btn" onclick="logout()" title="Keluar" aria-label="Keluar">${icon('logout')}</button>
         </div>
@@ -1076,7 +1174,7 @@
       const items = role === 'BENDAHARA'
         ? [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']]
         : [['home','home','Beranda'],['students','users','Murid']];
-      return `<div class="page"><nav class="desktop-nav">${items.map(([view,ic,label]) => `<button class="nav-chip ${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}${label}</button>`).join('')}</nav></div>`;
+      return `<div class="page"><nav class="desktop-nav" data-sliding-group><span class="slide-indicator"></span>${items.map(([view,ic,label]) => `<button data-key="${view}" class="nav-chip ${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}${label}</button>`).join('')}</nav></div>`;
     }
 
     function bottomNav() {
@@ -1084,13 +1182,61 @@
       const items = role === 'BENDAHARA'
         ? [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']]
         : [['home','home','Beranda'],['students','users','Murid']];
-      return `<nav class="bottom-nav">${items.map(([view,ic,label]) => `<button class="${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}<span>${label}</span></button>`).join('')}</nav>`;
+      return `<nav class="bottom-nav" data-sliding-group><span class="slide-indicator"></span>${items.map(([view,ic,label]) => `<button data-key="${view}" class="${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}<span>${label}</span></button>`).join('')}</nav>`;
+    }
+
+    function syncSlidingGroup(group) {
+      if (!group) return;
+      const slider = group.querySelector(':scope > .slide-indicator');
+      const active = group.querySelector(':scope > button.active');
+      if (!slider || !active) return;
+      slider.style.width = active.offsetWidth + 'px';
+      slider.style.height = active.offsetHeight + 'px';
+      slider.style.transform = `translate3d(${active.offsetLeft}px, ${active.offsetTop}px, 0)`;
+      slider.style.opacity = '1';
+    }
+
+    function syncSlidingIndicators() {
+      document.querySelectorAll('[data-sliding-group]').forEach(syncSlidingGroup);
+    }
+
+    function updateNavigationActive() {
+      document.querySelectorAll('.desktop-nav[data-sliding-group], .bottom-nav[data-sliding-group]').forEach(group => {
+        group.querySelectorAll(':scope > button[data-key]').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.currentView));
+        requestAnimationFrame(()=>syncSlidingGroup(group));
+      });
+    }
+
+    function updatePeriodPanelState(panel) {
+      if (!panel) return;
+      panel.querySelectorAll('.period-segment button[data-key]').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.scopeMode));
+      const row = panel.querySelector('.period-row');
+      if (row) row.innerHTML = periodRowHtml();
+      requestAnimationFrame(()=>syncSlidingGroup(panel.querySelector('.period-segment')));
     }
 
     function renderStaffShell(contentHtml='') {
       const app = document.getElementById('app');
-      app.innerHTML = `${topbar()}${desktopNav()}<main class="page main" id="mainContent">${contentHtml || renderHomeContent()}</main>${bottomNav()}`;
+      const content = contentHtml || renderHomeContent();
+      const existingMain = document.getElementById('mainContent');
+      if (!existingMain || !document.querySelector('.desktop-nav') || !document.querySelector('.bottom-nav')) {
+        app.innerHTML = `${topbar()}${desktopNav()}<main class="page main" id="mainContent">${content}</main>${bottomNav()}`;
+      } else {
+        const temp = document.createElement('div');
+        temp.innerHTML = content;
+        const oldPanel = existingMain.querySelector('#periodPanel');
+        const newPanel = temp.querySelector('#periodPanel');
+        existingMain.innerHTML = '';
+        if (oldPanel && newPanel) {
+          newPanel.remove();
+          updatePeriodPanelState(oldPanel);
+          existingMain.appendChild(oldPanel);
+        }
+        while (temp.firstChild) existingMain.appendChild(temp.firstChild);
+      }
+      updateNavigationActive();
       updateSyncIndicator();
+      requestAnimationFrame(syncSlidingIndicators);
     }
 
     function renderCurrentStaffView() {
@@ -1168,81 +1314,126 @@
     function applyBootstrap(data, preserveScope=true) {
       if (!data) return;
       state.config = Object.assign({}, DEFAULT_CONFIG, data.config || state.config || {});
-      state.students = Array.isArray(data.students) ? data.students : state.students;
+      state.config.classes = (state.config.classes || []).map(c=>Object.assign({},c,{nama:normalizeClassLabel(c.nama)}));
+      if (Array.isArray(data.students)) state.students = data.students.map(s=>Object.assign({},s,{kelas:normalizeClassLabel(s.kelas)}));
       state.dashboard = data.dashboard || state.dashboard;
       state.summary = data.summary || state.summary;
       state.detailCache = preserveScope ? state.detailCache : {};
       state.summaryCache = preserveScope ? state.summaryCache : {};
+      if (state.user?.kelas) state.user.kelas = normalizeClassLabel(state.user.kelas);
 
       const scope = data.summary?.scope || data.dashboard?.scope;
-      if (scope) {
+      if (scope && !preserveScope) {
         state.scopeMode = scope.mode || 'MONTH';
         const anchor = scope.anchor || scope.periods?.[0];
         const idx = state.config.periods.findIndex(p => p.bulan === anchor?.bulan && Number(p.tahun) === Number(anchor?.tahun));
         if (idx >= 0) state.scopeMonthIndex = idx;
-      } else if (!preserveScope) setDefaultScopeFromConfig();
-      if (state.user?.role === 'BENDAHARA') state.scopeClass = data.summary?.kelas === 'SEMUA' ? '' : (data.summary?.kelas || state.scopeClass || '');
+      } else if (!scope && !preserveScope) setDefaultScopeFromConfig();
+      if (state.user?.role === 'BENDAHARA' && !preserveScope) state.scopeClass = data.summary?.kelas === 'SEMUA' ? '' : normalizeClassLabel(data.summary?.kelas || '');
+      if (state.students.length) {
+        const local = buildLocalSummaryData();
+        state.summary = local;
+        state.dashboard = {user:state.user,scope:local.scope,stats:summaryStatsFromSummary(local.summary),config:state.config};
+      }
       rememberCurrentSummary();
       saveStaffSnapshot();
     }
 
-    function periodControlsHtml() {
+    function periodRowHtml() {
       const p = currentScopePeriod();
       const isMonth = state.scopeMode === 'MONTH';
       const isB = state.user?.role === 'BENDAHARA';
+      const scopeLabel = localScopeDefinition().label;
+      return `${isMonth ? `<div class="period-nav"><button class="period-arrow" onclick="moveScopeMonth(-1)" ${state.scopeMonthIndex<=0?'disabled':''}>${icon('left')}</button><div class="period-label">${escapeHtml(p?.label || '')}</div><button class="period-arrow" onclick="moveScopeMonth(1)" ${state.scopeMonthIndex>=state.config.periods.length-1?'disabled':''}>${icon('right')}</button></div>` : `<div class="period-static">${escapeHtml(scopeLabel)}</div>`}
+        ${isB ? `<select class="select period-class" onchange="changeScopeClass(this.value)"><option value="" ${!state.scopeClass?'selected':''}>Semua Kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}" ${normalizeClassLabel(state.scopeClass)===normalizeClassLabel(c.nama)?'selected':''}>${escapeHtml(normalizeClassLabel(c.nama))}</option>`).join('')}</select>` : `<div class="period-class-readonly">${escapeHtml(normalizeClassLabel(state.user?.kelas || ''))}</div>`}`;
+    }
+
+    function periodControlsHtml() {
       const modes = [['MONTH','Bulan'],['SEM1','Semester 1'],['SEM2','Semester 2'],['YEAR','Tahun Ajaran']];
-      const scopeLabel = state.summary?.scope?.label || state.dashboard?.scope?.label || (isMonth ? p?.label : state.scopeMode);
       return `<section class="period-panel" id="periodPanel">
-        <div class="period-segment">${modes.map(([mode,label])=>`<button class="${state.scopeMode===mode?'active':''}" onclick="changeScopeMode('${mode}')">${label}</button>`).join('')}</div>
-        <div class="period-row">
-          ${isMonth ? `<div class="period-nav"><button class="period-arrow" onclick="moveScopeMonth(-1)" ${state.scopeMonthIndex<=0?'disabled':''}>${icon('left')}</button><div class="period-label">${escapeHtml(p?.label || '')}</div><button class="period-arrow" onclick="moveScopeMonth(1)" ${state.scopeMonthIndex>=state.config.periods.length-1?'disabled':''}>${icon('right')}</button></div>` : `<div class="period-static">${escapeHtml(scopeLabel)}</div>`}
-          ${isB ? `<select class="select period-class" onchange="changeScopeClass(this.value)"><option value="" ${!state.scopeClass?'selected':''}>Semua Kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}" ${state.scopeClass===c.nama?'selected':''}>${escapeHtml(c.nama)}</option>`).join('')}</select>` : `<div class="period-class-readonly">${escapeHtml(state.user?.kelas || '')}</div>`}
-        </div>
+        <div class="period-segment" data-sliding-group><span class="slide-indicator"></span>${modes.map(([mode,label])=>`<button data-key="${mode}" class="${state.scopeMode===mode?'active':''}" onclick="changeScopeMode('${mode}')">${label}</button>`).join('')}</div>
+        <div class="period-row">${periodRowHtml()}</div>
       </section>`;
     }
 
-    async function changeScopeMode(mode) {
+    function changeScopeMode(mode) {
       if (!['MONTH','SEM1','SEM2','YEAR'].includes(mode) || mode === state.scopeMode) return;
       state.scopeMode = mode;
-      await loadScopeSummary();
+      loadScopeSummary();
     }
 
-    async function moveScopeMonth(delta) {
+    function moveScopeMonth(delta) {
       if (state.scopeMode !== 'MONTH') return;
       const next = Math.max(0, Math.min(state.config.periods.length - 1, state.scopeMonthIndex + Number(delta || 0)));
       if (next === state.scopeMonthIndex) return;
       state.scopeMonthIndex = next;
-      await loadScopeSummary();
+      loadScopeSummary();
     }
 
-    async function changeScopeClass(value) {
+    function changeScopeClass(value) {
       if (state.user?.role !== 'BENDAHARA') return;
-      state.scopeClass = value || '';
-      await loadScopeSummary();
+      state.scopeClass = normalizeClassLabel(value || '');
+      loadScopeSummary();
     }
 
-    async function loadScopeSummary(force=false) {
-      const key = summaryCacheKey();
-      if (!force && state.summaryCache[key]) {
-        state.summary = state.summaryCache[key];
-        state.dashboard = {user:state.user, scope:state.summary.scope, stats:summaryStatsFromSummary(state.summary.summary), config:state.config};
-        renderCurrentStaffView();
-        return;
-      }
+    function localScopeDefinition() {
+      const periods = state.config.periods || [];
+      if (state.scopeMode === 'SEM1') return {mode:'SEM1',label:'Semester 1',periods:periods.slice(0,6),anchor:periods[0]};
+      if (state.scopeMode === 'SEM2') return {mode:'SEM2',label:'Semester 2',periods:periods.slice(6,12),anchor:periods[6]};
+      if (state.scopeMode === 'YEAR') return {mode:'YEAR',label:`Tahun Ajaran ${state.config.schoolYear}`,periods:periods.slice(),anchor:periods[0]};
+      const p = currentScopePeriod();
+      return {mode:'MONTH',label:p?.label || '',periods:p?[p]:[],anchor:p};
+    }
 
-      document.getElementById('periodPanel')?.classList.add('busy');
-      try {
-        const data = await api('summary', Object.assign({token:state.token}, scopePayload(force)), {silent:true, timeout:17000});
-        state.summary = data;
-        state.dashboard = {user:state.user, scope:data.scope, stats:summaryStatsFromSummary(data.summary), config:state.config};
-        state.summaryCache[key] = data;
-        saveStaffSnapshot();
-        renderCurrentStaffView();
-      } catch (err) {
-        toast(err.message || 'Rekap belum dapat diperbarui.', 'warning');
-      } finally {
-        document.getElementById('periodPanel')?.classList.remove('busy');
-      }
+    function isPeriodDueLocal(period) {
+      const periods = state.config.periods || [];
+      const current = state.config.currentPeriod;
+      const currentIndex = periods.findIndex(p=>p.bulan===current?.bulan && Number(p.tahun)===Number(current?.tahun));
+      const idx = periods.findIndex(p=>p.bulan===period?.bulan && Number(p.tahun)===Number(period?.tahun));
+      if (currentIndex < 0 || idx < 0) return false;
+      return idx <= currentIndex;
+    }
+
+    function buildLocalSummaryData() {
+      const scope = localScopeDefinition();
+      const selectedClass = state.user?.role === 'BENDAHARA' ? normalizeClassLabel(state.scopeClass) : normalizeClassLabel(state.user?.kelas || '');
+      const students = (state.students || []).filter(s => !selectedClass || normalizeClassLabel(s.kelas) === selectedClass);
+      const selectedPeriods = scope.periods || [];
+      const amount = Number(state.config.amount || 50000);
+      let paidSlots=0, unpaidDueSlots=0, futureSlots=0, fullyPaidStudents=0;
+      const list = students.map(s => {
+        const paidSet = new Set(Array.isArray(s.paidPeriods) ? s.paidPeriods : []);
+        let paidCount=0, paidDueCount=0;
+        const duePeriods = selectedPeriods.filter(isPeriodDueLocal);
+        selectedPeriods.forEach(p=>{
+          const key=`${p.bulan}-${p.tahun}`;
+          if (paidSet.has(key)) {
+            paidCount++;
+            if (isPeriodDueLocal(p)) paidDueCount++;
+          }
+        });
+        const dueCount=duePeriods.length;
+        const unpaidDue=Math.max(0,dueCount-paidDueCount);
+        const futureUnpaid=Math.max(0,selectedPeriods.length-dueCount-(paidCount-paidDueCount));
+        paidSlots+=paidCount; unpaidDueSlots+=unpaidDue; futureSlots+=futureUnpaid;
+        if (selectedPeriods.length && paidCount===selectedPeriods.length) fullyPaidStudents++;
+        let status='BELUM_JATUH_TEMPO';
+        if (selectedPeriods.length && paidCount===selectedPeriods.length) status='LUNAS';
+        else if (unpaidDue>0) status='BELUM_BAYAR';
+        else if (paidCount>0) status='SEBAGIAN';
+        return {idSiswa:s.idSiswa,nisn:s.nisn,nama:s.nama,kelas:normalizeClassLabel(s.kelas),paidMonths:paidCount,totalMonths:selectedPeriods.length,unpaidDueMonths:unpaidDue,futureMonths:futureUnpaid,paidAmount:paidCount*amount,status};
+      }).sort((a,b)=>a.nama.localeCompare(b.nama,'id'));
+      const totalSlots=students.length*selectedPeriods.length;
+      return {scope,kelas:selectedClass||'SEMUA',summary:{totalStudents:students.length,totalSlots,paid:paidSlots,unpaid:unpaidDueSlots,future:futureSlots,fullyPaidStudents,percentage:totalSlots?Math.round(paidSlots/totalSlots*100):0,totalAmount:paidSlots*amount,students:list}};
+    }
+
+    function loadScopeSummary() {
+      const data = buildLocalSummaryData();
+      state.summary = data;
+      state.dashboard = {user:state.user, scope:data.scope, stats:summaryStatsFromSummary(data.summary), config:state.config};
+      state.summaryCache[summaryCacheKey()] = data;
+      saveStaffSnapshot();
+      renderCurrentStaffView();
     }
 
     function summaryStatsFromSummary(s) {
@@ -1261,7 +1452,7 @@
       return `
         ${periodControlsHtml()}
         <section class="hero">
-          <div class="hero-kicker">${isB ? 'Dashboard Bendahara' : 'Dashboard Wali Kelas • '+escapeHtml(state.user.kelas || '')}</div>
+          <div class="hero-kicker">${isB ? 'Dashboard Bendahara' : 'Dashboard Wali Kelas • '+escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</div>
           <div class="hero-title">${escapeHtml(label)}</div>
           <div class="hero-sub">Status Pembayaran Komite • ${money(state.config.amount)} per siswa${Number(s.future||0)>0 ? ` • ${s.future} belum jatuh tempo` : ''}</div>
           <div class="hero-stats">
@@ -1278,7 +1469,7 @@
             <button class="action-card" onclick="navigate('summary')"><span class="action-icon">${icon('chart')}</span><strong>Rekap</strong><span>Bulan, semester, tahun ajaran</span></button>
           </div>
         ` : `
-          <div class="section-head"><div><h2>Kelas ${escapeHtml(state.user.kelas || '')}</h2><p>${escapeHtml(label)} • status murid pada periode yang dipilih.</p></div><button class="btn btn-soft btn-sm" onclick="navigate('students')">Lihat semua ${icon('arrow')}</button></div>
+          <div class="section-head"><div><h2>Kelas ${escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</h2><p>${escapeHtml(label)} • status murid pada periode yang dipilih.</p></div><button class="btn btn-soft btn-sm" onclick="navigate('students')">Lihat semua ${icon('arrow')}</button></div>
           <div class="card card-pad">${summaryStudentsHtml(state.summary?.summary?.students || [], true)}</div>
         `}`;
     }
@@ -1295,7 +1486,7 @@
     function renderStudentsView() {
       const canClass = state.user.role === 'BENDAHARA';
       const html = `
-        <div class="section-head"><div><h2>${canClass?'Data Siswa':'Murid '+escapeHtml(state.user.kelas)}</h2><p>${state.students.length} data aktif • tersimpan di cache aplikasi</p></div>${canClass?`<button class="btn btn-primary btn-sm" onclick="openPaymentSearch()">${icon('plus')} Catat Pembayaran</button>`:''}</div>
+        <div class="section-head"><div><h2>${canClass?'Data Siswa':'Murid '+escapeHtml(normalizeClassLabel(state.user.kelas))}</h2><p>${state.students.length} data aktif • tersimpan di cache aplikasi</p></div>${canClass?`<button class="btn btn-primary btn-sm" onclick="openPaymentSearch()">${icon('plus')} Catat Pembayaran</button>`:''}</div>
         <section class="card card-pad">
           <div class="toolbar ${canClass?'three':''}">
             <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="studentSearch" class="input" placeholder="Cari nama atau NISN" oninput="filterStudentsView()"></div>
@@ -1311,7 +1502,7 @@
     function studentRowHtml(s, paymentMode=false) {
       return `<button class="student-row" onclick="openStudentDetail('${escapeHtml(s.idSiswa)}', ${paymentMode})">
         <span class="avatar">${escapeHtml(initials(s.nama).toUpperCase())}</span>
-        <span class="student-main"><strong>${escapeHtml(s.nama)}</strong><span class="student-meta"><span>${escapeHtml(s.kelas)}</span><span>•</span><span>NISN ${escapeHtml(s.nisn)}</span>${Number.isFinite(s.paidMonths)?`<span>•</span><span>${s.paidMonths}/12 lunas</span>`:''}</span></span>
+        <span class="student-main"><strong>${escapeHtml(s.nama)}</strong><span class="student-meta"><span>${escapeHtml(normalizeClassLabel(s.kelas))}</span><span>•</span><span>NISN ${escapeHtml(s.nisn)}</span>${Number.isFinite(s.paidMonths)?`<span>•</span><span>${s.paidMonths}/12 lunas</span>`:''}</span></span>
         <span class="chev">${icon('chevron')}</span>
       </button>`;
     }
@@ -1327,6 +1518,9 @@
     // ========================= CATAT PEMBAYARAN =========================
 
     function openPaymentSearch() {
+      state.paymentSelection = [];
+      state.paymentSelectionStudent = '';
+      state.paymentDate = todayJayapuraIso();
       if (!state.students.length) {
         toast('Data siswa belum tersedia. Tekan Refresh untuk mengambil data terbaru.', 'warning');
         return;
@@ -1400,11 +1594,17 @@
     function studentDetailModalHtml(d, paymentMode) {
       const s = d.student;
       const pending = getPaymentQueue().filter(x=>x.idSiswa===s.idSiswa).length;
+      if (paymentMode && state.paymentSelectionStudent !== s.idSiswa) {
+        state.paymentSelectionStudent = s.idSiswa;
+        state.paymentSelection = [];
+        state.paymentDate = todayJayapuraIso();
+      }
       return `
-        <div class="modal-head"><div><h3>${escapeHtml(s.nama)}</h3><p>${escapeHtml(s.kelas)} • NISN ${escapeHtml(s.nisn)} • ${d.paidMonths}/12 bulan lunas${pending?` • ${pending} menunggu sinkron`:''}</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-head"><div><h3>${escapeHtml(s.nama)}</h3><p>${escapeHtml(normalizeClassLabel(s.kelas))} • NISN ${escapeHtml(s.nisn)} • ${d.paidMonths}/12 bulan lunas${pending?` • ${pending} menunggu sinkron`:''}</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
         <div class="modal-body">
-          <div class="section-head" style="margin-top:0"><div><h2>Pembayaran ${escapeHtml(state.config.schoolYear)}</h2><p>${paymentMode?'Pilih bulan yang akan dibayar.':'Status Pembayaran Komite per bulan.'}</p></div><span class="status-pill ok">${icon('check')} ${money(d.paidAmount)}</span></div>
+          <div class="section-head" style="margin-top:0"><div><h2>Pembayaran ${escapeHtml(state.config.schoolYear)}</h2><p>${paymentMode?'Pilih satu atau beberapa bulan yang akan dicatat.':'Status Pembayaran Komite per bulan.'}</p></div><span class="status-pill ok">${icon('check')} ${money(d.paidAmount)}</span></div>
           <div class="months-grid">${d.periods.map(p=>monthCardHtml(p, s.idSiswa, paymentMode)).join('')}</div>
+          ${paymentMode ? paymentSelectionPanelHtml(s.idSiswa) : ''}
           <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>${d.offlineApprox ? 'Riwayat lengkap tersedia saat online' : (d.history.length ? d.history.length+' transaksi lunas' : 'Belum ada transaksi')}</p></div></div>
           <div class="card card-pad">${historyHtml(d.history, state.user.role === 'BENDAHARA')}</div>
         </div>`;
@@ -1414,14 +1614,17 @@
       const pending = pendingPayment(idSiswa, p.bulan, p.tahun);
       const lunas = p.status === 'LUNAS';
       const due = p.status === 'BELUM_BAYAR';
+      const key = `${p.bulan}-${p.tahun}`;
+      const selected = paymentMode && state.paymentSelection.includes(key);
       const status = pending
         ? `<span class="status-pill sync">${icon('clock')} Menunggu sinkron</span>`
         : lunas
           ? `<span class="status-pill ok">${icon('check')} Lunas</span>`
+          : selected ? `<span class="status-pill ok">${icon('check')} Dipilih</span>`
           : due ? `<span class="status-pill wait">${icon('clock')} Belum Bayar</span>`
           : `<span class="status-pill future">${icon('calendar')} Belum Jatuh Tempo</span>`;
-      const clickable = paymentMode && !lunas && !pending;
-      return `<div class="month-card ${clickable?'clickable':''}" ${clickable?`onclick="confirmPayment('${escapeHtml(idSiswa)}','${escapeHtml(p.bulan)}',${p.tahun})"`:''}>
+      const selectable = paymentMode && !lunas && !pending;
+      return `<div class="month-card ${selectable?'selectable':''} ${selected?'selected':''}" ${selectable?`data-pay-key="${escapeHtml(key)}" onclick="togglePaymentMonth('${escapeHtml(idSiswa)}','${escapeHtml(p.bulan)}',${p.tahun})"`:''}>
         <div><div class="month-name">${escapeHtml(p.bulan.slice(0,3))}</div><div class="month-year">${p.tahun}</div></div>${status}
       </div>`;
     }
@@ -1430,43 +1633,63 @@
       if (!history.length) return emptyHtml('Belum ada pembayaran','Pembayaran yang telah tercatat akan muncul di sini.');
       return `<div class="history-list">${history.map(h=>`
         <div class="history-row">
-          <div><strong>${titleCase(h.bulan)} ${h.tahun}</strong><div class="meta">${escapeHtml(h.tanggalBayar)} • ${escapeHtml(h.waktuBayar || '')}<br><span style="font-size:10px">${escapeHtml(h.idTransaksi)}</span></div></div>
+          <div><strong>${titleCase(h.bulan)} ${h.tahun}</strong><div class="meta">${escapeHtml(h.tanggalBayar)}</div></div>
           <div class="history-amount"><strong>${money(h.nominal)}</strong><div style="margin-top:6px;display:flex;justify-content:flex-end;gap:6px"><span class="status-pill ok">${icon('check')} Lunas</span>${allowCancel?`<button class="btn btn-soft btn-sm" title="Cetak bukti" onclick="printHistoryReceipt('${escapeHtml(h.idTransaksi)}')">${icon('printer')}</button><button class="btn btn-danger btn-sm" title="Batalkan" onclick="confirmCancel('${escapeHtml(h.idTransaksi)}')">${icon('trash')}</button>`:''}</div></div>
         </div>`).join('')}</div>`;
     }
 
-    function confirmPayment(idSiswa, bulan, tahun) {
-      const d = state.selectedStudentDetail;
-      const s = d?.student;
-      if (!s || s.idSiswa !== idSiswa) return;
-      openModal(`
-        <div class="modal-head"><div><h3>Konfirmasi Pembayaran</h3><p>Setelah ditekan, pencatatan langsung masuk antrean dan tidak perlu menunggu server.</p></div><button class="icon-btn" onclick="openStudentDetail('${escapeHtml(idSiswa)}',true)">${icon('x')}</button></div>
-        <div class="modal-body">
-          <div class="receipt">
-            <div class="success-mark" style="color:var(--blue);background:#edf6ff">${icon('receipt')}</div>
-            <div class="receipt-name">${escapeHtml(s.nama)}</div>
-            <div style="color:var(--muted);font-size:12px">${escapeHtml(s.kelas)} • ${escapeHtml(s.nisn)}</div>
-            <div class="receipt-amount">${money(state.config.amount)}</div>
-            <div style="color:var(--muted)">Komite ${titleCase(bulan)} ${tahun}</div>
-          </div>
-        </div>
-        <div class="modal-actions"><button class="btn btn-ghost" onclick="openStudentDetail('${escapeHtml(idSiswa)}',true)">Kembali</button><button class="btn btn-primary" onclick="savePayment('${escapeHtml(idSiswa)}','${escapeHtml(bulan)}',${tahun})">${icon('check')} Simpan Pembayaran</button></div>`);
+    function paymentSelectionPanelHtml(idSiswa) {
+      const count = state.paymentSelection.length;
+      return `<div class="payment-selection" id="paymentSelectionPanel">
+        <div class="payment-selection-summary"><strong id="paymentSelectionCount">${count ? count+' bulan dipilih' : 'Belum ada bulan dipilih'}</strong><span id="paymentSelectionTotal">${count ? money(count*Number(state.config.amount||50000)) : 'Pilih bulan yang belum lunas'}</span></div>
+        <div class="payment-date-wrap"><label class="label" for="paymentDate">Tanggal Pembayaran</label><input id="paymentDate" class="input" type="date" max="${todayJayapuraIso()}" value="${escapeHtml(state.paymentDate || todayJayapuraIso())}" onchange="state.paymentDate=this.value"></div>
+        <button id="saveSelectedPaymentBtn" class="btn btn-primary" ${count?'':'disabled'} onclick="saveSelectedPayments('${escapeHtml(idSiswa)}')">${icon('check')} Simpan</button>
+      </div>`;
     }
 
-    function savePayment(idSiswa, bulan, tahun) {
+    function togglePaymentMonth(idSiswa, bulan, tahun) {
+      if (state.paymentSelectionStudent !== idSiswa) return;
+      const key = `${bulan}-${tahun}`;
+      const i = state.paymentSelection.indexOf(key);
+      if (i >= 0) state.paymentSelection.splice(i,1); else state.paymentSelection.push(key);
+      const card = document.querySelector(`[data-pay-key="${CSS.escape(key)}"]`);
+      if (card) {
+        card.classList.toggle('selected', state.paymentSelection.includes(key));
+        const pill = card.querySelector('.status-pill');
+        if (pill) pill.outerHTML = state.paymentSelection.includes(key) ? `<span class="status-pill ok">${icon('check')} Dipilih</span>` : `<span class="status-pill ${isPeriodDueLocal({bulan,tahun})?'wait':'future'}">${icon(isPeriodDueLocal({bulan,tahun})?'clock':'calendar')} ${isPeriodDueLocal({bulan,tahun})?'Belum Bayar':'Belum Jatuh Tempo'}</span>`;
+      }
+      updatePaymentSelectionPanel();
+    }
+
+    function updatePaymentSelectionPanel() {
+      const count=state.paymentSelection.length;
+      const countEl=document.getElementById('paymentSelectionCount');
+      const totalEl=document.getElementById('paymentSelectionTotal');
+      const btn=document.getElementById('saveSelectedPaymentBtn');
+      if (countEl) countEl.textContent=count?`${count} bulan dipilih`:'Belum ada bulan dipilih';
+      if (totalEl) totalEl.textContent=count?money(count*Number(state.config.amount||50000)):'Pilih bulan yang belum lunas';
+      if (btn) btn.disabled=!count;
+    }
+
+    function saveSelectedPayments(idSiswa) {
       const d = state.selectedStudentDetail;
       const s = d?.student;
       if (!s || s.idSiswa !== idSiswa) return;
-      const result = enqueuePayment(idSiswa, bulan, tahun, s);
-      if (result.duplicate) {
-        toast(`Pembayaran ${titleCase(bulan)} ${tahun} sudah berada dalam antrean sinkronisasi.`, 'warning', 'Sudah diantrikan');
-        openPaymentSearch();
-        return;
-      }
-
+      if (!state.paymentSelection.length) { toast('Pilih minimal satu bulan pembayaran.', 'warning'); return; }
+      const paymentDate = document.getElementById('paymentDate')?.value || state.paymentDate || todayJayapuraIso();
+      if (!paymentDate) { toast('Pilih tanggal pembayaran.', 'warning'); return; }
+      if (paymentDate > todayJayapuraIso()) { toast('Tanggal pembayaran tidak boleh melebihi hari ini.', 'warning'); return; }
+      state.paymentDate = paymentDate;
+      let added=0, duplicates=0;
+      state.paymentSelection.forEach(key=>{
+        const [bulan,tahunText]=key.split('-');
+        const result=enqueuePayment(idSiswa,bulan,Number(tahunText),s,paymentDate);
+        if (result.duplicate) duplicates++; else added++;
+      });
+      state.paymentSelection=[];
+      state.paymentSelectionStudent='';
       openPaymentSearch();
-      if (navigator.onLine) toast(`Pembayaran ${s.nama} • ${titleCase(bulan)} ${tahun} sudah dicatat di perangkat dan sedang dikirim.`, 'info', 'Mengirim ke server');
-      else toast(`Pembayaran ${s.nama} • ${titleCase(bulan)} ${tahun} tersimpan sementara di perangkat. Akan dikirim otomatis saat internet tersedia.`, 'warning', 'Tersimpan di perangkat', 5600);
+      if (!added && duplicates) toast('Semua bulan yang dipilih sudah berada dalam antrean sinkronisasi.', 'warning', 'Sudah diantrikan');
       syncPaymentQueue();
     }
 
@@ -1489,14 +1712,14 @@
     function printReceipt(tx) {
       const w = window.open('', '_blank', 'width=520,height=720');
       if (!w) { toast('Izinkan pop-up browser untuk mencetak bukti.','warning'); return; }
-      w.document.write(`<!doctype html><html><head><title>${escapeHtml(tx.idTransaksi)}</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#16314d}main{max-width:420px;margin:auto;border:1px solid #dce6ef;border-radius:18px;padding:24px}h2{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#65758a;font-size:12px}.amount{text-align:center;font-size:30px;font-weight:700;margin:20px 0}.row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf1f5;font-size:12px}.foot{text-align:center;color:#738395;font-size:10px;margin-top:20px}@media print{body{padding:0}main{border:0}}</style></head><body><main><h2>Komite SMP Negeri 3 Jayapura</h2><div class="sub">Bukti Pembayaran Komite</div><div class="amount">${money(tx.nominal)}</div><div class="row"><span>Nama</span><strong>${escapeHtml(tx.student.nama)}</strong></div><div class="row"><span>Kelas</span><strong>${escapeHtml(tx.student.kelas)}</strong></div><div class="row"><span>Periode</span><strong>${titleCase(tx.bulan)} ${tx.tahun}</strong></div><div class="row"><span>Tanggal</span><strong>${escapeHtml(tx.tanggalBayar)} ${escapeHtml(tx.waktuBayar)}</strong></div><div class="row"><span>No. Transaksi</span><strong>${escapeHtml(tx.idTransaksi)}</strong></div><div class="row"><span>Status</span><strong>LUNAS</strong></div><div class="foot">SMP Negeri 3 Jayapura • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div></main><script>window.onload=()=>{window.print()}<\/script></body></html>`);
+      w.document.write(`<!doctype html><html><head><title>Bukti Pembayaran Komite</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#16314d}main{max-width:420px;margin:auto;border:1px solid #dce6ef;border-radius:18px;padding:24px}h2{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#65758a;font-size:12px}.amount{text-align:center;font-size:30px;font-weight:700;margin:20px 0}.row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf1f5;font-size:12px}.foot{text-align:center;color:#738395;font-size:10px;margin-top:20px}@media print{body{padding:0}main{border:0}}</style></head><body><main><h2>Komite SMP Negeri 3 Jayapura</h2><div class="sub">Bukti Pembayaran Komite</div><div class="amount">${money(tx.nominal)}</div><div class="row"><span>Nama</span><strong>${escapeHtml(tx.student.nama)}</strong></div><div class="row"><span>Kelas</span><strong>${escapeHtml(normalizeClassLabel(tx.student.kelas))}</strong></div><div class="row"><span>Periode</span><strong>${titleCase(tx.bulan)} ${tx.tahun}</strong></div><div class="row"><span>Tanggal</span><strong>${escapeHtml(tx.tanggalBayar)}</strong></div><div class="row"><span>Status</span><strong>LUNAS</strong></div><div class="foot">SMP Negeri 3 Jayapura • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div></main><script>window.onload=()=>{window.print()}<\/script></body></html>`);
       w.document.close();
     }
 
     function confirmCancel(idTransaksi) {
       openModal(`
-        <div class="modal-head"><div><h3>Batalkan transaksi?</h3><p>Transaksi tidak dihapus, statusnya akan menjadi BATAL.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
-        <div class="modal-body"><div class="card card-pad"><strong>${escapeHtml(idTransaksi)}</strong><p style="margin:7px 0 0;color:var(--muted);font-size:13px;line-height:1.5">Gunakan hanya bila bendahara salah mencatat pembayaran. Jejak pembatalan tetap tersimpan pada LOG_AKTIVITAS.</p></div></div>
+        <div class="modal-head"><div><h3>Batalkan pembayaran?</h3><p>Pembayaran tidak dihapus, status internalnya akan menjadi BATAL.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body"><div class="card card-pad"><p style="margin:0;color:var(--muted);font-size:13px;line-height:1.5">Gunakan hanya bila Bendahara salah mencatat pembayaran. Jejak pembatalan tetap tersimpan pada sistem.</p></div></div>
         <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Tidak</button><button class="btn btn-danger" onclick="cancelPayment('${escapeHtml(idTransaksi)}')">${icon('trash')} Ya, Batalkan</button></div>`);
     }
 
@@ -1580,7 +1803,7 @@
       document.getElementById('app').innerHTML = `${topbar()}<main class="page main">
         <section class="hero student-profile-hero">
           <div>
-            <div class="hero-kicker">Pembayaran Komite • ${escapeHtml(s.kelas)}</div>
+            <div class="hero-kicker">Pembayaran Komite • ${escapeHtml(normalizeClassLabel(s.kelas))}</div>
             <div class="hero-title">${escapeHtml(s.nama)}</div>
             <div class="hero-sub">NISN ${escapeHtml(s.nisn)} • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div>
             <div class="amount">${money(d.paidAmount)}</div><div class="amount-label">Total telah dibayar</div>
@@ -1606,12 +1829,13 @@
         const snap = loadStudentSnapshot();
         if (snap?.detail) {
           state.config = Object.assign({}, state.config, snap.config || {});
+          state.config.classes = (state.config.classes || []).map(c=>Object.assign({},c,{nama:normalizeClassLabel(c.nama)}));
           state.selectedStudentDetail = snap.detail;
           state.detailCache[snap.detail.student.idSiswa] = snap.detail;
           renderStudentApp(snap.detail);
         }
         if (!navigator.onLine) {
-          if (snap?.detail) { toast('Menampilkan data terakhir karena perangkat sedang offline.', 'warning', 'Mode offline'); return true; }
+          if (snap?.detail) return true;
           return false;
         }
         try {
@@ -1642,7 +1866,6 @@
       }
       if (!navigator.onLine) {
         if (snap) {
-          toast('Menampilkan data terakhir. Pembayaran baru tetap dapat dicatat dan akan disinkronkan saat internet kembali.', 'warning', 'Mode offline', 6200);
           return true;
         }
         return false;
@@ -1674,13 +1897,11 @@
 
     window.addEventListener('online', () => {
       updateSyncIndicator();
-      if (state.user) toast('Internet kembali tersedia. Data yang tertunda akan disinkronkan.', 'info', 'Koneksi kembali');
       if (state.user?.role === 'BENDAHARA') syncPaymentQueue();
     });
 
     window.addEventListener('offline', () => {
       updateSyncIndicator();
-      if (state.user) toast('Koneksi terputus. Data terakhir tetap dapat dilihat, dan pembayaran Bendahara akan diantrikan di perangkat.', 'warning', 'Mode offline', 5600);
     });
 
     document.addEventListener('visibilitychange', () => {
