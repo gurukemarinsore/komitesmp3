@@ -588,6 +588,103 @@
       .months-grid { grid-template-columns: 1fr; }
       .month-card .status-pill { font-size: 10px; }
     }
+
+    /* ===== Versi 1.04: wali satu halaman, sticky header, touch bersih, status lunas jelas ===== */
+    html, body { overflow-x: clip; }
+    .app-root { overflow-x: clip; }
+    .topbar-wrap {
+      position: sticky !important;
+      position: -webkit-sticky !important;
+      top: 0 !important;
+      z-index: 50;
+      isolation: isolate;
+      background: rgba(255,255,255,.96);
+    }
+
+    /* Hilangkan flash biru bawaan browser saat touch tanpa menghapus fokus keyboard. */
+    button, a, input, select, textarea, .student-row, .month-card.selectable, .action-card, .nav-chip, .period-arrow {
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:focus, a:focus, input:focus, select:focus, textarea:focus { outline: none; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible,
+    .student-row:focus-visible, .month-card.selectable:focus-visible {
+      outline: 2px solid rgba(23,105,210,.48);
+      outline-offset: 2px;
+    }
+
+    /* Bulan lunas mudah dibedakan, tetap halus dan profesional. */
+    .month-card.lunas {
+      border-color: rgba(22,139,99,.52);
+      box-shadow: 0 0 0 2px rgba(22,139,99,.07), 0 8px 22px rgba(22,139,99,.08);
+      background: linear-gradient(180deg, #ffffff 0%, #fbfffd 100%);
+    }
+    .month-card.lunas .month-name { color: #116f50; }
+
+    /* Wali Kelas hanya satu halaman utama, tanpa ruang ekstra untuk bottom navigation. */
+    .wali-main { padding-bottom: 42px; }
+
+    /* Pusat sinkronisasi. */
+    .sync-center-body { padding-top: 16px; }
+    .sync-center-summary {
+      display: grid; grid-template-columns: 48px minmax(0,1fr); gap: 12px; align-items: center;
+      padding: 14px; border: 1px solid var(--line); border-radius: 18px; background: #f8fbff;
+    }
+    .sync-center-summary.ok { background: var(--green-soft); border-color: #d0eddf; }
+    .sync-center-summary.offline { background: var(--orange-soft); border-color: #ffe0b2; }
+    .sync-center-mark {
+      width: 48px; height: 48px; display: grid; place-items: center; border-radius: 15px;
+      background: white; color: var(--blue); border: 1px solid rgba(23,105,210,.12);
+    }
+    .sync-center-summary.ok .sync-center-mark { color: var(--green); }
+    .sync-center-summary.offline .sync-center-mark { color: var(--orange); }
+    .sync-center-mark svg { width: 23px; height: 23px; }
+    .sync-center-summary strong { display: block; font-size: 14px; }
+    .sync-center-summary p { margin: 3px 0 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+
+    .sync-queue-list { display: grid; gap: 9px; margin-top: 14px; max-height: 48vh; overflow-y: auto; overflow-x: hidden; }
+    .sync-queue-item {
+      display: grid; grid-template-columns: 40px minmax(0,1fr) auto; gap: 10px; align-items: center;
+      padding: 11px; border: 1px solid var(--line); border-radius: 15px; background: white;
+      transition: opacity .16s ease, transform .16s ease, max-height .18s ease;
+    }
+    .sync-queue-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background:#eef6ff; color:var(--blue); }
+    .sync-queue-icon svg { width: 19px; height: 19px; }
+    .sync-queue-copy { min-width: 0; }
+    .sync-queue-copy strong { display:block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sync-queue-copy span { display:block; margin-top:3px; color:var(--muted); font-size:10px; line-height:1.35; overflow-wrap:anywhere; }
+    .sync-queue-copy small { display:block; margin-top:4px; color:var(--orange); font-size:9px; line-height:1.3; }
+    .sync-center-actions { padding: 14px 0 0; }
+    .sync-empty { display:grid; place-items:center; text-align:center; padding:28px 16px; color:var(--muted); }
+    .sync-empty svg { width:30px; height:30px; color:var(--green); margin-bottom:8px; }
+    .sync-empty strong { color:var(--text); font-size:13px; }
+    .sync-empty span { font-size:10px; margin-top:3px; }
+
+    /* Popup hasil penyimpanan. */
+    .payment-result { padding: 18px 4px 6px; }
+    .payment-result-sub { max-width: 440px; margin: 8px auto 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .queued-mark {
+      width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 22px;
+      display:grid; place-items:center; color:var(--orange); background:var(--orange-soft);
+    }
+    .queued-mark svg { width:31px; height:31px; }
+    .payment-result-actions { display:flex; justify-content:center; gap:9px; margin-top:20px; flex-wrap:wrap; }
+    .payment-result .receipt-details strong { max-width: 68%; text-align: right; overflow-wrap: anywhere; }
+
+    @media (max-width: 860px) {
+      body:has(.wali-main) .bottom-nav { display: none !important; }
+      .wali-main { padding-bottom: 38px !important; }
+    }
+
+    @media (max-width: 600px) {
+      .sync-queue-item { grid-template-columns: 36px minmax(0,1fr); }
+      .sync-queue-item > .status-pill { grid-column: 2; justify-self:start; }
+      .sync-queue-icon { width:36px; height:36px; border-radius:11px; }
+      .sync-center-actions { display:grid; grid-template-columns:1fr; }
+      .sync-center-actions .btn { width:100%; }
+      .payment-result-actions { display:grid; grid-template-columns:1fr; }
+      .payment-result-actions .btn { width:100%; }
+    }
+
   </style>
 </head>
 <body>
@@ -603,7 +700,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.03';
+    const APP_REVISION = 'Versi 1.04';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -626,7 +723,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.03'
+      revision: '1.04'
     };
 
     const state = {
@@ -646,6 +743,7 @@
       scopeMonthIndex: 0,
       scopeClass: '',
       syncing: false,
+      syncPromise: null,
       refreshBusy: false,
       silentRefreshTimer: null,
       paymentSelection: [],
@@ -1001,7 +1099,7 @@
       const cls = offline ? 'offline' : count ? 'pending' : 'ok';
       const ic = offline ? 'offline' : count ? 'clock' : 'cloud';
       const text = offline ? (count ? `${count} tertunda` : 'Offline') : (count ? `${count} tertunda` : 'Sinkron');
-      return `<button id="syncChip" class="sync-chip ${cls}" onclick="syncPaymentQueue({manual:true})" title="Status sinkronisasi">${icon(ic)}<span>${escapeHtml(text)}</span></button>`;
+      return `<button id="syncChip" class="sync-chip ${cls}" onclick="openSyncCenter()" title="Status sinkronisasi">${icon(ic)}<span>${escapeHtml(text)}</span></button>`;
     }
 
     function updateSyncIndicator() {
@@ -1013,57 +1111,157 @@
       }
     }
 
-    async function syncPaymentQueue({manual=false}={}) {
-      if (state.syncing || state.user?.role !== 'BENDAHARA' || !state.token) return 0;
+    function syncQueueItemHtml(item) {
+      const name = item?.student?.nama || 'Siswa';
+      const kelas = normalizeClassLabel(item?.student?.kelas || '');
+      const nisn = item?.student?.nisn || '';
+      const period = `${titleCase(item?.bulan)} ${Number(item?.tahun) || ''}`.trim();
+      const status = item?.lastError
+        ? `<span class="status-pill wait">${icon('alert')} Menunggu ulang</span>`
+        : `<span class="status-pill sync">${icon('clock')} Menunggu</span>`;
+      return `<div class="sync-queue-item" data-sync-client="${escapeHtml(item.clientId || '')}">
+        <span class="sync-queue-icon">${icon('receipt')}</span>
+        <span class="sync-queue-copy"><strong>${escapeHtml(name)}</strong><span>${escapeHtml(period)} • ${money(state.config.amount || 50000)}${kelas ? ` • ${escapeHtml(kelas)}` : ''}${nisn ? ` • NISN ${escapeHtml(nisn)}` : ''}</span>${item?.lastError ? `<small>${escapeHtml(item.lastError)}</small>` : ''}</span>
+        ${status}
+      </div>`;
+    }
+
+    function syncCenterBodyHtml() {
       const queue = getPaymentQueue();
-      if (!queue.length) {
-        if (manual) toast('Tidak ada pembayaran yang menunggu sinkronisasi.', 'info', 'Semua sudah sinkron');
-        updateSyncIndicator();
-        return 0;
-      }
-      if (!navigator.onLine) { updateSyncIndicator(); return 0; }
+      const offline = !navigator.onLine;
+      const syncing = state.syncing;
+      const title = queue.length ? `${queue.length} pembayaran menunggu` : 'Semua data sudah tersinkron';
+      const desc = queue.length
+        ? (offline ? 'Data tetap aman di perangkat. Sinkronisasi akan dilakukan saat koneksi tersedia.' : syncing ? 'Sedang mengirim pembayaran. Daftar akan berkurang setelah setiap data dikonfirmasi.' : 'Pembayaran berikut belum terkirim. Tekan Sinkronkan Sekarang atau tunggu proses otomatis.')
+        : 'Tidak ada pembayaran yang menunggu untuk dikirim.';
+      return `
+        <div class="sync-center-summary ${queue.length ? (offline ? 'offline' : 'pending') : 'ok'}">
+          <span class="sync-center-mark">${icon(queue.length ? (offline ? 'offline' : 'cloud') : 'check')}</span>
+          <span><strong id="syncCenterTitle">${escapeHtml(title)}</strong><p id="syncCenterDesc">${escapeHtml(desc)}</p></span>
+        </div>
+        <div id="syncQueueList" class="sync-queue-list">${queue.length ? queue.map(syncQueueItemHtml).join('') : `<div class="sync-empty">${icon('check')}<strong>Semua data sudah tersinkron</strong><span>Tidak ada antrean pembayaran.</span></div>`}</div>
+        <div class="modal-actions sync-center-actions">
+          <button class="btn btn-soft" onclick="closeModal()">Tutup</button>
+          ${queue.length ? `<button id="syncNowBtn" class="btn btn-primary" onclick="startManualSync()" ${offline || syncing ? 'disabled' : ''}>${icon('refresh')} ${syncing ? 'Menyinkronkan…' : 'Sinkronkan Sekarang'}</button>` : ''}
+        </div>`;
+    }
 
-      state.syncing = true;
-      updateSyncIndicator();
-      let synced = 0;
-      const confirmed = [];
-      try {
-        const batch = await api('addPaymentsBatch', {
-          token: state.token,
-          items: queue.map(item => ({
-            idSiswa:item.idSiswa, bulan:item.bulan, tahun:item.tahun,
-            tanggalPembayaran:item.tanggalPembayaran, clientTransactionId:item.clientId
-          }))
-        }, {silent:true, timeout:15000});
-        const results = Array.isArray(batch?.results) ? batch.results : [];
-        results.forEach(result => {
-          const clientId = result?.clientId || '';
-          if (result?.ok && result.transaction) {
-            removeQueueItem(clientId);
-            synced++;
-            confirmed.push(result.transaction);
-            applyServerPaymentLocally(result.transaction, true);
-          } else if (clientId) {
-            updateQueueFailure(clientId, result?.message || 'Pembayaran belum tersinkron.');
+    function openSyncCenter() {
+      if (state.user?.role !== 'BENDAHARA') return;
+      openModal(`
+        <div class="modal-head"><div><h3>Sinkronisasi Pembayaran</h3><p>Lihat pembayaran yang masih menunggu untuk dikirim.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body sync-center-body">${syncCenterBodyHtml()}</div>
+      `, false);
+      if (queueCount() && navigator.onLine && !state.syncing) {
+        setTimeout(() => startManualSync(), 120);
+      }
+    }
+
+    function renderSyncCenterState() {
+      const body = document.querySelector('.sync-center-body');
+      if (!body) return;
+      body.innerHTML = syncCenterBodyHtml();
+    }
+
+    async function startManualSync() {
+      if (state.user?.role !== 'BENDAHARA') return;
+      if (!navigator.onLine) {
+        renderSyncCenterState();
+        return;
+      }
+      await syncPaymentQueue({manual:true, perItemToasts:true, suppressSummaryToast:true});
+      renderSyncCenterState();
+    }
+
+    function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    async function syncPaymentQueue({manual=false, perItemToasts=false, suppressSummaryToast=false}={}) {
+      if (state.user?.role !== 'BENDAHARA' || !state.token) return {synced:0,confirmed:[],failed:[],attempted:0};
+      if (state.syncPromise) return state.syncPromise;
+
+      state.syncPromise = (async () => {
+        const queue = getPaymentQueue();
+        if (!queue.length) {
+          updateSyncIndicator();
+          if (manual) renderSyncCenterState();
+          return {synced:0,confirmed:[],failed:[],attempted:0};
+        }
+        if (!navigator.onLine) {
+          updateSyncIndicator();
+          if (manual) renderSyncCenterState();
+          return {synced:0,confirmed:[],failed:queue.map(x=>({clientId:x.clientId,message:'Menunggu koneksi.'})),attempted:0};
+        }
+
+        state.syncing = true;
+        updateSyncIndicator();
+        renderSyncCenterState();
+
+        let synced = 0;
+        const confirmed = [];
+        const failed = [];
+        try {
+          const batch = await api('addPaymentsBatch', {
+            token: state.token,
+            items: queue.map(item => ({
+              idSiswa:item.idSiswa, bulan:item.bulan, tahun:item.tahun,
+              tanggalPembayaran:item.tanggalPembayaran, clientTransactionId:item.clientId
+            }))
+          }, {silent:true, timeout:18000});
+          const results = Array.isArray(batch?.results) ? batch.results : [];
+
+          for (const result of results) {
+            const clientId = result?.clientId || '';
+            if (result?.ok && result.transaction) {
+              const queuedItem = getPaymentQueue().find(x => x.clientId === clientId) || queue.find(x => x.clientId === clientId);
+              removeQueueItem(clientId);
+              synced++;
+              confirmed.push({clientId, transaction:result.transaction});
+              applyServerPaymentLocally(result.transaction, true);
+              renderSyncCenterState();
+              if (perItemToasts || document.querySelector('.sync-center-body')) {
+                const tx = result.transaction;
+                toast(`${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} berhasil terkirim.`, 'success', 'Sinkronisasi berhasil', 3400);
+                await delay(120);
+              }
+            } else if (clientId) {
+              const message = result?.message || 'Pembayaran belum tersinkron.';
+              updateQueueFailure(clientId, message);
+              failed.push({clientId,message});
+              renderSyncCenterState();
+            }
           }
-        });
-        if (confirmed.length) finalizeLocalPaymentState();
-      } catch (err) {
-        getPaymentQueue().forEach(item => updateQueueFailure(item.clientId, err?.message || 'Pembayaran belum tersinkron.'));
-        if (isSessionError(err?.message)) toast(err.message, 'error');
-        else if (manual && isNetworkLikeError(err)) toast('Pembayaran belum tersinkron. Data tetap aman di perangkat.', 'warning', 'Sinkronisasi belum selesai');
-      } finally {
-        state.syncing = false;
-        updateSyncIndicator();
-      }
+          if (confirmed.length) finalizeLocalPaymentState();
+        } catch (err) {
+          getPaymentQueue().forEach(item => {
+            updateQueueFailure(item.clientId, err?.message || 'Pembayaran belum tersinkron.');
+            failed.push({clientId:item.clientId,message:err?.message || 'Pembayaran belum tersinkron.'});
+          });
+          renderSyncCenterState();
+          if (isSessionError(err?.message)) toast(err.message, 'error');
+          else if (manual && isNetworkLikeError(err)) toast('Pembayaran belum tersinkron. Data tetap aman di perangkat.', 'warning', 'Sinkronisasi belum selesai');
+        } finally {
+          state.syncing = false;
+          updateSyncIndicator();
+          renderSyncCenterState();
+        }
 
-      if (confirmed.length === 1) {
-        const tx = confirmed[0];
-        toast(`Pembayaran ${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} berhasil disimpan.`, 'success', 'Pembayaran tersimpan', 4300);
-      } else if (confirmed.length > 1) {
-        toast(`${confirmed.length} pembayaran berhasil disimpan.`, 'success', 'Pembayaran tersimpan', 4300);
+        if (!suppressSummaryToast && !perItemToasts && !document.querySelector('.sync-center-body')) {
+          if (confirmed.length === 1) {
+            const tx = confirmed[0].transaction;
+            toast(`Pembayaran ${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} berhasil disimpan.`, 'success', 'Pembayaran tersimpan', 4300);
+          } else if (confirmed.length > 1) {
+            toast(`${confirmed.length} pembayaran berhasil disimpan.`, 'success', 'Pembayaran tersimpan', 4300);
+          }
+        }
+
+        return {synced,confirmed,failed,attempted:queue.length};
+      })();
+
+      try {
+        return await state.syncPromise;
+      } finally {
+        state.syncPromise = null;
       }
-      return synced;
     }
 
     function applyServerPaymentLocally(tx, deferFinalize=false) {
@@ -1234,17 +1432,15 @@
 
     function desktopNav() {
       const role = state.user?.role;
-      const items = role === 'BENDAHARA'
-        ? [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']]
-        : [['home','home','Beranda'],['students','users','Murid']];
+      if (role !== 'BENDAHARA') return '';
+      const items = [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']];
       return `<div class="page"><nav class="desktop-nav">${items.map(([view,ic,label]) => `<button data-key="${view}" class="nav-chip ${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}${label}</button>`).join('')}</nav></div>`;
     }
 
     function bottomNav() {
       const role = state.user?.role;
-      const items = role === 'BENDAHARA'
-        ? [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']]
-        : [['home','home','Beranda'],['students','users','Murid']];
+      if (role !== 'BENDAHARA') return '';
+      const items = [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']];
       return `<nav class="bottom-nav">${items.map(([view,ic,label]) => `<button data-key="${view}" class="${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}<span>${label}</span></button>`).join('')}</nav>`;
     }
 
@@ -1264,6 +1460,14 @@
     function renderStaffShell(contentHtml='') {
       const app = document.getElementById('app');
       const content = contentHtml || renderHomeContent();
+
+      if (state.user?.role === 'WALI') {
+        state.currentView = 'home';
+        app.innerHTML = `${topbar()}<main class="page main wali-main" id="mainContent">${content}</main>`;
+        updateSyncIndicator();
+        return;
+      }
+
       const existingMain = document.getElementById('mainContent');
       if (!existingMain || !document.querySelector('.desktop-nav') || !document.querySelector('.bottom-nav')) {
         app.innerHTML = `${topbar()}${desktopNav()}<main class="page main" id="mainContent">${content}</main>${bottomNav()}`;
@@ -1286,8 +1490,13 @@
 
     function renderCurrentStaffView() {
       if (!state.user || state.user.role === 'SISWA') return;
+      if (state.user.role === 'WALI') {
+        state.currentView = 'home';
+        renderStaffShell();
+        return;
+      }
       if (state.currentView === 'students') renderStudentsView();
-      else if (state.currentView === 'summary' && state.user.role === 'BENDAHARA') renderSummaryView();
+      else if (state.currentView === 'summary') renderSummaryView();
       else renderStaffShell();
     }
 
@@ -1502,7 +1711,7 @@
           <div class="hero-title">${escapeHtml(label)}</div>
           <div class="hero-sub">Status Pembayaran Komite • ${money(state.config.amount)} per siswa${Number(s.future||0)>0 ? ` • ${s.future} belum jatuh tempo` : ''}</div>
           <div class="hero-stats">
-            <div class="hero-stat"><small>${isB?'Siswa':'Murid'}</small><strong>${s.totalStudents||0}</strong></div>
+            <div class="hero-stat"><small>Siswa</small><strong>${s.totalStudents||0}</strong></div>
             <div class="hero-stat"><small>${paidLabel}</small><strong>${s.paid||0}${periodCount>1?`/${s.totalSlots||0}`:''}</strong></div>
             <div class="hero-stat"><small>Belum</small><strong>${s.unpaid||0}</strong></div>
           </div>
@@ -1515,12 +1724,17 @@
             <button class="action-card" onclick="navigate('summary')"><span class="action-icon">${icon('chart')}</span><strong>Rekap</strong><span class="action-desc">Bulan, semester, tahun ajaran</span></button>
           </div>
         ` : `
-          <div class="section-head"><div><h2>Kelas ${escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</h2><p>${escapeHtml(label)} • status murid pada periode yang dipilih.</p></div><button class="btn btn-soft btn-sm" onclick="navigate('students')">Lihat semua ${icon('arrow')}</button></div>
-          <div class="card card-pad">${summaryStudentsHtml(state.summary?.summary?.students || [], true)}</div>
+          <div class="section-head"><div><h2>Siswa Kelas ${escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</h2><p>${escapeHtml(label)} • seluruh siswa pada periode yang dipilih.</p></div></div>
+          <div class="card card-pad">${summaryStudentsHtml(state.summary?.summary?.students || [], false)}</div>
         `}`;
     }
 
     async function navigate(view) {
+      if (state.user?.role === 'WALI') {
+        state.currentView = 'home';
+        renderStaffShell();
+        return;
+      }
       state.currentView = view;
       if (view === 'home') { renderStaffShell(); return; }
       if (view === 'students') { renderStudentsView(); return; }
@@ -1676,7 +1890,7 @@
           : due ? `<span class="status-pill wait">${icon('clock')} Belum Bayar</span>`
           : `<span class="status-pill future">${icon('calendar')} Belum Jatuh Tempo</span>`;
       const selectable = paymentMode && !lunas && !pending;
-      return `<div class="month-card ${selectable?'selectable':''} ${selected?'selected':''}" ${selectable?`data-pay-key="${escapeHtml(key)}" onclick="togglePaymentMonth('${escapeHtml(idSiswa)}','${escapeHtml(p.bulan)}',${p.tahun})"`:''}>
+      return `<div class="month-card ${lunas?'lunas':''} ${selectable?'selectable':''} ${selected?'selected':''}" ${selectable?`data-pay-key="${escapeHtml(key)}" onclick="togglePaymentMonth('${escapeHtml(idSiswa)}','${escapeHtml(p.bulan)}',${p.tahun})"`:''}>
         <div><div class="month-name">${escapeHtml(titleCase(p.bulan))}</div><div class="month-year">${p.tahun}</div></div>${status}
       </div>`;
     }
@@ -1723,7 +1937,59 @@
       if (btn) btn.disabled=!count;
     }
 
-    function saveSelectedPayments(idSiswa) {
+    function paymentMonthsLabel(keys) {
+      return keys.map(key => {
+        const [bulan,tahun] = key.split('-');
+        return `${titleCase(bulan)} ${tahun}`;
+      }).join(', ');
+    }
+
+    function showPaymentSuccessModal(student, selectedKeys, paymentDate) {
+      const count = selectedKeys.length;
+      const total = count * Number(state.config.amount || 50000);
+      openModal(`
+        <div class="modal-body">
+          <div class="receipt payment-result">
+            <div class="success-mark">${icon('check')}</div>
+            <h3>Pembayaran berhasil dicatat</h3>
+            <p class="payment-result-sub">Data pembayaran sudah tersimpan dengan aman.</p>
+            <div class="receipt-name">${escapeHtml(student.nama)}</div>
+            <div class="receipt-amount">${money(total)}</div>
+            <div class="receipt-details">
+              <div><span>Kelas</span><strong>${escapeHtml(normalizeClassLabel(student.kelas))}</strong></div>
+              <div><span>Periode</span><strong>${escapeHtml(paymentMonthsLabel(selectedKeys))}</strong></div>
+              <div><span>Tanggal Pembayaran</span><strong>${escapeHtml(paymentDate)}</strong></div>
+            </div>
+            <div class="payment-result-actions">
+              <button class="btn btn-primary" onclick="openPaymentSearch()">${icon('arrow')} Lanjut ke Pembayaran Berikutnya</button>
+            </div>
+          </div>
+        </div>`, false);
+    }
+
+    function showPaymentQueuedModal(student, selectedKeys, paymentDate) {
+      const offline = !navigator.onLine;
+      openModal(`
+        <div class="modal-body">
+          <div class="receipt payment-result">
+            <div class="queued-mark">${icon(offline ? 'offline' : 'clock')}</div>
+            <h3>Menunggu sinkronisasi</h3>
+            <p class="payment-result-sub">Pembayaran disimpan sementara di perangkat dan belum dikonfirmasi oleh layanan aplikasi.</p>
+            <div class="receipt-name">${escapeHtml(student.nama)}</div>
+            <div class="receipt-details">
+              <div><span>Periode</span><strong>${escapeHtml(paymentMonthsLabel(selectedKeys))}</strong></div>
+              <div><span>Tanggal Pembayaran</span><strong>${escapeHtml(paymentDate)}</strong></div>
+              <div><span>Status</span><strong>${queueCount()} pembayaran menunggu</strong></div>
+            </div>
+            <div class="payment-result-actions">
+              <button class="btn btn-soft" onclick="openSyncCenter()">${icon('cloud')} Lihat Sinkronisasi</button>
+              <button class="btn btn-primary" onclick="openPaymentSearch()">OK, Lanjut</button>
+            </div>
+          </div>
+        </div>`, false);
+    }
+
+    async function saveSelectedPayments(idSiswa) {
       const d = state.selectedStudentDetail;
       const s = d?.student;
       if (!s || s.idSiswa !== idSiswa) return;
@@ -1731,18 +1997,54 @@
       const paymentDate = document.getElementById('paymentDate')?.value || state.paymentDate || todayJayapuraIso();
       if (!paymentDate) { toast('Pilih tanggal pembayaran.', 'warning'); return; }
       if (paymentDate > todayJayapuraIso()) { toast('Tanggal pembayaran tidak boleh melebihi hari ini.', 'warning'); return; }
+
       state.paymentDate = paymentDate;
-      let added=0, duplicates=0;
-      state.paymentSelection.forEach(key=>{
-        const [bulan,tahunText]=key.split('-');
-        const result=enqueuePayment(idSiswa,bulan,Number(tahunText),s,paymentDate);
-        if (result.duplicate) duplicates++; else added++;
+      const selectedKeys = state.paymentSelection.slice();
+      const addedClientIds = [];
+      let duplicates = 0;
+
+      selectedKeys.forEach(key => {
+        const [bulan,tahunText] = key.split('-');
+        const result = enqueuePayment(idSiswa,bulan,Number(tahunText),s,paymentDate);
+        if (result.duplicate) duplicates++;
+        else addedClientIds.push(result.item.clientId);
       });
-      state.paymentSelection=[];
-      state.paymentSelectionStudent='';
-      openPaymentSearch();
-      if (!added && duplicates) toast('Semua bulan yang dipilih sudah berada dalam antrean sinkronisasi.', 'warning', 'Sudah diantrikan');
-      syncPaymentQueue();
+
+      state.paymentSelection = [];
+
+      if (!addedClientIds.length) {
+        state.paymentSelectionStudent = '';
+        showPaymentQueuedModal(s, selectedKeys, paymentDate);
+        return;
+      }
+
+      const saveBtn = document.getElementById('saveSelectedPaymentBtn');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = `${icon('clock')} Menyimpan…`;
+      }
+
+      if (!navigator.onLine) {
+        state.paymentSelectionStudent = '';
+        showPaymentQueuedModal(s, selectedKeys, paymentDate);
+        return;
+      }
+
+      try {
+        await syncPaymentQueue({manual:false, suppressSummaryToast:true});
+        let remainingTargets = addedClientIds.filter(id => getPaymentQueue().some(x => x.clientId === id));
+        if (remainingTargets.length && navigator.onLine) {
+          await syncPaymentQueue({manual:false, suppressSummaryToast:true});
+          remainingTargets = addedClientIds.filter(id => getPaymentQueue().some(x => x.clientId === id));
+        }
+
+        state.paymentSelectionStudent = '';
+        if (!remainingTargets.length) showPaymentSuccessModal(s, selectedKeys, paymentDate);
+        else showPaymentQueuedModal(s, selectedKeys, paymentDate);
+      } catch (_) {
+        state.paymentSelectionStudent = '';
+        showPaymentQueuedModal(s, selectedKeys, paymentDate);
+      }
     }
 
     function printHistoryReceipt(idTransaksi) {
