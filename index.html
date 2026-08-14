@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="color-scheme" content="light" />
+  <title>Komite SMP Negeri 3 Jayapura</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f8fc;
+      --surface: #ffffff;
+      --surface-2: #f8fbff;
+      --text: #10233a;
+      --muted: #65758a;
+      --line: #e5edf6;
+      --navy: #0b3158;
+      --blue: #1769d2;
+      --blue-2: #3d8df5;
+      --cyan: #8bdcff;
+      --green: #168b63;
+      --green-soft: #eaf8f2;
+      --orange: #d97706;
+      --orange-soft: #fff5e8;
+      --red: #c43b4d;
+      --red-soft: #fff0f2;
+      --shadow: 0 14px 40px rgba(25, 65, 110, .09);
+      --shadow-soft: 0 8px 26px rgba(25, 65, 110, .07);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Google Sans Flex", "Google Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-optical-sizing: auto;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .58; }
+    a { color: inherit; }
+    .hidden { display: none !important; }
+
+    .app-root { min-height: 100vh; }
+    .page { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    .main { padding: 24px 0 104px; }
+
+    .topbar-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(255,255,255,.91);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(229,237,246,.88);
+    }
+    .topbar {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark {
+      width: 44px; height: 44px; border-radius: 15px;
+      display: grid; place-items: center; color: white;
+      background: linear-gradient(145deg, var(--navy), var(--blue) 60%, #6dc8f8);
+      box-shadow: 0 10px 24px rgba(23,105,210,.24);
+      flex: 0 0 auto;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+    .brand-text { min-width: 0; }
+    .brand-title { font-weight: 720; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand-sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .user-pill {
+      display: flex; align-items: center; gap: 9px; padding: 8px 12px;
+      border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+      color: var(--muted); font-size: 13px;
+    }
+    .user-pill strong { color: var(--text); font-weight: 650; }
+    .icon-btn {
+      width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 14px;
+      background: var(--surface); color: var(--text); display: grid; place-items: center;
+      transition: .18s ease;
+    }
+    .icon-btn:hover { transform: translateY(-1px); border-color: #cbdced; background: var(--surface-2); }
+    .icon-btn svg { width: 20px; height: 20px; }
+
+    .desktop-nav { display: flex; gap: 6px; padding: 10px; background: white; border: 1px solid var(--line); border-radius: 18px; margin-top: 18px; }
+    .nav-chip {
+      flex: 0 0 auto; border: 0; background: transparent; color: var(--muted); border-radius: 12px;
+      padding: 10px 14px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;
+    }
+    .nav-chip.active { background: #eef6ff; color: var(--blue); }
+    .nav-chip svg { width: 18px; height: 18px; }
+
+    .hero {
+      margin-top: 22px;
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      color: white;
+      background:
+        radial-gradient(circle at 82% 15%, rgba(139,220,255,.38), transparent 31%),
+        radial-gradient(circle at 15% 90%, rgba(61,141,245,.25), transparent 38%),
+        linear-gradient(135deg, #092f55 0%, #0f579e 52%, #2b87e9 100%);
+      box-shadow: 0 20px 50px rgba(9, 60, 110, .18);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::after {
+      content: ""; position: absolute; width: 240px; height: 240px; right: -100px; bottom: -160px;
+      border: 1px solid rgba(255,255,255,.18); border-radius: 50%; box-shadow: 0 0 0 28px rgba(255,255,255,.035), 0 0 0 56px rgba(255,255,255,.025);
+    }
+    .hero-kicker { font-size: 13px; opacity: .78; letter-spacing: .02em; }
+    .hero-title { margin: 7px 0 4px; font-size: clamp(25px, 4vw, 40px); font-weight: 760; letter-spacing: -.035em; }
+    .hero-sub { opacity: .78; font-size: 14px; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 28px; max-width: 720px; }
+    .hero-stat { padding: 14px 16px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.08); border-radius: 17px; backdrop-filter: blur(8px); }
+    .hero-stat small { display: block; opacity: .72; font-size: 12px; }
+    .hero-stat strong { display: block; margin-top: 4px; font-size: clamp(20px, 3vw, 29px); font-weight: 730; }
+
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 14px; margin: 28px 0 14px; }
+    .section-head h2 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+
+    .action-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .action-card {
+      border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-lg); padding: 18px;
+      text-align: left; min-height: 134px; box-shadow: var(--shadow-soft); transition: .18s ease; color: var(--text);
+    }
+    .action-card:hover { transform: translateY(-2px); border-color: #cfe0f1; box-shadow: var(--shadow); }
+    .action-icon { width: 42px; height: 42px; border-radius: 14px; background: #eef6ff; color: var(--blue); display: grid; place-items: center; }
+    .action-icon svg { width: 21px; height: 21px; }
+    .action-card strong { display: block; margin-top: 18px; font-weight: 690; }
+    .action-card span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .action-card.primary { background: linear-gradient(145deg, #f4f9ff, #ffffff); border-color: #cfe6ff; }
+
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
+    .card-pad { padding: 20px; }
+    .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+    .toolbar.three { grid-template-columns: 1fr 180px 180px; }
+    .field-wrap { position: relative; }
+    .field-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #8192a6; pointer-events: none; display: grid; }
+    .field-icon svg { width: 18px; height: 18px; }
+    .input, .select {
+      width: 100%; min-height: 48px; border: 1px solid var(--line); border-radius: 14px; background: #fbfdff;
+      color: var(--text); padding: 0 14px; outline: none; transition: .16s ease;
+    }
+    .field-wrap .input { padding-left: 43px; }
+    .input:focus, .select:focus { border-color: #80b9f4; box-shadow: 0 0 0 4px rgba(23,105,210,.08); background: white; }
+    .label { display: block; color: var(--muted); font-size: 12px; font-weight: 600; margin: 0 0 7px 2px; }
+
+    .btn {
+      min-height: 46px; border: 0; border-radius: 14px; padding: 0 17px; display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; font-weight: 650; transition: .18s ease; white-space: nowrap;
+    }
+    .btn svg { width: 18px; height: 18px; }
+    .btn-primary { color: white; background: linear-gradient(135deg, var(--navy), var(--blue) 68%, #4ea4f3); box-shadow: 0 9px 22px rgba(23,105,210,.19); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 11px 26px rgba(23,105,210,.24); }
+    .btn-soft { color: var(--blue); background: #edf6ff; border: 1px solid #d8ebff; }
+    .btn-ghost { color: var(--text); background: white; border: 1px solid var(--line); }
+    .btn-danger { color: var(--red); background: var(--red-soft); border: 1px solid #ffd8dd; }
+    .btn-sm { min-height: 38px; padding: 0 12px; border-radius: 12px; font-size: 13px; }
+
+    .student-list { display: grid; gap: 9px; margin-top: 16px; }
+    .student-row {
+      width: 100%; display: grid; grid-template-columns: 44px minmax(0,1fr) auto; align-items: center; gap: 12px;
+      padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: white; color: var(--text); text-align: left; transition: .16s ease;
+    }
+    .student-row:hover { border-color: #cfe0f1; background: #fbfdff; }
+    .avatar { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: #edf6ff; color: var(--blue); font-weight: 730; }
+    .student-main { min-width: 0; }
+    .student-main strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .student-meta { color: var(--muted); font-size: 12px; margin-top: 3px; display: flex; gap: 7px; flex-wrap: wrap; }
+    .chev { color: #9aabba; display: grid; }
+    .chev svg { width: 18px; height: 18px; }
+
+    .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 9px; border-radius: 999px; font-size: 11px; font-weight: 650; white-space: nowrap; }
+    .status-pill.ok { background: var(--green-soft); color: var(--green); }
+    .status-pill.wait { background: var(--orange-soft); color: var(--orange); }
+    .status-pill.future { background: #f1f4f7; color: #77879a; }
+    .status-pill.cancel { background: var(--red-soft); color: var(--red); }
+    .status-pill svg { width: 14px; height: 14px; }
+
+    .months-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+    .month-card { border: 1px solid var(--line); border-radius: 17px; padding: 14px; background: white; min-height: 100px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+    .month-card.clickable { cursor: pointer; transition: .16s ease; }
+    .month-card.clickable:hover { border-color: #8fc2f4; background: #f8fbff; transform: translateY(-1px); }
+    .month-name { font-size: 12px; font-weight: 700; letter-spacing: .03em; color: var(--text); }
+    .month-year { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+    .history-list { display: grid; gap: 10px; }
+    .history-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .history-row:last-child { border-bottom: 0; }
+    .history-row strong { display: block; font-size: 14px; }
+    .history-row .meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .history-amount { text-align: right; }
+    .history-amount strong { font-variant-numeric: tabular-nums; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-top: 16px; }
+    .metric { padding: 17px; border: 1px solid var(--line); border-radius: 18px; background: white; }
+    .metric span { color: var(--muted); font-size: 12px; }
+    .metric strong { display: block; margin-top: 5px; font-size: 24px; letter-spacing: -.03em; }
+
+    .empty { text-align: center; padding: 42px 20px; color: var(--muted); }
+    .empty-icon { width: 54px; height: 54px; margin: 0 auto 12px; border-radius: 18px; display: grid; place-items: center; background: #f1f6fb; color: #7c91a7; }
+    .empty-icon svg { width: 24px; height: 24px; }
+    .empty strong { color: var(--text); display: block; margin-bottom: 4px; }
+
+    .bottom-nav {
+      display: none; position: fixed; z-index: 35; left: 50%; transform: translateX(-50%); bottom: calc(10px + var(--safe-bottom));
+      width: min(94%, 480px); padding: 7px; background: rgba(255,255,255,.95); border: 1px solid var(--line); border-radius: 22px;
+      box-shadow: 0 18px 48px rgba(18, 57, 95, .16); backdrop-filter: blur(18px);
+    }
+    .bottom-nav button { flex: 1; min-height: 54px; border: 0; background: transparent; border-radius: 16px; color: var(--muted); display: grid; place-items: center; gap: 2px; font-size: 10px; }
+    .bottom-nav button.active { color: var(--blue); background: #eef6ff; }
+    .bottom-nav svg { width: 20px; height: 20px; }
+
+    .login-page {
+      min-height: 100vh; display: grid; grid-template-columns: minmax(0,1.1fr) minmax(400px,.9fr); background: white;
+    }
+    .login-art {
+      position: relative; overflow: hidden; padding: 52px; color: white;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(139,220,255,.38), transparent 28%),
+        radial-gradient(circle at 78% 78%, rgba(58,144,245,.28), transparent 36%),
+        linear-gradient(145deg, #092c50 0%, #0f4e8d 48%, #2481df 100%);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .login-art::before, .login-art::after { content: ""; position: absolute; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; }
+    .login-art::before { width: 480px; height: 480px; right: -260px; top: -180px; box-shadow: 0 0 0 54px rgba(255,255,255,.025), 0 0 0 108px rgba(255,255,255,.018); }
+    .login-art::after { width: 320px; height: 320px; left: -180px; bottom: -170px; box-shadow: 0 0 0 42px rgba(255,255,255,.022); }
+    .login-brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; }
+    .login-brand .brand-mark { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); box-shadow: none; }
+    .login-copy { position: relative; z-index: 1; max-width: 620px; }
+    .login-copy h1 { font-size: clamp(36px,5vw,68px); line-height: .99; letter-spacing: -.052em; margin: 0 0 18px; font-weight: 780; }
+    .login-copy p { max-width: 520px; margin: 0; opacity: .76; font-size: 16px; line-height: 1.55; }
+    .login-mini { position: relative; z-index: 1; display: flex; gap: 10px; flex-wrap: wrap; }
+    .login-mini span { padding: 8px 11px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.07); border-radius: 999px; font-size: 11px; opacity: .88; }
+    .login-panel { display: grid; place-items: center; padding: 34px; background: #fbfdff; }
+    .login-box { width: min(100%, 470px); }
+    .login-mobile-brand { display: none; margin-bottom: 24px; }
+    .login-box h2 { margin: 0; font-size: 30px; letter-spacing: -.035em; }
+    .login-box > p { margin: 8px 0 22px; color: var(--muted); line-height: 1.5; }
+    .segment { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; padding: 5px; background: #eef3f8; border-radius: 15px; margin-bottom: 22px; }
+    .segment button { border: 0; background: transparent; min-height: 42px; border-radius: 11px; color: var(--muted); font-size: 12px; font-weight: 650; }
+    .segment button.active { background: white; color: var(--blue); box-shadow: 0 3px 12px rgba(25,65,110,.08); }
+    .form-stack { display: grid; gap: 14px; }
+    .login-btn { min-height: 51px; width: 100%; margin-top: 2px; }
+    .login-foot { color: var(--muted); font-size: 11px; line-height: 1.45; margin-top: 18px; text-align: center; }
+
+    .student-profile-hero { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 18px; }
+    .student-profile-hero .amount { font-size: clamp(29px,5vw,48px); font-weight: 760; letter-spacing: -.045em; margin-top: 18px; }
+    .student-profile-hero .amount-label { font-size: 12px; opacity: .7; }
+    .student-profile-hero .paid-circle { width: 112px; height: 112px; border-radius: 50%; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08); display: grid; place-items: center; text-align: center; }
+    .paid-circle strong { font-size: 27px; display: block; }
+    .paid-circle span { opacity: .72; font-size: 11px; }
+
+    .modal-backdrop { position: fixed; inset: 0; z-index: 70; background: rgba(9,30,52,.46); backdrop-filter: blur(5px); display: grid; place-items: center; padding: 18px; animation: fadeIn .16s ease; }
+    .modal {
+      width: min(760px, 100%); max-height: min(90vh, 900px); overflow: auto; background: white; border: 1px solid rgba(255,255,255,.7);
+      border-radius: 26px; box-shadow: 0 28px 80px rgba(5,31,58,.25); animation: pop .2s ease;
+    }
+    .modal.large { width: min(920px, 100%); }
+    .modal-head { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 20px 20px 14px; background: rgba(255,255,255,.95); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+    .modal-head h3 { margin: 0; font-size: 19px; }
+    .modal-head p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .modal-body { padding: 20px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 9px; padding: 14px 20px 20px; }
+
+    .receipt { text-align: center; padding: 6px 4px; }
+    .success-mark { width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 22px; display: grid; place-items: center; color: var(--green); background: var(--green-soft); }
+    .success-mark svg { width: 32px; height: 32px; }
+    .receipt h3 { margin: 0; font-size: 23px; }
+    .receipt .receipt-name { margin-top: 18px; font-size: 17px; font-weight: 680; }
+    .receipt .receipt-amount { font-size: 31px; font-weight: 770; letter-spacing: -.035em; margin: 7px 0; }
+    .receipt-details { margin: 18px auto 0; max-width: 450px; border: 1px solid var(--line); border-radius: 17px; overflow: hidden; text-align: left; }
+    .receipt-details div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 13px; border-bottom: 1px solid var(--line); font-size: 12px; }
+    .receipt-details div:last-child { border-bottom: 0; }
+    .receipt-details span { color: var(--muted); }
+
+    .toast-container { position: fixed; z-index: 100; top: 18px; right: 18px; width: min(390px, calc(100% - 28px)); display: grid; gap: 10px; pointer-events: none; }
+    .toast { pointer-events: auto; display: grid; grid-template-columns: 34px minmax(0,1fr) 28px; gap: 9px; align-items: center; padding: 11px; background: rgba(255,255,255,.98); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 16px 46px rgba(15,47,80,.16); animation: toastIn .25s ease; }
+    .toast-icon { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; }
+    .toast-icon svg { width: 17px; height: 17px; }
+    .toast.success .toast-icon { color: var(--green); background: var(--green-soft); }
+    .toast.error .toast-icon { color: var(--red); background: var(--red-soft); }
+    .toast.warning .toast-icon { color: var(--orange); background: var(--orange-soft); }
+    .toast.info .toast-icon { color: var(--blue); background: #edf6ff; }
+    .toast strong { display: block; font-size: 13px; }
+    .toast p { margin: 2px 0 0; color: var(--muted); font-size: 11px; line-height: 1.35; }
+    .toast-close { width: 28px; height: 28px; display: grid; place-items: center; border: 0; background: transparent; color: #91a0ae; border-radius: 9px; }
+    .toast-close svg { width: 15px; height: 15px; }
+
+    .loading-overlay { position: fixed; inset: 0; z-index: 90; background: rgba(248,251,255,.76); backdrop-filter: blur(4px); display: grid; place-items: center; }
+    .loader-card { display: flex; align-items: center; gap: 11px; padding: 13px 16px; background: white; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); color: var(--muted); font-size: 13px; }
+    .spinner { width: 19px; height: 19px; border: 2px solid #d7e5f3; border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; } }
+    @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.985); } }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-8px); } }
+
+    @media (max-width: 860px) {
+      .login-page { grid-template-columns: 1fr; background: #fbfdff; }
+      .login-art { display: none; }
+      .login-panel { padding: 24px; min-height: 100vh; }
+      .login-mobile-brand { display: flex; align-items: center; gap: 12px; }
+      .desktop-nav { display: none; }
+      .bottom-nav { display: flex; }
+      .main { padding-top: 14px; }
+      .action-grid { grid-template-columns: repeat(3,1fr); }
+      .action-card { min-height: 120px; padding: 15px; }
+      .toolbar.three { grid-template-columns: 1fr 145px; }
+      .toolbar.three > :last-child { grid-column: 1 / -1; }
+      .summary-grid { grid-template-columns: repeat(2,1fr); }
+      .months-grid { grid-template-columns: repeat(3,1fr); }
+      .user-pill { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .page { width: min(100% - 22px, 1180px); }
+      .topbar { min-height: 64px; }
+      .brand-mark { width: 40px; height: 40px; border-radius: 13px; }
+      .brand-title { font-size: 14px; max-width: 210px; }
+      .brand-sub { font-size: 10px; }
+      .hero { padding: 21px; border-radius: 24px; margin-top: 13px; }
+      .hero-stats { grid-template-columns: repeat(3,1fr); gap: 7px; margin-top: 22px; }
+      .hero-stat { padding: 11px 9px; border-radius: 14px; }
+      .hero-stat strong { font-size: 21px; }
+      .hero-stat small { font-size: 10px; }
+      .action-grid { grid-template-columns: repeat(3,1fr); gap: 8px; }
+      .action-card { min-height: 108px; border-radius: 17px; padding: 12px; }
+      .action-icon { width: 36px; height: 36px; border-radius: 12px; }
+      .action-card strong { margin-top: 12px; font-size: 12px; }
+      .action-card span { display: none; }
+      .section-head { margin-top: 23px; }
+      .card-pad { padding: 14px; }
+      .toolbar, .toolbar.three { grid-template-columns: 1fr; }
+      .toolbar.three > :last-child { grid-column: auto; }
+      .months-grid { grid-template-columns: repeat(3,1fr); gap: 7px; }
+      .month-card { min-height: 90px; padding: 11px; border-radius: 14px; }
+      .summary-grid { gap: 8px; }
+      .metric { padding: 14px; border-radius: 16px; }
+      .metric strong { font-size: 21px; }
+      .modal-backdrop { padding: 10px; align-items: end; }
+      .modal { width: 100%; max-height: 92vh; border-radius: 24px 24px 18px 18px; }
+      .modal.large { width: 100%; }
+      .toast-container { left: 50%; right: auto; transform: translateX(-50%); top: 12px; width: calc(100% - 24px); }
+      .student-profile-hero { grid-template-columns: 1fr; }
+      .student-profile-hero .paid-circle { width: 92px; height: 92px; position: absolute; right: 20px; top: 22px; }
+      .login-panel { padding: 20px; }
+      .login-box h2 { font-size: 27px; }
+    }
+
+    @media (orientation: landscape) and (max-height: 560px) and (max-width: 960px) {
+      .login-panel { min-height: 100vh; padding: 16px 24px; }
+      .login-mobile-brand { margin-bottom: 12px; }
+      .login-box h2 { font-size: 24px; }
+      .login-box > p { margin: 4px 0 12px; }
+      .segment { margin-bottom: 12px; }
+      .form-stack { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .form-stack .login-btn, .form-stack .student-only-wide { grid-column: 1 / -1; }
+      .login-foot { display: none; }
+      .hero { padding: 20px 24px; }
+      .hero-stats { margin-top: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="app-root"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loader-card"><span class="spinner"></span><span id="loadingText">Memuat data…</span></div>
+  </div>
+  <div id="modalRoot"></div>
+
+  <script>
+    // ==========================================================
+    // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
+    // ==========================================================
+    const API_URL = 'PASTE_URL_APPS_SCRIPT_DI_SINI';
+
+    const DEFAULT_CONFIG = {
+      appName: 'Komite SMP Negeri 3 Jayapura',
+      schoolName: 'SMP Negeri 3 Jayapura',
+      schoolYear: '2026/2027',
+      level: 'VII',
+      amount: 50000,
+      startMonth: 'JULI 2026',
+      endMonth: 'JUNI 2027',
+      periods: [
+        ['JULI',2026],['AGUSTUS',2026],['SEPTEMBER',2026],['OKTOBER',2026],['NOVEMBER',2026],['DESEMBER',2026],
+        ['JANUARI',2027],['FEBRUARI',2027],['MARET',2027],['APRIL',2027],['MEI',2027],['JUNI',2027]
+      ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
+      classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'VII '+x})),
+      currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'}
+    };
+
+    const state = {
+      config: DEFAULT_CONFIG,
+      token: localStorage.getItem('komite_token') || '',
+      user: safeJson(localStorage.getItem('komite_user')),
+      loginRole: 'SISWA',
+      currentView: 'home',
+      students: [],
+      summary: null,
+      dashboard: null,
+      selectedStudentDetail: null
+    };
+
+    const icons = {
+      shield: '<path d="M12 3 5.5 5.8v4.7c0 4.1 2.5 7.4 6.5 9.5 4-2.1 6.5-5.4 6.5-9.5V5.8L12 3Z"/><path d="m9.5 12 1.7 1.7 3.6-4"/>',
+      home: '<path d="m3 11 9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/>',
+      users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+      chart: '<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/>',
+      plus: '<path d="M12 5v14M5 12h14"/>',
+      search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+      logout: '<path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>',
+      chevron: '<path d="m9 18 6-6-6-6"/>',
+      check: '<path d="m5 12 4 4L19 6"/>',
+      clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+      info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
+      alert: '<path d="M10.3 3.7 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.7a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+      x: '<path d="M6 6l12 12M18 6 6 18"/>',
+      receipt: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/>',
+      download: '<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
+      wallet: '<path d="M4 6h15a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2V7a4 4 0 0 1 4-4h10"/><path d="M16 11h5v4h-5a2 2 0 0 1 0-4Z"/>',
+      user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+      trash: '<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="m7 7 1 14h8l1-14"/><path d="M10 11v6M14 11v6"/>',
+      printer: '<path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/>',
+      menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+      calendar: '<path d="M6 3v3M18 3v3"/><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/>',
+      arrow: '<path d="M5 12h14"/><path d="m14 7 5 5-5 5"/>'
+    };
+
+    function icon(name, cls='') {
+      return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.info}</svg>`;
+    }
+
+    function safeJson(text) {
+      try { return text ? JSON.parse(text) : null; } catch (_) { return null; }
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    }
+
+    function titleCase(text) {
+      const s = String(text || '').toLowerCase();
+      return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+    }
+
+    function money(value) {
+      return new Intl.NumberFormat('id-ID', {style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(value || 0));
+    }
+
+    function initials(name) {
+      const p = String(name || '').trim().split(/\s+/).filter(Boolean);
+      return (p[0]?.[0] || '') + (p[1]?.[0] || p[0]?.[1] || '');
+    }
+
+    function isApiConfigured() {
+      return /^https:\/\/.+\/exec(?:\?.*)?$/.test(API_URL) && !API_URL.includes('PASTE_URL');
+    }
+
+    async function api(action, data = {}, opts = {}) {
+      if (!isApiConfigured()) throw new Error('URL Apps Script belum dipasang di index.html.');
+      if (!opts.silent) loading(true, opts.loadingText || 'Memuat data…');
+      try {
+        const payload = Object.assign({ action }, data);
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: new URLSearchParams({ payload: JSON.stringify(payload) }),
+          redirect: 'follow'
+        });
+        const text = await res.text();
+        let json;
+        try { json = JSON.parse(text); }
+        catch (_) { throw new Error('Respons backend tidak valid. Pastikan URL Web App menggunakan /exec dan deployment sudah aktif.'); }
+        if (!json.ok) throw new Error(json.message || 'Permintaan gagal.');
+        return json.data;
+      } catch (err) {
+        const msg = err?.message || 'Tidak dapat terhubung ke backend.';
+        if (/sesi/i.test(msg)) {
+          clearSession(false);
+          renderLogin();
+        }
+        throw err;
+      } finally {
+        if (!opts.silent) loading(false);
+      }
+    }
+
+    function loading(show, text='Memuat data…') {
+      document.getElementById('loadingText').textContent = text;
+      document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
+    }
+
+    function toast(message, type='info', title='') {
+      const container = document.getElementById('toastContainer');
+      const id = 't' + Date.now() + Math.random().toString(36).slice(2,6);
+      const map = {
+        success: {icon:'check', title:'Berhasil'},
+        error: {icon:'alert', title:'Terjadi kesalahan'},
+        warning: {icon:'alert', title:'Perhatian'},
+        info: {icon:'info', title:'Informasi'}
+      };
+      const m = map[type] || map.info;
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.id = id;
+      el.innerHTML = `<div class="toast-icon">${icon(m.icon)}</div><div><strong>${escapeHtml(title || m.title)}</strong><p>${escapeHtml(message)}</p></div><button class="toast-close" aria-label="Tutup">${icon('x')}</button>`;
+      el.querySelector('button').onclick = () => el.remove();
+      container.appendChild(el);
+      setTimeout(() => { if (el.isConnected) el.remove(); }, type === 'error' ? 5200 : 3600);
+    }
+
+    function openModal(html, large=false) {
+      const root = document.getElementById('modalRoot');
+      root.innerHTML = `<div class="modal-backdrop" id="modalBackdrop"><div class="modal ${large ? 'large' : ''}" role="dialog" aria-modal="true">${html}</div></div>`;
+      const back = document.getElementById('modalBackdrop');
+      back.addEventListener('mousedown', e => { if (e.target === back) closeModal(); });
+      document.addEventListener('keydown', modalEsc, {once:true});
+    }
+
+    function modalEsc(e) { if (e.key === 'Escape') closeModal(); }
+    function closeModal() { document.getElementById('modalRoot').innerHTML = ''; }
+
+    function setSession(token, user) {
+      state.token = token;
+      state.user = user;
+      localStorage.setItem('komite_token', token);
+      localStorage.setItem('komite_user', JSON.stringify(user));
+    }
+
+    function clearSession(showToast=true) {
+      state.token = '';
+      state.user = null;
+      state.students = [];
+      state.summary = null;
+      state.dashboard = null;
+      localStorage.removeItem('komite_token');
+      localStorage.removeItem('komite_user');
+      if (showToast) toast('Anda telah keluar dari aplikasi.', 'info');
+    }
+
+    function logout() {
+      clearSession(true);
+      state.loginRole = 'SISWA';
+      renderLogin();
+    }
+
+    async function loadPublicConfig() {
+      if (!isApiConfigured()) return;
+      try {
+        const data = await api('publicConfig', {}, {silent:true});
+        state.config = Object.assign({}, DEFAULT_CONFIG, data || {});
+      } catch (_) {}
+    }
+
+    function renderLogin() {
+      const app = document.getElementById('app');
+      const role = state.loginRole;
+      const student = role === 'SISWA';
+      app.innerHTML = `
+        <div class="login-page">
+          <section class="login-art">
+            <div class="login-brand">
+              <div class="brand-mark">${icon('shield')}</div>
+              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</div></div>
+            </div>
+            <div class="login-copy">
+              <h1>Ringkas.<br>Aman.<br>Mudah dipantau.</h1>
+              <p>Pembayaran Komite kelas VII dalam satu aplikasi yang ringan untuk bendahara, wali kelas, dan siswa.</p>
+            </div>
+            <div class="login-mini"><span>Juli 2026 — Juni 2027</span><span>${money(state.config.amount)} / bulan</span><span>Kelas VII A — VII J</span></div>
+          </section>
+          <section class="login-panel">
+            <div class="login-box">
+              <div class="login-mobile-brand">
+                <div class="brand-mark">${icon('shield')}</div>
+                <div><strong>${escapeHtml(state.config.schoolName)}</strong><div class="brand-sub">${escapeHtml(state.config.schoolYear)}</div></div>
+              </div>
+              <h2>Selamat datang</h2>
+              <p>${student ? 'Masukkan NISN untuk melihat status dan riwayat Pembayaran Komite.' : 'Masuk menggunakan akun yang tersimpan pada spreadsheet.'}</p>
+              <div class="segment">
+                <button class="${role==='BENDAHARA'?'active':''}" onclick="switchLoginRole('BENDAHARA')">Bendahara</button>
+                <button class="${role==='WALI'?'active':''}" onclick="switchLoginRole('WALI')">Wali Kelas</button>
+                <button class="${role==='SISWA'?'active':''}" onclick="switchLoginRole('SISWA')">Siswa</button>
+              </div>
+              ${student ? `
+                <form class="form-stack" onsubmit="loginStudent(event)">
+                  <div class="student-only-wide">
+                    <label class="label" for="nisn">NISN</label>
+                    <div class="field-wrap"><span class="field-icon">${icon('user')}</span><input class="input" id="nisn" inputmode="numeric" autocomplete="off" placeholder="Masukkan NISN" required></div>
+                  </div>
+                  <button class="btn btn-primary login-btn student-only-wide" type="submit">Lihat Pembayaran ${icon('arrow')}</button>
+                </form>
+              ` : `
+                <form class="form-stack" onsubmit="loginStaff(event)">
+                  <div>
+                    <label class="label" for="username">Username</label>
+                    <div class="field-wrap"><span class="field-icon">${icon('user')}</span><input class="input" id="username" autocomplete="username" placeholder="Username" required></div>
+                  </div>
+                  <div>
+                    <label class="label" for="password">Kata sandi</label>
+                    <div class="field-wrap"><span class="field-icon">${icon('shield')}</span><input class="input" id="password" type="password" autocomplete="current-password" placeholder="Kata sandi" required></div>
+                  </div>
+                  <button class="btn btn-primary login-btn" type="submit">Masuk ${icon('arrow')}</button>
+                </form>
+              `}
+              <div class="login-foot">${escapeHtml(state.config.appName)}<br>Data pembayaran dikelola melalui Google Spreadsheet.</div>
+            </div>
+          </section>
+        </div>`;
+
+      if (!isApiConfigured()) {
+        setTimeout(() => toast('Pasang URL Web App Apps Script pada konstanta API_URL sebelum digunakan.', 'warning', 'Backend belum dihubungkan'), 250);
+      }
+    }
+
+    function switchLoginRole(role) {
+      state.loginRole = role;
+      renderLogin();
+      setTimeout(() => document.querySelector('.input')?.focus(), 30);
+    }
+
+    async function loginStaff(e) {
+      e.preventDefault();
+      try {
+        const expectedRole = state.loginRole;
+        const data = await api('loginStaff', {
+          username: document.getElementById('username').value.trim(),
+          password: document.getElementById('password').value,
+          expectedRole
+        }, {loadingText:'Memeriksa akun…'});
+        if (data.user.role !== expectedRole) throw new Error(`Akun ini adalah akun ${data.user.role === 'WALI' ? 'Wali Kelas' : 'Bendahara'}. Pilih jenis login yang sesuai.`);
+        state.config = Object.assign({}, state.config, data.config || {});
+        setSession(data.token, data.user);
+        toast(`Selamat datang, ${data.user.nama}.`, 'success', 'Login berhasil');
+        state.currentView = 'home';
+        await renderStaffApp();
+      } catch (err) {
+        toast(err.message || 'Login gagal.', 'error');
+      }
+    }
+
+    async function loginStudent(e) {
+      e.preventDefault();
+      try {
+        const data = await api('loginStudent', {nisn: document.getElementById('nisn').value.trim()}, {loadingText:'Mencari data siswa…'});
+        state.config = Object.assign({}, state.config, data.config || {});
+        setSession(data.token, data.user);
+        state.selectedStudentDetail = data.detail;
+        toast(`Halo, ${data.user.nama}.`, 'success', 'Data ditemukan');
+        renderStudentApp(data.detail);
+      } catch (err) {
+        toast(err.message || 'NISN tidak ditemukan.', 'error');
+      }
+    }
+
+    function topbar() {
+      return `<div class="topbar-wrap"><div class="page topbar">
+        <div class="brand">
+          <div class="brand-mark">${icon('shield')}</div>
+          <div class="brand-text"><div class="brand-title">${escapeHtml(state.config.appName)}</div><div class="brand-sub">${escapeHtml(state.config.schoolYear)}</div></div>
+        </div>
+        <div class="top-actions">
+          <div class="user-pill">${icon('user')}<div><strong>${escapeHtml(state.user?.nama || '')}</strong>${state.user?.kelas ? ' • '+escapeHtml(state.user.kelas) : ''}</div></div>
+          <button class="icon-btn" onclick="logout()" title="Keluar" aria-label="Keluar">${icon('logout')}</button>
+        </div>
+      </div></div>`;
+    }
+
+    function desktopNav() {
+      const role = state.user?.role;
+      const items = role === 'BENDAHARA'
+        ? [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']]
+        : [['home','home','Beranda'],['students','users','Murid']];
+      return `<div class="page"><nav class="desktop-nav">${items.map(([view,ic,label]) => `<button class="nav-chip ${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}${label}</button>`).join('')}</nav></div>`;
+    }
+
+    function bottomNav() {
+      const role = state.user?.role;
+      const items = role === 'BENDAHARA'
+        ? [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']]
+        : [['home','home','Beranda'],['students','users','Murid']];
+      return `<nav class="bottom-nav">${items.map(([view,ic,label]) => `<button class="${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}<span>${label}</span></button>`).join('')}</nav>`;
+    }
+
+    async function renderStaffApp() {
+      try {
+        const dashboard = await api('dashboard', {token:state.token}, {loadingText:'Menyiapkan dashboard…'});
+        state.dashboard = dashboard;
+        state.config = Object.assign({}, state.config, dashboard.config || {});
+        renderStaffShell();
+        if (state.user?.role === 'WALI') loadWaliPreview();
+      } catch (err) {
+        toast(err.message || 'Dashboard gagal dimuat.', 'error');
+      }
+    }
+
+    function renderStaffShell(contentHtml='') {
+      const app = document.getElementById('app');
+      app.innerHTML = `${topbar()}${desktopNav()}<main class="page main" id="mainContent">${contentHtml || renderHomeContent()}</main>${bottomNav()}`;
+    }
+
+    function renderHomeContent() {
+      const d = state.dashboard;
+      const s = d?.stats || {totalStudents:0,paid:0,unpaid:0,percentage:0,totalAmount:0};
+      const p = d?.period || state.config.currentPeriod;
+      const isB = state.user?.role === 'BENDAHARA';
+      return `
+        <section class="hero">
+          <div class="hero-kicker">${isB ? 'Dashboard Bendahara' : 'Dashboard Wali Kelas • '+escapeHtml(state.user.kelas || '')}</div>
+          <div class="hero-title">${titleCase(p.bulan)} ${p.tahun}</div>
+          <div class="hero-sub">Status Pembayaran Komite • ${money(state.config.amount)} per siswa</div>
+          <div class="hero-stats">
+            <div class="hero-stat"><small>${isB?'Siswa':'Murid'}</small><strong>${s.totalStudents}</strong></div>
+            <div class="hero-stat"><small>Lunas</small><strong>${s.paid}</strong></div>
+            <div class="hero-stat"><small>Belum</small><strong>${s.unpaid}</strong></div>
+          </div>
+        </section>
+        ${isB ? `
+          <div class="section-head"><div><h2>Akses cepat</h2><p>Fitur utama untuk pencatatan dan pemantauan Komite.</p></div></div>
+          <div class="action-grid">
+            <button class="action-card primary" onclick="openPaymentSearch()"><span class="action-icon">${icon('plus')}</span><strong>Catat Pembayaran</strong><span>Cari siswa dan pilih bulan</span></button>
+            <button class="action-card" onclick="navigate('students')"><span class="action-icon">${icon('users')}</span><strong>Data Siswa</strong><span>Lihat status pembayaran</span></button>
+            <button class="action-card" onclick="navigate('summary')"><span class="action-icon">${icon('chart')}</span><strong>Rekap</strong><span>Per bulan dan kelas</span></button>
+          </div>
+        ` : `
+          <div class="section-head"><div><h2>Kelas ${escapeHtml(state.user.kelas || '')}</h2><p>Lihat status Pembayaran Komite murid di kelas Anda.</p></div><button class="btn btn-soft btn-sm" onclick="navigate('students')">Lihat semua ${icon('arrow')}</button></div>
+          <div id="waliPreview" class="card card-pad"><div class="empty"><span class="spinner" style="display:inline-block"></span></div></div>
+        `}`;
+    }
+
+    async function navigate(view) {
+      state.currentView = view;
+      if (view === 'home') {
+        await renderStaffApp();
+        if (state.user?.role === 'WALI') loadWaliPreview();
+        return;
+      }
+      renderStaffShell('<div class="card card-pad"><div class="empty">Memuat…</div></div>');
+      if (view === 'students') await renderStudentsView();
+      if (view === 'summary') await renderSummaryView();
+    }
+
+    async function loadWaliPreview() {
+      try {
+        const list = await api('listStudents', {token:state.token, kelas:state.user.kelas}, {silent:true});
+        const target = document.getElementById('waliPreview');
+        if (!target) return;
+        const show = list.slice(0,6);
+        target.innerHTML = show.length ? `<div class="student-list" style="margin-top:0">${show.map(studentRowHtml).join('')}</div>` : emptyHtml('Belum ada data murid','Isi data siswa pada sheet SISWA.');
+      } catch (err) { toast(err.message,'error'); }
+    }
+
+    async function renderStudentsView() {
+      try {
+        state.students = await api('listStudents', {token:state.token}, {loadingText:'Memuat data siswa…'});
+        const canClass = state.user.role === 'BENDAHARA';
+        const html = `
+          <div class="section-head"><div><h2>${canClass?'Data Siswa':'Murid '+escapeHtml(state.user.kelas)}</h2><p>${state.students.length} data aktif</p></div>${canClass?`<button class="btn btn-primary btn-sm" onclick="openPaymentSearch()">${icon('plus')} Catat Pembayaran</button>`:''}</div>
+          <section class="card card-pad">
+            <div class="toolbar ${canClass?'three':''}">
+              <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="studentSearch" class="input" placeholder="Cari nama atau NISN" oninput="filterStudentsView()"></div>
+              ${canClass ? `<select id="studentClass" class="select" onchange="filterStudentsView()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select>` : ''}
+              <div></div>
+            </div>
+            <div id="studentList" class="student-list"></div>
+          </section>`;
+        renderStaffShell(html);
+        filterStudentsView();
+      } catch (err) { toast(err.message || 'Data siswa gagal dimuat.','error'); }
+    }
+
+    function studentRowHtml(s, paymentMode=false) {
+      return `<button class="student-row" onclick="openStudentDetail('${escapeHtml(s.idSiswa)}', ${paymentMode})">
+        <span class="avatar">${escapeHtml(initials(s.nama).toUpperCase())}</span>
+        <span class="student-main"><strong>${escapeHtml(s.nama)}</strong><span class="student-meta"><span>${escapeHtml(s.kelas)}</span><span>•</span><span>NISN ${escapeHtml(s.nisn)}</span>${Number.isFinite(s.paidMonths)?`<span>•</span><span>${s.paidMonths}/12 lunas</span>`:''}</span></span>
+        <span class="chev">${icon('chevron')}</span>
+      </button>`;
+    }
+
+    function filterStudentsView() {
+      const q = (document.getElementById('studentSearch')?.value || '').toLowerCase().trim();
+      const k = document.getElementById('studentClass')?.value || '';
+      const list = state.students.filter(s => (!q || s.nama.toLowerCase().includes(q) || s.nisn.toLowerCase().includes(q)) && (!k || s.kelas===k));
+      const target = document.getElementById('studentList');
+      if (target) target.innerHTML = list.length ? list.map(studentRowHtml).join('') : emptyHtml('Siswa tidak ditemukan','Coba kata pencarian atau kelas yang lain.');
+    }
+
+    async function openPaymentSearch() {
+      try {
+        if (!state.students.length) state.students = await api('listStudents', {token:state.token}, {loadingText:'Memuat siswa…'});
+        openModal(`
+          <div class="modal-head"><div><h3>Catat Pembayaran</h3><p>Cari siswa, lalu pilih bulan Pembayaran Komite.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+          <div class="modal-body">
+            <div class="toolbar three">
+              <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="paySearch" class="input" placeholder="Cari nama atau NISN" oninput="filterPaymentStudents()" autofocus></div>
+              <select id="payClass" class="select" onchange="filterPaymentStudents()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select>
+              <div></div>
+            </div>
+            <div id="payStudentList" class="student-list"></div>
+          </div>`, true);
+        filterPaymentStudents();
+        setTimeout(()=>document.getElementById('paySearch')?.focus(),50);
+      } catch (err) { toast(err.message,'error'); }
+    }
+
+    function filterPaymentStudents() {
+      const q = (document.getElementById('paySearch')?.value || '').toLowerCase().trim();
+      const k = document.getElementById('payClass')?.value || '';
+      const list = state.students.filter(s => (!q || s.nama.toLowerCase().includes(q) || s.nisn.toLowerCase().includes(q)) && (!k || s.kelas===k)).slice(0,80);
+      const target = document.getElementById('payStudentList');
+      if (target) target.innerHTML = list.length ? list.map(s=>studentRowHtml(s,true)).join('') : emptyHtml('Siswa tidak ditemukan','Periksa nama, NISN, atau kelas.');
+    }
+
+    async function openStudentDetail(idSiswa, paymentMode=false) {
+      try {
+        const d = await api('studentDetail', {token:state.token,idSiswa}, {loadingText:'Memuat pembayaran siswa…'});
+        state.selectedStudentDetail = d;
+        const isB = state.user.role === 'BENDAHARA';
+        openModal(studentDetailModalHtml(d, paymentMode && isB), true);
+      } catch (err) { toast(err.message,'error'); }
+    }
+
+    function studentDetailModalHtml(d, paymentMode) {
+      const s = d.student;
+      return `
+        <div class="modal-head"><div><h3>${escapeHtml(s.nama)}</h3><p>${escapeHtml(s.kelas)} • NISN ${escapeHtml(s.nisn)} • ${d.paidMonths}/12 bulan lunas</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body">
+          <div class="section-head" style="margin-top:0"><div><h2>Pembayaran ${escapeHtml(state.config.schoolYear)}</h2><p>${paymentMode?'Pilih bulan yang akan dibayar.':'Status Pembayaran Komite per bulan.'}</p></div><span class="status-pill ok">${icon('check')} ${money(d.paidAmount)}</span></div>
+          <div class="months-grid">${d.periods.map(p=>monthCardHtml(p, s.idSiswa, paymentMode)).join('')}</div>
+          <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>${d.history.length ? d.history.length+' transaksi lunas' : 'Belum ada transaksi'}</p></div></div>
+          <div class="card card-pad">${historyHtml(d.history, state.user.role === 'BENDAHARA')}</div>
+        </div>`;
+    }
+
+    function monthCardHtml(p, idSiswa, paymentMode=false) {
+      const lunas = p.status === 'LUNAS';
+      const due = p.status === 'BELUM_BAYAR';
+      const status = lunas
+        ? `<span class="status-pill ok">${icon('check')} Lunas</span>`
+        : due ? `<span class="status-pill wait">${icon('clock')} Belum Bayar</span>`
+        : `<span class="status-pill future">${icon('calendar')} Belum Jatuh Tempo</span>`;
+      const clickable = paymentMode && !lunas;
+      return `<div class="month-card ${clickable?'clickable':''}" ${clickable?`onclick="confirmPayment('${escapeHtml(idSiswa)}','${escapeHtml(p.bulan)}',${p.tahun})"`:''}>
+        <div><div class="month-name">${escapeHtml(p.bulan.slice(0,3))}</div><div class="month-year">${p.tahun}</div></div>${status}
+      </div>`;
+    }
+
+    function historyHtml(history, allowCancel=false) {
+      if (!history.length) return emptyHtml('Belum ada pembayaran','Pembayaran yang telah tercatat akan muncul di sini.');
+      return `<div class="history-list">${history.map(h=>`
+        <div class="history-row">
+          <div><strong>${titleCase(h.bulan)} ${h.tahun}</strong><div class="meta">${escapeHtml(h.tanggalBayar)} • ${escapeHtml(h.waktuBayar || '')}<br><span style="font-size:10px">${escapeHtml(h.idTransaksi)}</span></div></div>
+          <div class="history-amount"><strong>${money(h.nominal)}</strong><div style="margin-top:6px;display:flex;justify-content:flex-end;gap:6px"><span class="status-pill ok">${icon('check')} Lunas</span>${allowCancel?`<button class="btn btn-danger btn-sm" title="Batalkan" onclick="confirmCancel('${escapeHtml(h.idTransaksi)}')">${icon('trash')}</button>`:''}</div></div>
+        </div>`).join('')}</div>`;
+    }
+
+    function confirmPayment(idSiswa, bulan, tahun) {
+      const d = state.selectedStudentDetail;
+      const s = d?.student;
+      if (!s || s.idSiswa !== idSiswa) return;
+      openModal(`
+        <div class="modal-head"><div><h3>Konfirmasi Pembayaran</h3><p>Periksa sebelum disimpan.</p></div><button class="icon-btn" onclick="openStudentDetail('${escapeHtml(idSiswa)}',true)">${icon('x')}</button></div>
+        <div class="modal-body">
+          <div class="receipt">
+            <div class="success-mark" style="color:var(--blue);background:#edf6ff">${icon('receipt')}</div>
+            <div class="receipt-name">${escapeHtml(s.nama)}</div>
+            <div style="color:var(--muted);font-size:12px">${escapeHtml(s.kelas)} • ${escapeHtml(s.nisn)}</div>
+            <div class="receipt-amount">${money(state.config.amount)}</div>
+            <div style="color:var(--muted)">Komite ${titleCase(bulan)} ${tahun}</div>
+          </div>
+        </div>
+        <div class="modal-actions"><button class="btn btn-ghost" onclick="openStudentDetail('${escapeHtml(idSiswa)}',true)">Kembali</button><button class="btn btn-primary" onclick="savePayment('${escapeHtml(idSiswa)}','${escapeHtml(bulan)}',${tahun})">${icon('check')} Simpan Pembayaran</button></div>`);
+    }
+
+    async function savePayment(idSiswa, bulan, tahun) {
+      try {
+        const tx = await api('addPayment', {token:state.token,idSiswa,bulan,tahun}, {loadingText:'Menyimpan pembayaran…'});
+        toast(`Pembayaran Komite ${titleCase(bulan)} ${tahun} berhasil disimpan.`, 'success');
+        state.students = [];
+        const fresh = await api('studentDetail', {token:state.token,idSiswa}, {silent:true});
+        state.selectedStudentDetail = fresh;
+        showReceipt(tx);
+        refreshDashboardSilent();
+      } catch (err) { toast(err.message,'error'); }
+    }
+
+    function showReceipt(tx) {
+      openModal(`
+        <div class="modal-head"><div><h3>Bukti Pembayaran</h3><p>Transaksi berhasil dicatat.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body">
+          <div class="receipt">
+            <div class="success-mark">${icon('check')}</div>
+            <h3>Pembayaran Berhasil</h3>
+            <div class="receipt-name">${escapeHtml(tx.student.nama)}</div>
+            <div style="color:var(--muted);font-size:12px">${escapeHtml(tx.student.kelas)} • NISN ${escapeHtml(tx.student.nisn)}</div>
+            <div class="receipt-amount">${money(tx.nominal)}</div>
+            <div style="color:var(--muted);font-size:13px">Komite ${titleCase(tx.bulan)} ${tx.tahun}</div>
+            <div class="receipt-details">
+              <div><span>No. Transaksi</span><strong>${escapeHtml(tx.idTransaksi)}</strong></div>
+              <div><span>Tanggal</span><strong>${escapeHtml(tx.tanggalBayar)} • ${escapeHtml(tx.waktuBayar)}</strong></div>
+              <div><span>Status</span><strong style="color:var(--green)">LUNAS</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions"><button class="btn btn-ghost" onclick='printReceipt(${JSON.stringify(tx).replace(/'/g,"&#39;")})'>${icon('printer')} Cetak Bukti</button><button class="btn btn-primary" onclick="closeModal()">Selesai</button></div>`);
+    }
+
+    function printReceipt(tx) {
+      const w = window.open('', '_blank', 'width=520,height=720');
+      if (!w) { toast('Izinkan pop-up browser untuk mencetak bukti.','warning'); return; }
+      w.document.write(`<!doctype html><html><head><title>${escapeHtml(tx.idTransaksi)}</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#16314d}main{max-width:420px;margin:auto;border:1px solid #dce6ef;border-radius:18px;padding:24px}h2{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#65758a;font-size:12px}.amount{text-align:center;font-size:30px;font-weight:700;margin:20px 0}.row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf1f5;font-size:12px}.foot{text-align:center;color:#738395;font-size:10px;margin-top:20px}@media print{body{padding:0}main{border:0}}</style></head><body><main><h2>Komite SMP Negeri 3 Jayapura</h2><div class="sub">Bukti Pembayaran Komite</div><div class="amount">${money(tx.nominal)}</div><div class="row"><span>Nama</span><strong>${escapeHtml(tx.student.nama)}</strong></div><div class="row"><span>Kelas</span><strong>${escapeHtml(tx.student.kelas)}</strong></div><div class="row"><span>Periode</span><strong>${titleCase(tx.bulan)} ${tx.tahun}</strong></div><div class="row"><span>Tanggal</span><strong>${escapeHtml(tx.tanggalBayar)} ${escapeHtml(tx.waktuBayar)}</strong></div><div class="row"><span>No. Transaksi</span><strong>${escapeHtml(tx.idTransaksi)}</strong></div><div class="row"><span>Status</span><strong>LUNAS</strong></div><div class="foot">SMP Negeri 3 Jayapura • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div></main><script>window.onload=()=>{window.print()}<\/script></body></html>`);
+      w.document.close();
+    }
+
+    function confirmCancel(idTransaksi) {
+      openModal(`
+        <div class="modal-head"><div><h3>Batalkan transaksi?</h3><p>Transaksi tidak dihapus, statusnya akan menjadi BATAL.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body"><div class="card card-pad"><strong>${escapeHtml(idTransaksi)}</strong><p style="margin:7px 0 0;color:var(--muted);font-size:13px;line-height:1.5">Gunakan hanya bila bendahara salah mencatat pembayaran. Jejak pembatalan tetap tersimpan pada LOG_AKTIVITAS.</p></div></div>
+        <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Tidak</button><button class="btn btn-danger" onclick="cancelPayment('${escapeHtml(idTransaksi)}')">${icon('trash')} Ya, Batalkan</button></div>`);
+    }
+
+    async function cancelPayment(idTransaksi) {
+      try {
+        const idSiswa = state.selectedStudentDetail?.student?.idSiswa;
+        await api('cancelPayment', {token:state.token,idTransaksi}, {loadingText:'Membatalkan transaksi…'});
+        toast('Transaksi berhasil dibatalkan dan jejaknya tetap tersimpan.', 'success');
+        state.students = [];
+        if (idSiswa) await openStudentDetail(idSiswa, false); else closeModal();
+        refreshDashboardSilent();
+      } catch (err) { toast(err.message,'error'); }
+    }
+
+    async function refreshDashboardSilent() {
+      try { state.dashboard = await api('dashboard', {token:state.token}, {silent:true}); } catch (_) {}
+    }
+
+    async function renderSummaryView() {
+      try {
+        const p = state.config.currentPeriod || state.config.periods[0];
+        const data = await api('summary', {token:state.token,bulan:p.bulan,tahun:p.tahun}, {loadingText:'Menyiapkan rekap…'});
+        state.summary = data;
+        const periodValue = `${data.period.bulan}|${data.period.tahun}`;
+        const html = `
+          <div class="section-head"><div><h2>Rekap Pembayaran</h2><p>Ringkasan Pembayaran Komite per bulan.</p></div><button class="btn btn-soft btn-sm" onclick="downloadSummaryCsv()">${icon('download')} Unduh CSV</button></div>
+          <section class="card card-pad">
+            <div class="toolbar three">
+              <div><label class="label">Bulan</label><select id="summaryPeriod" class="select" onchange="reloadSummary()">${state.config.periods.map(x=>`<option value="${x.bulan}|${x.tahun}" ${periodValue===x.bulan+'|'+x.tahun?'selected':''}>${escapeHtml(x.label)}</option>`).join('')}</select></div>
+              <div><label class="label">Kelas</label><select id="summaryClass" class="select" onchange="reloadSummary()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select></div>
+              <div></div>
+            </div>
+            <div id="summaryBody">${summaryBodyHtml(data)}</div>
+          </section>`;
+        renderStaffShell(html);
+      } catch (err) { toast(err.message,'error'); }
+    }
+
+    function summaryBodyHtml(data) {
+      const s = data.summary;
+      return `<div class="summary-grid">
+        <div class="metric"><span>Siswa</span><strong>${s.totalStudents}</strong></div>
+        <div class="metric"><span>Lunas</span><strong style="color:var(--green)">${s.paid}</strong></div>
+        <div class="metric"><span>Belum</span><strong style="color:var(--orange)">${s.unpaid}</strong></div>
+        <div class="metric"><span>Terkumpul</span><strong style="font-size:19px">${money(s.totalAmount)}</strong></div>
+      </div>
+      <div class="section-head"><div><h2>Daftar Siswa</h2><p>${escapeHtml(data.period.label)} • ${escapeHtml(data.kelas || 'SEMUA')}</p></div><span class="status-pill ok">${s.percentage}% lunas</span></div>
+      <div class="student-list">${s.students?.length ? s.students.map(x=>`<button class="student-row" onclick="openStudentDetail('${escapeHtml(x.idSiswa)}',false)"><span class="avatar">${escapeHtml(initials(x.nama).toUpperCase())}</span><span class="student-main"><strong>${escapeHtml(x.nama)}</strong><span class="student-meta">${escapeHtml(x.kelas)} • NISN ${escapeHtml(x.nisn)}</span></span><span class="status-pill ${x.status==='LUNAS'?'ok':'wait'}">${icon(x.status==='LUNAS'?'check':'clock')} ${x.status==='LUNAS'?'Lunas':'Belum'}</span></button>`).join('') : emptyHtml('Belum ada siswa','Isi data pada sheet SISWA.')}</div>`;
+    }
+
+    async function reloadSummary() {
+      try {
+        const [bulan,tahun] = document.getElementById('summaryPeriod').value.split('|');
+        const kelas = document.getElementById('summaryClass').value;
+        const data = await api('summary', {token:state.token,bulan,tahun:Number(tahun),kelas}, {loadingText:'Memperbarui rekap…'});
+        state.summary = data;
+        document.getElementById('summaryBody').innerHTML = summaryBodyHtml(data);
+      } catch (err) { toast(err.message,'error'); }
+    }
+
+    function downloadSummaryCsv() {
+      const d = state.summary;
+      if (!d?.summary?.students) { toast('Rekap belum tersedia.','warning'); return; }
+      const rows = [['NISN','NAMA_SISWA','KELAS','BULAN','TAHUN','STATUS']];
+      d.summary.students.forEach(s => rows.push([s.nisn,s.nama,s.kelas,d.period.bulan,d.period.tahun,s.status]));
+      const csv = '\ufeff' + rows.map(r => r.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Rekap_Komite_${d.period.bulan}_${d.period.tahun}_${(d.kelas||'SEMUA').replace(/\s+/g,'_')}.csv`;
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+      toast('Rekap CSV berhasil dibuat.','success');
+    }
+
+    function renderStudentApp(detail) {
+      const d = detail || state.selectedStudentDetail;
+      const s = d.student;
+      document.getElementById('app').innerHTML = `${topbar()}<main class="page main">
+        <section class="hero student-profile-hero">
+          <div>
+            <div class="hero-kicker">Pembayaran Komite • ${escapeHtml(s.kelas)}</div>
+            <div class="hero-title">${escapeHtml(s.nama)}</div>
+            <div class="hero-sub">NISN ${escapeHtml(s.nisn)} • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div>
+            <div class="amount">${money(d.paidAmount)}</div><div class="amount-label">Total telah dibayar</div>
+          </div>
+          <div class="paid-circle"><div><strong>${d.paidMonths}/${d.totalMonths}</strong><span>Bulan Lunas</span></div></div>
+        </section>
+        <div class="section-head"><div><h2>Status Pembayaran</h2><p>${escapeHtml(state.config.startMonth)} — ${escapeHtml(state.config.endMonth)}</p></div><span class="status-pill ok">${money(state.config.amount)} / bulan</span></div>
+        <div class="months-grid">${d.periods.map(p=>monthCardHtml(p,s.idSiswa,false)).join('')}</div>
+        <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>Transaksi Pembayaran Komite yang sudah lunas.</p></div></div>
+        <section class="card card-pad">${historyHtml(d.history,false)}</section>
+      </main>`;
+    }
+
+    function emptyHtml(title, sub) {
+      return `<div class="empty"><div class="empty-icon">${icon('search')}</div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(sub)}</span></div>`;
+    }
+
+    async function restoreSession() {
+      if (!state.token || !state.user) return false;
+      try {
+        if (state.user.role === 'SISWA') {
+          const d = await api('studentDetail', {token:state.token}, {silent:true});
+          state.selectedStudentDetail = d;
+          renderStudentApp(d);
+        } else {
+          await renderStaffApp();
+          if (state.user.role === 'WALI') loadWaliPreview();
+        }
+        return true;
+      } catch (_) {
+        clearSession(false);
+        return false;
+      }
+    }
+
+    async function boot() {
+      await loadPublicConfig();
+      const restored = await restoreSession();
+      if (!restored) renderLogin();
+      else if (state.user?.role === 'WALI') loadWaliPreview();
+    }
+
+    boot();
+  </script>
+</body>
+</html>
