@@ -147,7 +147,7 @@
     .action-icon { width: 42px; height: 42px; border-radius: 14px; background: #eef6ff; color: var(--blue); display: grid; place-items: center; }
     .action-icon svg { width: 21px; height: 21px; }
     .action-card strong { display: block; margin-top: 18px; font-weight: 690; }
-    .action-card span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .action-card > span:not(.action-icon) { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
     .action-card.primary { background: linear-gradient(145deg, #f4f9ff, #ffffff); border-color: #cfe6ff; }
 
     .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
@@ -348,7 +348,7 @@
       .action-card { min-height: 108px; border-radius: 17px; padding: 12px; }
       .action-icon { width: 36px; height: 36px; border-radius: 12px; }
       .action-card strong { margin-top: 12px; font-size: 12px; }
-      .action-card span { display: none; }
+      .action-card > span:not(.action-icon) { display: none; }
       .section-head { margin-top: 23px; }
       .card-pad { padding: 14px; }
       .toolbar, .toolbar.three { grid-template-columns: 1fr; }
@@ -501,6 +501,93 @@
       .payment-selection .btn { grid-column:auto; width:100%; }
     }
 
+
+
+    /* ===== Versi 1.03: cepat, responsif, tanpa slider ===== */
+    body, .app-root { overflow-x: hidden; }
+    .page, .main, .card, .modal, .modal-body, .months-grid { min-width: 0; max-width: 100%; }
+
+    /* Navigasi normal: indikator aktif langsung, tanpa animasi slider. */
+    .nav-chip, .segment button, .period-segment button, .bottom-nav button { transition: background-color .12s ease, color .12s ease, border-color .12s ease; }
+    .nav-chip.active, .bottom-nav button.active { background: #eef6ff !important; color: var(--blue); }
+    .segment button.active, .period-segment button.active { background: white !important; color: var(--blue); box-shadow: 0 3px 12px rgba(25,65,110,.08); }
+
+    /* Bottom navigation harus selalu floating pada layar mobile. */
+    .bottom-nav { position: fixed !important; }
+
+    /* Sistem icon seragam dan tepat di tengah. */
+    .nav-chip svg, .bottom-nav svg, .action-icon svg, .icon-btn svg, .user-avatar svg { display: block; flex: 0 0 auto; }
+    .nav-chip { line-height: 1; }
+    .action-card .action-icon {
+      width: 42px; height: 42px; margin: 0 !important; padding: 0; border-radius: 14px;
+      display: grid !important; place-items: center !important; color: var(--blue) !important;
+      background: #eef6ff !important; font-size: initial !important;
+    }
+    .action-card .action-icon svg { width: 21px; height: 21px; margin: 0; }
+    .action-card > .action-desc { color: var(--muted); font-size: 12px; margin-top: 3px; }
+
+    /* Profil kanan atas rapi dua baris dan proporsional. */
+    .user-pill { align-items: center; min-height: 50px; padding: 5px 12px 5px 5px; }
+    .user-avatar { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 13px; }
+    .user-avatar svg { width: 20px; height: 20px; }
+    .user-copy strong { max-width: 190px; font-size: 12px; line-height: 1.2; }
+    .user-copy span { max-width: 190px; overflow: hidden; text-overflow: ellipsis; font-size: 10px; line-height: 1.2; }
+
+    /* Password Bendahara/Wali dapat ditampilkan atau disembunyikan. */
+    .password-wrap .input { padding-right: 48px; }
+    .password-toggle {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      width: 38px; height: 38px; border: 0; border-radius: 11px; background: transparent;
+      color: #74869a; display: grid; place-items: center;
+    }
+    .password-toggle:hover { background: #eef6ff; color: var(--blue); }
+    .password-toggle svg { width: 18px; height: 18px; }
+
+    /* Nama bulan penuh dan status pilihan biru. */
+    .month-name { letter-spacing: 0; font-size: 12px; line-height: 1.2; }
+    .status-pill.selected { background: #eaf4ff; color: var(--blue); }
+
+    /* Cegah modal dan halaman melebar horizontal. */
+    .modal { overflow-y: auto; overflow-x: hidden; }
+    .modal-body { overflow-x: hidden; }
+    .months-grid { width: 100%; }
+    .month-card { min-width: 0; overflow: hidden; }
+
+    @media (max-width: 860px) {
+      .bottom-nav { display: flex !important; }
+      .main { padding-bottom: calc(96px + var(--safe-bottom)); }
+      .action-card .action-icon { display: grid !important; }
+      .months-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 600px) {
+      .action-card .action-icon { width: 34px; height: 34px; border-radius: 11px; display: grid !important; }
+      .action-card .action-icon svg { width: 18px; height: 18px; }
+      .action-card > .action-desc { display: none; }
+      .months-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+      .month-card { min-height: 96px; padding: 11px; gap: 8px; }
+      .month-card .status-pill {
+        width: 100%; max-width: 100%; min-width: 0; padding: 6px 7px; gap: 5px;
+        white-space: normal; line-height: 1.15; font-size: 9.5px; justify-content: flex-start;
+      }
+      .month-card .status-pill svg { width: 12px; height: 12px; flex: 0 0 12px; }
+      .student-profile-hero { grid-template-columns: 1fr; align-items: start; gap: 14px; }
+      .student-profile-hero .paid-circle {
+        position: static; width: 84px; height: 84px; justify-self: end; margin: 0;
+      }
+      .student-profile-hero .paid-circle strong { font-size: 22px; }
+      .student-profile-hero .paid-circle span { font-size: 9px; }
+      .student-profile-hero .hero-title { padding-right: 0; overflow-wrap: anywhere; }
+      .student-profile-hero .hero-sub { max-width: 100%; line-height: 1.4; }
+      .student-profile-hero .amount { margin-top: 14px; }
+      .history-row { grid-template-columns: minmax(0,1fr) auto; gap: 8px; }
+      .history-amount { min-width: 0; }
+    }
+
+    @media (max-width: 350px) {
+      .months-grid { grid-template-columns: 1fr; }
+      .month-card .status-pill { font-size: 10px; }
+    }
   </style>
 </head>
 <body>
@@ -516,13 +603,13 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Revisi 1.02';
+    const APP_REVISION = 'Versi 1.03';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
       QUEUE: 'komite_payment_queue_v1',
-      STAFF_SNAPSHOT: 'komite_staff_snapshot_v1',
-      STUDENT_SNAPSHOT: 'komite_student_snapshot_v1'
+      STAFF_SNAPSHOT: 'komite_staff_snapshot_v2',
+      STUDENT_SNAPSHOT: 'komite_student_snapshot_v2'
     };
 
     const DEFAULT_CONFIG = {
@@ -539,7 +626,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.02'
+      revision: '1.03'
     };
 
     const state = {
@@ -549,6 +636,7 @@
       loginRole: 'SISWA',
       currentView: 'home',
       students: [],
+      payments: [],
       summary: null,
       dashboard: null,
       selectedStudentDetail: null,
@@ -585,6 +673,8 @@
       download: '<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
       wallet: '<path d="M4 6h15a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2V7a4 4 0 0 1 4-4h10"/><path d="M16 11h5v4h-5a2 2 0 0 1 0-4Z"/>',
       user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+      eye: '<path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/>',
+      eyeOff: '<path d="M3 3l18 18"/><path d="M10.6 6.2A10.6 10.6 0 0 1 12 6c6 0 9.5 6 9.5 6a15.5 15.5 0 0 1-3.1 3.8"/><path d="M6.2 6.2C3.8 7.8 2.5 12 2.5 12S6 18 12 18c1.6 0 3-.4 4.2-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
       trash: '<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="m7 7 1 14h8l1-14"/><path d="M10 11v6M14 11v6"/>',
       printer: '<path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/>',
       calendar: '<path d="M6 3v3M18 3v3"/><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/>',
@@ -648,7 +738,7 @@
     }
 
     async function api(action, data = {}, opts = {}) {
-      if (!isApiConfigured()) throw new Error('URL Apps Script belum dipasang di index.html.');
+      if (!isApiConfigured()) throw new Error('Konfigurasi layanan belum lengkap.');
       const timeout = Number(opts.timeout || 18000);
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeout);
@@ -665,11 +755,11 @@
         const text = await res.text();
         let json;
         try { json = JSON.parse(text); }
-        catch (_) { throw new Error('Respons backend tidak valid. Pastikan URL Web App menggunakan /exec dan deployment sudah aktif.'); }
+        catch (_) { throw new Error('Layanan sedang tidak dapat diakses. Silakan coba lagi.'); }
         if (!json.ok) throw new Error(json.message || 'Permintaan gagal.');
         return json.data;
       } catch (err) {
-        const mapped = err?.name === 'AbortError' ? new Error('Koneksi ke server terlalu lama.') : err;
+        const mapped = err?.name === 'AbortError' ? new Error('Koneksi terlalu lambat. Silakan coba lagi.') : err;
         if (isSessionError(mapped?.message)) {
           clearSession(false);
           renderLogin();
@@ -786,6 +876,7 @@
       state.token = '';
       state.user = null;
       state.students = [];
+      state.payments = [];
       state.summary = null;
       state.dashboard = null;
       state.selectedStudentDetail = null;
@@ -810,6 +901,7 @@
           savedAt: Date.now(),
           config: state.config,
           students: state.students,
+          payments: state.payments,
           summary: state.summary,
           dashboard: state.dashboard,
           scopeMode: state.scopeMode,
@@ -929,47 +1021,37 @@
         updateSyncIndicator();
         return 0;
       }
-      if (!navigator.onLine) {
-        updateSyncIndicator();
-        return 0;
-      }
+      if (!navigator.onLine) { updateSyncIndicator(); return 0; }
 
       state.syncing = true;
       updateSyncIndicator();
       let synced = 0;
       const confirmed = [];
       try {
-        for (const item of getPaymentQueue()) {
-          try {
-            const tx = await api('addPayment', {
-              token: state.token,
-              idSiswa: item.idSiswa,
-              bulan: item.bulan,
-              tahun: item.tahun,
-              tanggalPembayaran: item.tanggalPembayaran,
-              clientTransactionId: item.clientId
-            }, {silent:true, timeout:10000});
-
-            removeQueueItem(item.clientId);
+        const batch = await api('addPaymentsBatch', {
+          token: state.token,
+          items: queue.map(item => ({
+            idSiswa:item.idSiswa, bulan:item.bulan, tahun:item.tahun,
+            tanggalPembayaran:item.tanggalPembayaran, clientTransactionId:item.clientId
+          }))
+        }, {silent:true, timeout:15000});
+        const results = Array.isArray(batch?.results) ? batch.results : [];
+        results.forEach(result => {
+          const clientId = result?.clientId || '';
+          if (result?.ok && result.transaction) {
+            removeQueueItem(clientId);
             synced++;
-            confirmed.push(tx);
-            applyServerPaymentLocally(tx);
-          } catch (err) {
-            const message = err?.message || 'Gagal mengirim pembayaran.';
-            if (/sudah tercatat lunas/i.test(message)) {
-              removeQueueItem(item.clientId);
-              synced++;
-              continue;
-            }
-            updateQueueFailure(item.clientId, message);
-            if (isSessionError(message)) {
-              toast(message, 'error');
-              break;
-            }
-            if (manual && isNetworkLikeError(err)) toast('Pembayaran belum sampai ke server. Data tetap aman di perangkat.', 'warning', 'Sinkronisasi belum selesai');
-            break;
+            confirmed.push(result.transaction);
+            applyServerPaymentLocally(result.transaction, true);
+          } else if (clientId) {
+            updateQueueFailure(clientId, result?.message || 'Pembayaran belum tersinkron.');
           }
-        }
+        });
+        if (confirmed.length) finalizeLocalPaymentState();
+      } catch (err) {
+        getPaymentQueue().forEach(item => updateQueueFailure(item.clientId, err?.message || 'Pembayaran belum tersinkron.'));
+        if (isSessionError(err?.message)) toast(err.message, 'error');
+        else if (manual && isNetworkLikeError(err)) toast('Pembayaran belum tersinkron. Data tetap aman di perangkat.', 'warning', 'Sinkronisasi belum selesai');
       } finally {
         state.syncing = false;
         updateSyncIndicator();
@@ -977,17 +1059,21 @@
 
       if (confirmed.length === 1) {
         const tx = confirmed[0];
-        toast(`Pembayaran ${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} sudah tersimpan di server.`, 'success', 'Tersimpan di server', 4300);
+        toast(`Pembayaran ${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} berhasil disimpan.`, 'success', 'Pembayaran tersimpan', 4300);
       } else if (confirmed.length > 1) {
-        toast(`${confirmed.length} pembayaran sudah tersimpan di server.`, 'success', 'Tersimpan di server', 4300);
+        toast(`${confirmed.length} pembayaran berhasil disimpan.`, 'success', 'Pembayaran tersimpan', 4300);
       }
       return synced;
     }
 
-    function applyServerPaymentLocally(tx) {
+    function applyServerPaymentLocally(tx, deferFinalize=false) {
       if (!tx?.student?.idSiswa) return;
-      delete state.detailCache[tx.student.idSiswa];
       const key = `${tx.bulan}-${tx.tahun}`;
+      if (!Array.isArray(state.payments)) state.payments = [];
+      if (!state.payments.some(x => x.idTransaksi === tx.idTransaksi)) state.payments.push({
+        idTransaksi:tx.idTransaksi, idSiswa:tx.student.idSiswa, bulan:tx.bulan, tahun:Number(tx.tahun),
+        nominal:Number(tx.nominal||state.config.amount||50000), tanggalBayar:tx.tanggalBayar, status:'LUNAS'
+      });
       const listStudent = state.students.find(s=>s.idSiswa===tx.student.idSiswa);
       if (listStudent) {
         listStudent.kelas = normalizeClassLabel(listStudent.kelas);
@@ -996,40 +1082,18 @@
         listStudent.paidMonths = listStudent.paidPeriods.length;
         listStudent.unpaidMonths = Math.max(0,(state.config.periods||[]).length-listStudent.paidMonths);
       }
-      if (state.selectedStudentDetail?.student?.idSiswa === tx.student.idSiswa) {
-        const d = state.selectedStudentDetail;
-        const p = d.periods.find(x => x.bulan === tx.bulan && Number(x.tahun) === Number(tx.tahun));
-        if (p && p.status !== 'LUNAS') {
-          p.status = 'LUNAS';
-          p.nominal = tx.nominal;
-          p.idTransaksi = tx.idTransaksi;
-          if (!d.history.some(h => h.idTransaksi === tx.idTransaksi)) d.history.unshift({
-            idTransaksi:tx.idTransaksi, bulan:tx.bulan, tahun:tx.tahun, nominal:tx.nominal,
-            tanggalBayar:tx.tanggalBayar, waktuBayar:tx.waktuBayar, status:'LUNAS'
-          });
-          d.paidMonths = d.periods.filter(x => x.status === 'LUNAS').length;
-          d.paidAmount = d.history.reduce((sum,h)=>sum+Number(h.nominal||0),0);
-        }
-      }
+      state.detailCache[tx.student.idSiswa] = buildLocalStudentDetail(tx.student.idSiswa);
+      if (state.selectedStudentDetail?.student?.idSiswa === tx.student.idSiswa) state.selectedStudentDetail = state.detailCache[tx.student.idSiswa];
+      if (!deferFinalize) finalizeLocalPaymentState();
+    }
+
+    function finalizeLocalPaymentState() {
       const local=buildLocalSummaryData();
       state.summary=local;
       state.dashboard={user:state.user,scope:local.scope,stats:summaryStatsFromSummary(local.summary),config:state.config};
       state.summaryCache={};
       saveStaffSnapshot();
       if (state.currentView==='home' || state.currentView==='summary') renderCurrentStaffView();
-    }
-
-    function scheduleSilentStaffRefresh() {
-      if (state.user?.role !== 'BENDAHARA') return;
-      clearTimeout(state.silentRefreshTimer);
-      state.silentRefreshTimer = setTimeout(async () => {
-        if (!navigator.onLine || state.syncing) return;
-        try {
-          const data = await api('staffBootstrap', Object.assign({token:state.token}, scopePayload(false)), {silent:true, timeout:15000});
-          applyBootstrap(data, true);
-          renderCurrentStaffView();
-        } catch (_) {}
-      }, 650);
     }
 
     // ========================= LOGIN =========================
@@ -1058,9 +1122,8 @@
                 <div><strong>${escapeHtml(state.config.schoolName)}</strong><div class="brand-sub">${escapeHtml(state.config.schoolYear)}</div></div>
               </div>
               <h2>Selamat datang</h2>
-              <p>${student ? 'Masukkan NISN untuk melihat status dan riwayat Pembayaran Komite.' : 'Masuk menggunakan akun yang tersimpan pada spreadsheet.'}</p>
-              <div class="segment" data-sliding-group>
-                <span class="slide-indicator"></span>
+              <p>${student ? 'Masukkan NISN untuk melihat status dan riwayat Pembayaran Komite.' : 'Masuk menggunakan akun Anda untuk mengakses layanan Pembayaran Komite.'}</p>
+              <div class="segment">
                 <button data-key="BENDAHARA" class="${role==='BENDAHARA'?'active':''}" onclick="switchLoginRole('BENDAHARA')">Bendahara</button>
                 <button data-key="WALI" class="${role==='WALI'?'active':''}" onclick="switchLoginRole('WALI')">Wali Kelas</button>
                 <button data-key="SISWA" class="${role==='SISWA'?'active':''}" onclick="switchLoginRole('SISWA')">Siswa</button>
@@ -1081,35 +1144,35 @@
                   </div>
                   <div>
                     <label class="label" for="password">Kata sandi</label>
-                    <div class="field-wrap"><span class="field-icon">${icon('shield')}</span><input class="input" id="password" type="password" autocomplete="current-password" placeholder="Kata sandi" required></div>
+                    <div class="field-wrap password-wrap"><span class="field-icon">${icon('shield')}</span><input class="input" id="password" type="password" autocomplete="current-password" placeholder="Kata sandi" required><button class="password-toggle" type="button" onclick="togglePasswordVisibility()" aria-label="Tampilkan kata sandi" title="Tampilkan kata sandi">${icon('eye')}</button></div>
                   </div>
                   <button class="btn btn-primary login-btn" type="submit">Masuk ${icon('arrow')}</button>
                 </form>
               `}
-              <div class="login-foot">${escapeHtml(state.config.appName)} • ${APP_REVISION}<br>Data pembayaran dikelola melalui Google Spreadsheet.</div>
+              <div class="login-foot">${escapeHtml(state.config.appName)} • ${APP_REVISION}<br>Layanan Pembayaran Komite Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}.</div>
             </div>
           </section>
         </div>`;
-      requestAnimationFrame(syncSlidingIndicators);
-      if (!isApiConfigured()) setTimeout(() => toast('Pasang URL Web App Apps Script pada konstanta API_URL sebelum digunakan.', 'warning', 'Backend belum dihubungkan'), 250);
+      if (!isApiConfigured()) setTimeout(() => toast('Konfigurasi layanan belum lengkap.', 'warning', 'Belum siap digunakan'), 250);
     }
 
     function switchLoginRole(role) {
       if (role === state.loginRole) return;
-      const group = document.querySelector('.segment[data-sliding-group]');
-      const target = group?.querySelector(`button[data-key="${role}"]`);
-      if (group && target) {
-        group.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b===target));
-        syncSlidingGroup(group);
-        setTimeout(() => {
-          state.loginRole = role;
-          renderLogin();
-          setTimeout(() => document.querySelector('.input')?.focus(), 30);
-        }, 150);
-      } else {
-        state.loginRole = role;
-        renderLogin();
-      }
+      state.loginRole = role;
+      renderLogin();
+      setTimeout(() => document.querySelector('.input')?.focus(), 20);
+    }
+
+    function togglePasswordVisibility() {
+      const input = document.getElementById('password');
+      const button = document.querySelector('.password-toggle');
+      if (!input || !button) return;
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      button.innerHTML = icon(show ? 'eyeOff' : 'eye');
+      button.setAttribute('aria-label', show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+      button.title = show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi';
+      input.focus();
     }
 
     async function loginStaff(e) {
@@ -1174,7 +1237,7 @@
       const items = role === 'BENDAHARA'
         ? [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']]
         : [['home','home','Beranda'],['students','users','Murid']];
-      return `<div class="page"><nav class="desktop-nav" data-sliding-group><span class="slide-indicator"></span>${items.map(([view,ic,label]) => `<button data-key="${view}" class="nav-chip ${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}${label}</button>`).join('')}</nav></div>`;
+      return `<div class="page"><nav class="desktop-nav">${items.map(([view,ic,label]) => `<button data-key="${view}" class="nav-chip ${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}${label}</button>`).join('')}</nav></div>`;
     }
 
     function bottomNav() {
@@ -1182,28 +1245,12 @@
       const items = role === 'BENDAHARA'
         ? [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']]
         : [['home','home','Beranda'],['students','users','Murid']];
-      return `<nav class="bottom-nav" data-sliding-group><span class="slide-indicator"></span>${items.map(([view,ic,label]) => `<button data-key="${view}" class="${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}<span>${label}</span></button>`).join('')}</nav>`;
-    }
-
-    function syncSlidingGroup(group) {
-      if (!group) return;
-      const slider = group.querySelector(':scope > .slide-indicator');
-      const active = group.querySelector(':scope > button.active');
-      if (!slider || !active) return;
-      slider.style.width = active.offsetWidth + 'px';
-      slider.style.height = active.offsetHeight + 'px';
-      slider.style.transform = `translate3d(${active.offsetLeft}px, ${active.offsetTop}px, 0)`;
-      slider.style.opacity = '1';
-    }
-
-    function syncSlidingIndicators() {
-      document.querySelectorAll('[data-sliding-group]').forEach(syncSlidingGroup);
+      return `<nav class="bottom-nav">${items.map(([view,ic,label]) => `<button data-key="${view}" class="${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}<span>${label}</span></button>`).join('')}</nav>`;
     }
 
     function updateNavigationActive() {
-      document.querySelectorAll('.desktop-nav[data-sliding-group], .bottom-nav[data-sliding-group]').forEach(group => {
-        group.querySelectorAll(':scope > button[data-key]').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.currentView));
-        requestAnimationFrame(()=>syncSlidingGroup(group));
+      document.querySelectorAll('.desktop-nav, .bottom-nav').forEach(group => {
+        group.querySelectorAll('button[data-key]').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.currentView));
       });
     }
 
@@ -1212,7 +1259,6 @@
       panel.querySelectorAll('.period-segment button[data-key]').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.scopeMode));
       const row = panel.querySelector('.period-row');
       if (row) row.innerHTML = periodRowHtml();
-      requestAnimationFrame(()=>syncSlidingGroup(panel.querySelector('.period-segment')));
     }
 
     function renderStaffShell(contentHtml='') {
@@ -1236,7 +1282,6 @@
       }
       updateNavigationActive();
       updateSyncIndicator();
-      requestAnimationFrame(syncSlidingIndicators);
     }
 
     function renderCurrentStaffView() {
@@ -1266,7 +1311,7 @@
           applyBootstrap(data, true);
           renderCurrentStaffView();
         }
-        if (!silent) toast('Data terbaru berhasil diambil dari server.', 'success', 'Data diperbarui');
+        if (!silent) toast('Data berhasil diperbarui.', 'success', 'Data diperbarui');
       } catch (err) {
         if (!silent) toast(err.message || 'Data belum dapat diperbarui.', 'warning', 'Refresh gagal');
       } finally {
@@ -1316,6 +1361,7 @@
       state.config = Object.assign({}, DEFAULT_CONFIG, data.config || state.config || {});
       state.config.classes = (state.config.classes || []).map(c=>Object.assign({},c,{nama:normalizeClassLabel(c.nama)}));
       if (Array.isArray(data.students)) state.students = data.students.map(s=>Object.assign({},s,{kelas:normalizeClassLabel(s.kelas)}));
+      if (Array.isArray(data.payments)) state.payments = data.payments.slice();
       state.dashboard = data.dashboard || state.dashboard;
       state.summary = data.summary || state.summary;
       state.detailCache = preserveScope ? state.detailCache : {};
@@ -1351,7 +1397,7 @@
     function periodControlsHtml() {
       const modes = [['MONTH','Bulan'],['SEM1','Semester 1'],['SEM2','Semester 2'],['YEAR','Tahun Ajaran']];
       return `<section class="period-panel" id="periodPanel">
-        <div class="period-segment" data-sliding-group><span class="slide-indicator"></span>${modes.map(([mode,label])=>`<button data-key="${mode}" class="${state.scopeMode===mode?'active':''}" onclick="changeScopeMode('${mode}')">${label}</button>`).join('')}</div>
+        <div class="period-segment">${modes.map(([mode,label])=>`<button data-key="${mode}" class="${state.scopeMode===mode?'active':''}" onclick="changeScopeMode('${mode}')">${label}</button>`).join('')}</div>
         <div class="period-row">${periodRowHtml()}</div>
       </section>`;
     }
@@ -1464,9 +1510,9 @@
         ${isB ? `
           <div class="section-head"><div><h2>Akses cepat</h2><p>Fitur utama untuk pencatatan dan pemantauan Komite.</p></div></div>
           <div class="action-grid">
-            <button class="action-card primary" onclick="openPaymentSearch()"><span class="action-icon">${icon('plus')}</span><strong>Catat Pembayaran</strong><span>Cari siswa dan pilih bulan</span></button>
-            <button class="action-card" onclick="navigate('students')"><span class="action-icon">${icon('users')}</span><strong>Data Siswa</strong><span>Lihat status pembayaran</span></button>
-            <button class="action-card" onclick="navigate('summary')"><span class="action-icon">${icon('chart')}</span><strong>Rekap</strong><span>Bulan, semester, tahun ajaran</span></button>
+            <button class="action-card primary" onclick="openPaymentSearch()"><span class="action-icon">${icon('plus')}</span><strong>Catat Pembayaran</strong><span class="action-desc">Cari siswa dan pilih bulan</span></button>
+            <button class="action-card" onclick="navigate('students')"><span class="action-icon">${icon('users')}</span><strong>Data Siswa</strong><span class="action-desc">Lihat status pembayaran</span></button>
+            <button class="action-card" onclick="navigate('summary')"><span class="action-icon">${icon('chart')}</span><strong>Rekap</strong><span class="action-desc">Bulan, semester, tahun ajaran</span></button>
           </div>
         ` : `
           <div class="section-head"><div><h2>Kelas ${escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</h2><p>${escapeHtml(label)} • status murid pada periode yang dipilih.</p></div><button class="btn btn-soft btn-sm" onclick="navigate('students')">Lihat semua ${icon('arrow')}</button></div>
@@ -1486,7 +1532,7 @@
     function renderStudentsView() {
       const canClass = state.user.role === 'BENDAHARA';
       const html = `
-        <div class="section-head"><div><h2>${canClass?'Data Siswa':'Murid '+escapeHtml(normalizeClassLabel(state.user.kelas))}</h2><p>${state.students.length} data aktif • tersimpan di cache aplikasi</p></div>${canClass?`<button class="btn btn-primary btn-sm" onclick="openPaymentSearch()">${icon('plus')} Catat Pembayaran</button>`:''}</div>
+        <div class="section-head"><div><h2>${canClass?'Data Siswa':'Murid '+escapeHtml(normalizeClassLabel(state.user.kelas))}</h2><p>${state.students.length} data aktif</p></div>${canClass?`<button class="btn btn-primary btn-sm" onclick="openPaymentSearch()">${icon('plus')} Catat Pembayaran</button>`:''}</div>
         <section class="card card-pad">
           <div class="toolbar ${canClass?'three':''}">
             <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="studentSearch" class="input" placeholder="Cari nama atau NISN" oninput="filterStudentsView()"></div>
@@ -1548,19 +1594,11 @@
       if (target) target.innerHTML = list.length ? list.map(s=>studentRowHtml(s,true)).join('') : emptyHtml('Siswa tidak ditemukan','Periksa nama, NISN, atau kelas.');
     }
 
-    async function openStudentDetail(idSiswa, paymentMode=false, force=false) {
+    function openStudentDetail(idSiswa, paymentMode=false) {
       try {
-        let d = !force ? state.detailCache[idSiswa] : null;
-        if (!d && !navigator.onLine) d = buildLocalStudentDetail(idSiswa);
-        if (!d) {
-          try {
-            d = await api('studentDetail', {token:state.token,idSiswa,force}, {loadingText:'Memuat pembayaran siswa…', timeout:16000});
-          } catch (err) {
-            if (isNetworkLikeError(err)) d = buildLocalStudentDetail(idSiswa);
-            if (!d) throw err;
-          }
-          state.detailCache[idSiswa] = d;
-        }
+        const d = buildLocalStudentDetail(idSiswa) || state.detailCache[idSiswa];
+        if (!d) throw new Error('Data siswa belum tersedia. Tekan Refresh lalu coba lagi.');
+        state.detailCache[idSiswa] = d;
         state.selectedStudentDetail = d;
         const isB = state.user.role === 'BENDAHARA';
         openModal(studentDetailModalHtml(d, paymentMode && isB), true);
@@ -1570,24 +1608,38 @@
     function buildLocalStudentDetail(idSiswa) {
       const s = state.students.find(x => x.idSiswa === idSiswa);
       if (!s) return null;
+      const serverPayments = (state.payments || []).filter(x => x.idSiswa === idSiswa && String(x.status || 'LUNAS').toUpperCase() === 'LUNAS');
+      const paymentMap = new Map(serverPayments.map(x => [`${x.bulan}-${x.tahun}`, x]));
       const paidSet = new Set(Array.isArray(s.paidPeriods) ? s.paidPeriods : []);
+      serverPayments.forEach(x => paidSet.add(`${x.bulan}-${x.tahun}`));
+      const pending = getPaymentQueue().filter(x => x.idSiswa === idSiswa);
+      const pendingSet = new Set(pending.map(x => `${x.bulan}-${x.tahun}`));
       const current = state.config.currentPeriod;
       const currentIndex = state.config.periods.findIndex(p => p.bulan === current?.bulan && Number(p.tahun) === Number(current?.tahun));
       const periods = state.config.periods.map((p, index) => {
         const key = `${p.bulan}-${p.tahun}`;
+        const tx = paymentMap.get(key);
         const paid = paidSet.has(key);
         return {
           bulan:p.bulan, tahun:p.tahun, label:p.label,
           status: paid ? 'LUNAS' : (currentIndex >= 0 && index <= currentIndex ? 'BELUM_BAYAR' : 'BELUM_JATUH_TEMPO'),
-          nominal:Number(state.config.amount||50000), idTransaksi:''
+          nominal:Number(tx?.nominal || state.config.amount || 50000), idTransaksi:tx?.idTransaksi || '', pending:pendingSet.has(key)
         };
       });
+      const history = serverPayments.map(x => ({
+        idTransaksi:x.idTransaksi || '', bulan:String(x.bulan || '').toUpperCase(), tahun:Number(x.tahun),
+        nominal:Number(x.nominal || state.config.amount || 50000), tanggalBayar:x.tanggalBayar || '', status:'LUNAS'
+      })).sort((a,b) => {
+        const ai=state.config.periods.findIndex(p=>p.bulan===a.bulan&&Number(p.tahun)===Number(a.tahun));
+        const bi=state.config.periods.findIndex(p=>p.bulan===b.bulan&&Number(p.tahun)===Number(b.tahun));
+        return bi-ai;
+      });
+      const paidMonths=periods.filter(p=>p.status==='LUNAS').length;
       return {
         student:{idSiswa:s.idSiswa,nisn:s.nisn,nama:s.nama,kelas:s.kelas},
-        paidMonths:periods.filter(p=>p.status==='LUNAS').length,
-        totalMonths:periods.length,
-        paidAmount:periods.filter(p=>p.status==='LUNAS').length * Number(state.config.amount||50000),
-        periods, history:[], offlineApprox:true
+        paidMonths, totalMonths:periods.length,
+        paidAmount:history.length ? history.reduce((sum,h)=>sum+Number(h.nominal||0),0) : paidMonths * Number(state.config.amount||50000),
+        periods, history, localData:true
       };
     }
 
@@ -1605,7 +1657,7 @@
           <div class="section-head" style="margin-top:0"><div><h2>Pembayaran ${escapeHtml(state.config.schoolYear)}</h2><p>${paymentMode?'Pilih satu atau beberapa bulan yang akan dicatat.':'Status Pembayaran Komite per bulan.'}</p></div><span class="status-pill ok">${icon('check')} ${money(d.paidAmount)}</span></div>
           <div class="months-grid">${d.periods.map(p=>monthCardHtml(p, s.idSiswa, paymentMode)).join('')}</div>
           ${paymentMode ? paymentSelectionPanelHtml(s.idSiswa) : ''}
-          <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>${d.offlineApprox ? 'Riwayat lengkap tersedia saat online' : (d.history.length ? d.history.length+' transaksi lunas' : 'Belum ada transaksi')}</p></div></div>
+          <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>${d.history.length ? d.history.length+' transaksi lunas' : 'Belum ada transaksi'}</p></div></div>
           <div class="card card-pad">${historyHtml(d.history, state.user.role === 'BENDAHARA')}</div>
         </div>`;
     }
@@ -1620,12 +1672,12 @@
         ? `<span class="status-pill sync">${icon('clock')} Menunggu sinkron</span>`
         : lunas
           ? `<span class="status-pill ok">${icon('check')} Lunas</span>`
-          : selected ? `<span class="status-pill ok">${icon('check')} Dipilih</span>`
+          : selected ? `<span class="status-pill selected">${icon('check')} Dipilih</span>`
           : due ? `<span class="status-pill wait">${icon('clock')} Belum Bayar</span>`
           : `<span class="status-pill future">${icon('calendar')} Belum Jatuh Tempo</span>`;
       const selectable = paymentMode && !lunas && !pending;
       return `<div class="month-card ${selectable?'selectable':''} ${selected?'selected':''}" ${selectable?`data-pay-key="${escapeHtml(key)}" onclick="togglePaymentMonth('${escapeHtml(idSiswa)}','${escapeHtml(p.bulan)}',${p.tahun})"`:''}>
-        <div><div class="month-name">${escapeHtml(p.bulan.slice(0,3))}</div><div class="month-year">${p.tahun}</div></div>${status}
+        <div><div class="month-name">${escapeHtml(titleCase(p.bulan))}</div><div class="month-year">${p.tahun}</div></div>${status}
       </div>`;
     }
 
@@ -1656,7 +1708,7 @@
       if (card) {
         card.classList.toggle('selected', state.paymentSelection.includes(key));
         const pill = card.querySelector('.status-pill');
-        if (pill) pill.outerHTML = state.paymentSelection.includes(key) ? `<span class="status-pill ok">${icon('check')} Dipilih</span>` : `<span class="status-pill ${isPeriodDueLocal({bulan,tahun})?'wait':'future'}">${icon(isPeriodDueLocal({bulan,tahun})?'clock':'calendar')} ${isPeriodDueLocal({bulan,tahun})?'Belum Bayar':'Belum Jatuh Tempo'}</span>`;
+        if (pill) pill.outerHTML = state.paymentSelection.includes(key) ? `<span class="status-pill selected">${icon('check')} Dipilih</span>` : `<span class="status-pill ${isPeriodDueLocal({bulan,tahun})?'wait':'future'}">${icon(isPeriodDueLocal({bulan,tahun})?'clock':'calendar')} ${isPeriodDueLocal({bulan,tahun})?'Belum Bayar':'Belum Jatuh Tempo'}</span>`;
       }
       updatePaymentSelectionPanel();
     }
@@ -1718,23 +1770,39 @@
 
     function confirmCancel(idTransaksi) {
       openModal(`
-        <div class="modal-head"><div><h3>Batalkan pembayaran?</h3><p>Pembayaran tidak dihapus, status internalnya akan menjadi BATAL.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
-        <div class="modal-body"><div class="card card-pad"><p style="margin:0;color:var(--muted);font-size:13px;line-height:1.5">Gunakan hanya bila Bendahara salah mencatat pembayaran. Jejak pembatalan tetap tersimpan pada sistem.</p></div></div>
+        <div class="modal-head"><div><h3>Batalkan pembayaran?</h3><p>Pembayaran akan dibatalkan dan tetap tercatat dalam riwayat.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body"><div class="card card-pad"><p style="margin:0;color:var(--muted);font-size:13px;line-height:1.5">Gunakan hanya bila Bendahara salah mencatat pembayaran. Riwayat pembatalan tetap tersimpan.</p></div></div>
         <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Tidak</button><button class="btn btn-danger" onclick="cancelPayment('${escapeHtml(idTransaksi)}')">${icon('trash')} Ya, Batalkan</button></div>`);
     }
 
     async function cancelPayment(idTransaksi) {
       try {
-        const idSiswa = state.selectedStudentDetail?.student?.idSiswa;
-        await api('cancelPayment', {token:state.token,idTransaksi}, {loadingText:'Membatalkan transaksi…'});
-        toast('Transaksi berhasil dibatalkan dan jejaknya tetap tersimpan.', 'success');
-        state.detailCache = {};
-        state.summaryCache = {};
-        if (navigator.onLine) {
-          const data = await api('staffBootstrap', Object.assign({token:state.token}, scopePayload(false)), {silent:true});
-          applyBootstrap(data, true);
+        const record = (state.payments || []).find(x => x.idTransaksi === idTransaksi);
+        const idSiswa = record?.idSiswa || state.selectedStudentDetail?.student?.idSiswa;
+        await api('cancelPayment', {token:state.token,idTransaksi}, {loadingText:'Membatalkan pembayaran…'});
+        toast('Pembayaran berhasil dibatalkan.', 'success');
+        if (record) {
+          state.payments = state.payments.filter(x => x.idTransaksi !== idTransaksi);
+          const listStudent = state.students.find(x => x.idSiswa === record.idSiswa);
+          if (listStudent) {
+            const key = `${record.bulan}-${record.tahun}`;
+            listStudent.paidPeriods = (listStudent.paidPeriods || []).filter(x => x !== key);
+            listStudent.paidMonths = listStudent.paidPeriods.length;
+            listStudent.unpaidMonths = Math.max(0,(state.config.periods||[]).length-listStudent.paidMonths);
+          }
         }
-        if (idSiswa) await openStudentDetail(idSiswa, false, true); else closeModal();
+        if (idSiswa) {
+          const d = buildLocalStudentDetail(idSiswa);
+          if (d) {
+            state.detailCache[idSiswa] = d;
+            state.selectedStudentDetail = d;
+          }
+        }
+        const local=buildLocalSummaryData();
+        state.summary=local;
+        state.dashboard={user:state.user,scope:local.scope,stats:summaryStatsFromSummary(local.summary),config:state.config};
+        saveStaffSnapshot();
+        if (idSiswa && state.selectedStudentDetail) openModal(studentDetailModalHtml(state.selectedStudentDetail, false), true); else closeModal();
       } catch (err) { toast(err.message,'error'); }
     }
 
@@ -1764,7 +1832,7 @@
 
     function summaryStudentsHtml(list, preview=false) {
       const rows = preview ? list.slice(0,6) : list;
-      if (!rows.length) return emptyHtml('Belum ada siswa','Isi data pada sheet SISWA.');
+      if (!rows.length) return emptyHtml('Belum ada siswa','Belum ada data siswa yang tersedia.');
       const many = (state.summary?.scope?.periods?.length || 1) > 1;
       return `<div class="student-list" style="margin-top:0">${rows.map(x=>{
         let cls = 'future', txt = 'Belum Jatuh Tempo', ic = 'calendar';
@@ -1856,6 +1924,7 @@
       if (snap) {
         state.config = Object.assign({}, state.config, snap.config || {});
         state.students = snap.students || [];
+        state.payments = snap.payments || [];
         state.summary = snap.summary || null;
         state.dashboard = snap.dashboard || null;
         state.scopeMode = snap.scopeMode || 'MONTH';
@@ -1885,14 +1954,16 @@
     }
 
     async function boot() {
-      await loadPublicConfig();
-      if (!state.scopeMonthIndex && state.config?.currentPeriod) {
-        const idx = state.config.periods.findIndex(p=>p.bulan===state.config.currentPeriod.bulan && Number(p.tahun)===Number(state.config.currentPeriod.tahun));
-        if (idx >= 0) state.scopeMonthIndex = idx;
+      if (!state.token || !state.user) {
+        renderLogin();
+        loadPublicConfig().then(() => { if (!state.user) renderLogin(); });
+        updateSyncIndicator();
+        return;
       }
       const restored = await restoreSession();
       if (!restored) renderLogin();
       updateSyncIndicator();
+      loadPublicConfig().catch(()=>{});
     }
 
     window.addEventListener('online', () => {
