@@ -685,6 +685,136 @@
       .payment-result-actions .btn { width:100%; }
     }
 
+
+    /* ===== Versi 1.05: filter ringkas, bottom nav penuh, kontrol mobile, rekening bendahara ===== */
+    .dashboard-hero { padding-right: 82px; }
+    .hero-filter-toggle {
+      position: absolute; z-index: 2; top: 18px; right: 18px;
+      width: 44px; height: 44px; display: grid; place-items: center;
+      border: 1px solid rgba(255,255,255,.24); border-radius: 15px;
+      color: white; background: rgba(255,255,255,.12); backdrop-filter: blur(8px);
+      transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
+    }
+    .hero-filter-toggle:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.34); transform: translateY(-1px); }
+    .hero-filter-toggle svg { width: 21px; height: 21px; }
+
+    .period-panel { margin-top: 14px; }
+    .period-arrow {
+      width: 36px; height: 36px; justify-self: center; border-radius: 50%;
+      color: var(--blue); background: rgba(139,220,255,.22); border: 1px solid rgba(23,105,210,.10);
+    }
+    .period-arrow:hover:not(:disabled) { background: rgba(139,220,255,.36); }
+    .period-arrow:disabled {
+      color: #a9b5c1; background: #eef1f4; border-color: #e1e6eb; opacity: 1;
+    }
+    .period-nav { grid-template-columns: 48px minmax(0,1fr) 48px; }
+
+    .select-badge-wrap { position: relative; min-width: 0; width: 100%; }
+    .select-badge-wrap .select { appearance: none; -webkit-appearance: none; padding-right: 52px; }
+    .select-arrow-badge {
+      position: absolute; pointer-events: none; right: 9px; top: 50%; transform: translateY(-50%);
+      width: 31px; height: 31px; border-radius: 50%; display: grid; place-items: center;
+      color: var(--blue); background: rgba(139,220,255,.22); border: 1px solid rgba(23,105,210,.09);
+    }
+    .select-arrow-badge svg { width: 16px; height: 16px; }
+
+    .treasurer-accounts-wrap { margin-top: 28px; }
+    .treasurer-accounts {
+      overflow: hidden; border: 1px solid var(--line); border-radius: 22px;
+      background: var(--surface); box-shadow: var(--shadow-soft);
+    }
+    .treasurer-accounts > summary {
+      list-style: none; cursor: pointer; min-height: 76px; padding: 14px 16px;
+      display: grid; grid-template-columns: 46px minmax(0,1fr) 36px; gap: 12px; align-items: center;
+      -webkit-tap-highlight-color: transparent; user-select: none;
+    }
+    .treasurer-accounts > summary::-webkit-details-marker { display: none; }
+    .accounts-summary-icon {
+      width: 46px; height: 46px; border-radius: 15px; display: grid; place-items: center;
+      color: var(--blue); background: #eef6ff; border: 1px solid #d8ebff;
+    }
+    .accounts-summary-icon svg { width: 22px; height: 22px; }
+    .accounts-summary-copy { min-width: 0; }
+    .accounts-summary-copy strong { display: block; font-size: 14px; }
+    .accounts-summary-copy small { display: block; color: var(--muted); font-size: 11px; margin-top: 3px; line-height: 1.35; }
+    .accounts-summary-chevron {
+      width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+      color: var(--blue); background: #f0f7ff; transition: transform .18s ease;
+    }
+    .accounts-summary-chevron svg { width: 17px; height: 17px; }
+    .treasurer-accounts[open] .accounts-summary-chevron { transform: rotate(180deg); }
+    .accounts-expanded { border-top: 1px solid var(--line); padding: 16px; }
+    .bank-card-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+    .bank-card {
+      min-width: 0; min-height: 190px; padding: 20px; border-radius: 22px; color: white;
+      display: flex; flex-direction: column; position: relative; overflow: hidden;
+      box-shadow: 0 16px 34px rgba(10,52,92,.16);
+    }
+    .bank-card::before, .bank-card::after { content:""; position:absolute; border-radius:50%; pointer-events:none; }
+    .bank-card::before { width: 190px; height: 190px; right:-86px; top:-100px; border:1px solid rgba(255,255,255,.18); box-shadow: 0 0 0 28px rgba(255,255,255,.025); }
+    .bank-card::after { width: 120px; height: 120px; left:-68px; bottom:-72px; background:rgba(255,255,255,.04); }
+    .bank-papua-card { background: linear-gradient(140deg,#092f55 0%,#1265b8 62%,#3f9cf0 100%); }
+    .bri-card { background: linear-gradient(140deg,#0b3b6f 0%,#1769d2 58%,#62b8f4 100%); }
+    .bank-card-top, .bank-card-bottom { position: relative; z-index: 1; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .bank-name { font-size: 15px; font-weight: 760; letter-spacing: .03em; }
+    .bank-card-mark { font-size: 10px; padding: 6px 9px; border: 1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.09); border-radius:999px; }
+    .bank-account-label { position:relative; z-index:1; margin-top:30px; font-size:10px; opacity:.7; }
+    .bank-account-number { position:relative; z-index:1; margin-top:5px; font-size:clamp(19px,3vw,25px); font-weight:720; letter-spacing:.035em; white-space:nowrap; }
+    .bank-card-bottom { margin-top:auto; align-items:end; }
+    .bank-card-bottom > div span { display:block; font-size:9px; opacity:.7; }
+    .bank-card-bottom > div strong { display:block; margin-top:3px; font-size:12px; letter-spacing:.025em; }
+    .copy-account-btn {
+      min-height: 36px; padding: 0 11px; border:1px solid rgba(255,255,255,.22); border-radius:12px;
+      display:inline-flex; align-items:center; gap:6px; color:white; background:rgba(255,255,255,.11);
+      font-size:10px; font-weight:650; -webkit-tap-highlight-color:transparent;
+    }
+    .copy-account-btn:hover { background:rgba(255,255,255,.18); }
+    .copy-account-btn svg { width:15px; height:15px; }
+    .transfer-confirmation { text-align:center; padding:18px 8px 4px; }
+    .transfer-confirmation p { margin:0 auto 12px; max-width:540px; color:var(--muted); font-size:12px; line-height:1.5; }
+    .whatsapp-link {
+      display:inline-flex; align-items:center; gap:8px; padding:9px 13px; border-radius:999px;
+      color:#159447; background:#edf9f1; border:1px solid #d1efdc; text-decoration:none; font-weight:700; font-size:13px;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .whatsapp-link:hover { background:#e5f7ec; }
+    .whatsapp-link svg { width:21px; height:21px; }
+
+    @media (max-width: 860px) {
+      .bottom-nav {
+        left: 0 !important; right: 0 !important; transform: none !important; bottom: 0 !important;
+        width: 100% !important; max-width: none !important;
+        padding: 7px 10px calc(7px + var(--safe-bottom)) !important;
+        border-left: 0 !important; border-right: 0 !important; border-bottom: 0 !important;
+        border-radius: 22px 22px 0 0 !important;
+        box-shadow: 0 -10px 30px rgba(18,57,95,.12) !important;
+      }
+      .bendahara-main { padding-bottom: calc(94px + var(--safe-bottom)); }
+      .wali-main { padding-bottom: 42px !important; }
+    }
+
+    @media (max-width: 600px) {
+      .dashboard-hero { padding-right: 64px; }
+      .hero-filter-toggle { width:39px; height:39px; top:14px; right:14px; border-radius:13px; }
+      .hero-filter-toggle svg { width:19px; height:19px; }
+      .period-segment {
+        display:flex; grid-template-columns:none; overflow-x:auto; overflow-y:hidden; gap:5px;
+        scroll-snap-type:x proximity; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+      }
+      .period-segment::-webkit-scrollbar { display:none; }
+      .period-segment button { flex:0 0 auto; min-width:96px; padding:0 13px; scroll-snap-align:start; }
+      .period-segment button:nth-child(n+2) { min-width:116px; }
+      .period-row { margin-top:8px; }
+      .bank-card-grid { grid-template-columns:1fr; }
+      .bank-card { min-height:184px; padding:18px; }
+      .bank-account-number { font-size:20px; }
+      .accounts-expanded { padding:12px; }
+      .treasurer-accounts > summary { padding:12px; grid-template-columns:42px minmax(0,1fr) 32px; }
+      .accounts-summary-icon { width:42px; height:42px; border-radius:14px; }
+      .accounts-summary-copy strong { font-size:13px; }
+      .accounts-summary-copy small { font-size:10px; }
+    }
+
   </style>
 </head>
 <body>
@@ -700,7 +830,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.04';
+    const APP_REVISION = 'Versi 1.05';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -723,7 +853,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.04'
+      revision: '1.05'
     };
 
     const state = {
@@ -742,6 +872,7 @@
       scopeMode: 'MONTH',
       scopeMonthIndex: 0,
       scopeClass: '',
+      filterOpen: false,
       syncing: false,
       syncPromise: null,
       refreshBusy: false,
@@ -762,6 +893,10 @@
       chevron: '<path d="m9 18 6-6-6-6"/>',
       left: '<path d="m15 18-6-6 6-6"/>',
       right: '<path d="m9 18 6-6-6-6"/>',
+      up: '<path d="m6 15 6-6 6 6"/>',
+      down: '<path d="m6 9 6 6 6-6"/>',
+      filter: '<path d="M4 5h16"/><path d="M7 12h10"/><path d="M10 19h4"/>',
+      copy: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
       check: '<path d="m5 12 4 4L19 6"/>',
       clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
       info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
@@ -784,6 +919,60 @@
 
     function icon(name, cls='') {
       return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.info}</svg>`;
+    }
+
+    function whatsappIcon(cls='') {
+      return `<svg class="${cls}" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M26.576 5.363c-2.69-2.69-6.406-4.354-10.511-4.354-8.209 0-14.865 6.655-14.865 14.865 0 2.732.737 5.291 2.022 7.491l-.038-.07-2.109 7.702 7.879-2.067c2.051 1.139 4.498 1.809 7.102 1.809h.006c8.209-.003 14.862-6.659 14.862-14.868 0-4.103-1.662-7.817-4.349-10.507l0 0zM16.062 28.228h-.005c-2.319 0-4.489-.64-6.342-1.753l.056.031-.451-.267-4.675 1.227 1.247-4.559-.294-.467c-1.185-1.862-1.889-4.131-1.889-6.565 0-6.822 5.531-12.353 12.353-12.353s12.353 5.531 12.353 12.353c0 6.822-5.53 12.353-12.353 12.353zM22.838 18.977c-.371-.186-2.197-1.083-2.537-1.208-.341-.124-.589-.185-.837.187-.246.371-.958 1.207-1.175 1.455-.216.249-.434.279-.805.094-1.15-.466-2.138-1.087-2.997-1.852l.01.009c-.799-.74-1.484-1.587-2.037-2.521l-.028-.052c-.216-.371-.023-.572.162-.757.167-.166.372-.434.557-.65.146-.179.271-.384.366-.604l.006-.017c.043-.087.068-.188.068-.296 0-.131-.037-.253-.101-.357l.002.003c-.094-.186-.836-2.014-1.145-2.758-.302-.724-.609-.625-.836-.637-.216-.01-.464-.012-.712-.012-.395.01-.746.188-.988.463l-.001.002c-.802.761-1.3 1.834-1.3 3.023 0 .026 0 .053.001.079v-.004c.131 1.467.681 2.784 1.527 3.857l-.012-.015c1.604 2.379 3.742 4.282 6.251 5.564l.094.043c.548.248 1.25.513 1.968.74l.149.041c.442.14.951.221 1.479.221.303 0 .601-.027.889-.078l-.031.004c1.069-.223 1.956-.868 2.497-1.749l.009-.017c.165-.366.261-.793.261-1.242 0-.185-.016-.366-.047-.542l.003.019c-.092-.155-.34-.247-.712-.434z"/></svg>`;
+    }
+
+    function treasurerAccountsHtml() {
+      return `<section class="treasurer-accounts-wrap">
+        <details class="treasurer-accounts">
+          <summary>
+            <span class="accounts-summary-icon">${icon('wallet')}</span>
+            <span class="accounts-summary-copy"><strong>Nomor Rekening Bendahara</strong><small>Tekan untuk melihat rekening pembayaran</small></span>
+            <span class="accounts-summary-chevron">${icon('down')}</span>
+          </summary>
+          <div class="accounts-expanded">
+            <div class="bank-card-grid">
+              <article class="bank-card bank-papua-card">
+                <div class="bank-card-top"><span class="bank-name">BANK PAPUA</span><span class="bank-card-mark">Komite</span></div>
+                <div class="bank-account-label">Nomor Rekening</div>
+                <div class="bank-account-number">1000 2052 1188 7</div>
+                <div class="bank-card-bottom"><div><span>Atas Nama</span><strong>INTI HAYATI</strong></div><button type="button" class="copy-account-btn" onclick="event.preventDefault();event.stopPropagation();copyAccountNumber('1000205211887')">${icon('copy')}<span>Salin</span></button></div>
+              </article>
+              <article class="bank-card bri-card">
+                <div class="bank-card-top"><span class="bank-name">BRI</span><span class="bank-card-mark">Komite</span></div>
+                <div class="bank-account-label">Nomor Rekening</div>
+                <div class="bank-account-number">4915 0101 4988 532</div>
+                <div class="bank-card-bottom"><div><span>Atas Nama</span><strong>INTI HAYATI</strong></div><button type="button" class="copy-account-btn" onclick="event.preventDefault();event.stopPropagation();copyAccountNumber('491501014988532')">${icon('copy')}<span>Salin</span></button></div>
+              </article>
+            </div>
+            <div class="transfer-confirmation">
+              <p>Sudah melakukan transfer? Silakan kirim bukti transfer melalui WhatsApp.</p>
+              <a class="whatsapp-link" href="https://wa.me/6282199661697" target="_blank" rel="noopener noreferrer" aria-label="Kirim bukti transfer melalui WhatsApp kepada Inti Hayati">${whatsappIcon()}<span>Inti Hayati</span></a>
+            </div>
+          </div>
+        </details>
+      </section>`;
+    }
+
+    async function copyAccountNumber(number) {
+      const text = String(number || '').replace(/\D/g,'');
+      if (!text) return;
+      try {
+        if (navigator.clipboard?.writeText && window.isSecureContext) await navigator.clipboard.writeText(text);
+        else {
+          const area = document.createElement('textarea');
+          area.value = text; area.setAttribute('readonly',''); area.style.position='fixed'; area.style.opacity='0'; area.style.pointerEvents='none';
+          document.body.appendChild(area); area.select();
+          const ok = document.execCommand('copy'); area.remove();
+          if (!ok) throw new Error('copy');
+        }
+        toast('Nomor rekening berhasil disalin.', 'success');
+      } catch (_) {
+        toast('Nomor rekening belum dapat disalin. Silakan salin secara manual.', 'warning');
+      }
     }
 
     function safeJson(text) {
@@ -966,6 +1155,7 @@
       if (normalizedUser.kelas) normalizedUser.kelas = normalizeClassLabel(normalizedUser.kelas);
       state.token = token;
       state.user = normalizedUser;
+      state.filterOpen = false;
       localStorage.setItem(STORAGE.TOKEN, token);
       localStorage.setItem(STORAGE.USER, JSON.stringify(normalizedUser));
     }
@@ -1460,32 +1650,34 @@
     function renderStaffShell(contentHtml='') {
       const app = document.getElementById('app');
       const content = contentHtml || renderHomeContent();
+      const fullContent = `${content}${treasurerAccountsHtml()}`;
 
       if (state.user?.role === 'WALI') {
         state.currentView = 'home';
-        app.innerHTML = `${topbar()}<main class="page main wali-main" id="mainContent">${content}</main>`;
+        app.innerHTML = `${topbar()}<main class="page main wali-main" id="mainContent">${fullContent}</main>`;
         updateSyncIndicator();
         return;
       }
 
       const existingMain = document.getElementById('mainContent');
       if (!existingMain || !document.querySelector('.desktop-nav') || !document.querySelector('.bottom-nav')) {
-        app.innerHTML = `${topbar()}${desktopNav()}<main class="page main" id="mainContent">${content}</main>${bottomNav()}`;
+        app.innerHTML = `${topbar()}${desktopNav()}<main class="page main bendahara-main" id="mainContent">${fullContent}</main>${bottomNav()}`;
       } else {
-        const temp = document.createElement('div');
-        temp.innerHTML = content;
-        const oldPanel = existingMain.querySelector('#periodPanel');
-        const newPanel = temp.querySelector('#periodPanel');
-        existingMain.innerHTML = '';
-        if (oldPanel && newPanel) {
-          newPanel.remove();
-          updatePeriodPanelState(oldPanel);
-          existingMain.appendChild(oldPanel);
-        }
-        while (temp.firstChild) existingMain.appendChild(temp.firstChild);
+        existingMain.innerHTML = fullContent;
       }
       updateNavigationActive();
       updateSyncIndicator();
+      if (state.filterOpen) requestAnimationFrame(ensureActivePeriodVisible);
+    }
+
+    function ensureActivePeriodVisible() {
+      const segment = document.querySelector('#periodPanel .period-segment');
+      const active = segment?.querySelector('button.active');
+      if (!segment || !active || segment.scrollWidth <= segment.clientWidth) return;
+      const left = active.offsetLeft - 8;
+      const right = active.offsetLeft + active.offsetWidth + 8;
+      if (left < segment.scrollLeft) segment.scrollLeft = Math.max(0, left);
+      else if (right > segment.scrollLeft + segment.clientWidth) segment.scrollLeft = Math.max(0, right - segment.clientWidth);
     }
 
     function renderCurrentStaffView() {
@@ -1599,16 +1791,30 @@
       const isMonth = state.scopeMode === 'MONTH';
       const isB = state.user?.role === 'BENDAHARA';
       const scopeLabel = localScopeDefinition().label;
-      return `${isMonth ? `<div class="period-nav"><button class="period-arrow" onclick="moveScopeMonth(-1)" ${state.scopeMonthIndex<=0?'disabled':''}>${icon('left')}</button><div class="period-label">${escapeHtml(p?.label || '')}</div><button class="period-arrow" onclick="moveScopeMonth(1)" ${state.scopeMonthIndex>=state.config.periods.length-1?'disabled':''}>${icon('right')}</button></div>` : `<div class="period-static">${escapeHtml(scopeLabel)}</div>`}
-        ${isB ? `<select class="select period-class" onchange="changeScopeClass(this.value)"><option value="" ${!state.scopeClass?'selected':''}>Semua Kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}" ${normalizeClassLabel(state.scopeClass)===normalizeClassLabel(c.nama)?'selected':''}>${escapeHtml(normalizeClassLabel(c.nama))}</option>`).join('')}</select>` : `<div class="period-class-readonly">${escapeHtml(normalizeClassLabel(state.user?.kelas || ''))}</div>`}`;
+      return `${isMonth ? `<div class="period-nav"><button class="period-arrow" onclick="moveScopeMonth(-1)" ${state.scopeMonthIndex<=0?'disabled':''} aria-label="Bulan sebelumnya">${icon('left')}</button><div class="period-label">${escapeHtml(p?.label || '')}</div><button class="period-arrow" onclick="moveScopeMonth(1)" ${state.scopeMonthIndex>=state.config.periods.length-1?'disabled':''} aria-label="Bulan berikutnya">${icon('right')}</button></div>` : `<div class="period-static">${escapeHtml(scopeLabel)}</div>`}
+        ${isB ? `<div class="select-badge-wrap"><select class="select period-class" onchange="changeScopeClass(this.value)"><option value="" ${!state.scopeClass?'selected':''}>Semua Kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}" ${normalizeClassLabel(state.scopeClass)===normalizeClassLabel(c.nama)?'selected':''}>${escapeHtml(normalizeClassLabel(c.nama))}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>` : `<div class="period-class-readonly">${escapeHtml(normalizeClassLabel(state.user?.kelas || ''))}</div>`}`;
     }
 
-    function periodControlsHtml() {
+    function periodControlsHtml(collapsible=false) {
       const modes = [['MONTH','Bulan'],['SEM1','Semester 1'],['SEM2','Semester 2'],['YEAR','Tahun Ajaran']];
-      return `<section class="period-panel" id="periodPanel">
+      return `<section class="period-panel ${collapsible && !state.filterOpen ? 'hidden' : ''}" id="periodPanel">
         <div class="period-segment">${modes.map(([mode,label])=>`<button data-key="${mode}" class="${state.scopeMode===mode?'active':''}" onclick="changeScopeMode('${mode}')">${label}</button>`).join('')}</div>
         <div class="period-row">${periodRowHtml()}</div>
       </section>`;
+    }
+
+    function togglePeriodFilter() {
+      state.filterOpen = !state.filterOpen;
+      const panel = document.getElementById('periodPanel');
+      if (panel) panel.classList.toggle('hidden', !state.filterOpen);
+      const btn = document.getElementById('dashboardFilterToggle');
+      if (btn) {
+        btn.innerHTML = icon(state.filterOpen ? 'up' : 'filter');
+        btn.setAttribute('aria-expanded', String(state.filterOpen));
+        btn.setAttribute('title', state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter');
+        btn.setAttribute('aria-label', state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter');
+      }
+      if (state.filterOpen) requestAnimationFrame(ensureActivePeriodVisible);
     }
 
     function changeScopeMode(mode) {
@@ -1705,8 +1911,8 @@
       const periodCount = state.summary?.scope?.periods?.length || d?.scope?.periods?.length || 1;
       const paidLabel = scopeIsMonth() ? 'Lunas' : 'Pembayaran Lunas';
       return `
-        ${periodControlsHtml()}
-        <section class="hero">
+        <section class="hero dashboard-hero">
+          <button id="dashboardFilterToggle" class="hero-filter-toggle" onclick="togglePeriodFilter()" title="${state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter'}" aria-label="${state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter'}" aria-expanded="${state.filterOpen}">${icon(state.filterOpen ? 'up' : 'filter')}</button>
           <div class="hero-kicker">${isB ? 'Dashboard Bendahara' : 'Dashboard Wali Kelas • '+escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</div>
           <div class="hero-title">${escapeHtml(label)}</div>
           <div class="hero-sub">Status Pembayaran Komite • ${money(state.config.amount)} per siswa${Number(s.future||0)>0 ? ` • ${s.future} belum jatuh tempo` : ''}</div>
@@ -1716,6 +1922,7 @@
             <div class="hero-stat"><small>Belum</small><strong>${s.unpaid||0}</strong></div>
           </div>
         </section>
+        ${periodControlsHtml(true)}
         ${isB ? `
           <div class="section-head"><div><h2>Akses cepat</h2><p>Fitur utama untuk pencatatan dan pemantauan Komite.</p></div></div>
           <div class="action-grid">
@@ -1750,7 +1957,7 @@
         <section class="card card-pad">
           <div class="toolbar ${canClass?'three':''}">
             <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="studentSearch" class="input" placeholder="Cari nama atau NISN" oninput="filterStudentsView()"></div>
-            ${canClass ? `<select id="studentClass" class="select" onchange="filterStudentsView()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select>` : ''}
+            ${canClass ? `<div class="select-badge-wrap"><select id="studentClass" class="select" onchange="filterStudentsView()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>` : ''}
             <div></div>
           </div>
           <div id="studentList" class="student-list"></div>
@@ -1791,7 +1998,7 @@
           ${queueCount()?`<div class="sync-notice">${icon('clock')} <span><strong>${queueCount()} pembayaran menunggu sinkronisasi.</strong> Anda tetap dapat mencatat pembayaran berikutnya.</span></div>`:''}
           <div class="toolbar three">
             <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="paySearch" class="input" placeholder="Cari nama atau NISN" oninput="filterPaymentStudents()" autofocus></div>
-            <select id="payClass" class="select" onchange="filterPaymentStudents()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select>
+            <div class="select-badge-wrap"><select id="payClass" class="select" onchange="filterPaymentStudents()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>
             <div></div>
           </div>
           <div id="payStudentList" class="student-list"></div>
@@ -1908,9 +2115,23 @@
       const count = state.paymentSelection.length;
       return `<div class="payment-selection" id="paymentSelectionPanel">
         <div class="payment-selection-summary"><strong id="paymentSelectionCount">${count ? count+' bulan dipilih' : 'Belum ada bulan dipilih'}</strong><span id="paymentSelectionTotal">${count ? money(count*Number(state.config.amount||50000)) : 'Pilih bulan yang belum lunas'}</span></div>
-        <div class="payment-date-wrap"><label class="label" for="paymentDate">Tanggal Pembayaran</label><input id="paymentDate" class="input" type="date" max="${todayJayapuraIso()}" value="${escapeHtml(state.paymentDate || todayJayapuraIso())}" onchange="state.paymentDate=this.value"></div>
+        <div class="payment-date-wrap"><label class="label" for="paymentDate">Tanggal Pembayaran</label><input id="paymentDate" class="input" type="date" max="${todayJayapuraIso()}" value="${escapeHtml(state.paymentDate || todayJayapuraIso())}" oninput="validatePaymentDateInput(this)" onchange="validatePaymentDateInput(this)"></div>
         <button id="saveSelectedPaymentBtn" class="btn btn-primary" ${count?'':'disabled'} onclick="saveSelectedPayments('${escapeHtml(idSiswa)}')">${icon('check')} Simpan</button>
       </div>`;
+    }
+
+    function validatePaymentDateInput(input) {
+      if (!input) return true;
+      const today = todayJayapuraIso();
+      input.max = today;
+      if (input.value && input.value > today) {
+        input.value = today;
+        state.paymentDate = today;
+        toast('Tanggal pembayaran tidak boleh melebihi hari ini.', 'warning');
+        return false;
+      }
+      state.paymentDate = input.value || today;
+      return true;
     }
 
     function togglePaymentMonth(idSiswa, bulan, tahun) {
@@ -2184,6 +2405,7 @@
         <div class="months-grid">${d.periods.map(p=>monthCardHtml(p,s.idSiswa,false)).join('')}</div>
         <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>Transaksi Pembayaran Komite yang sudah lunas.</p></div></div>
         <section class="card card-pad">${historyHtml(d.history,false)}</section>
+        ${treasurerAccountsHtml()}
       </main>`;
     }
 
