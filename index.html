@@ -1420,6 +1420,76 @@
       .login-foot { margin-top:8px; font-size:8.8px; }
     }
 
+
+
+    /* ===== Versi 1.11: identitas dashboard HP + form login ringkas ===== */
+    .hero-user-name { display:none; }
+
+    /* Form login: tanpa label berulang, tinggi dan jarak kontrol seragam. */
+    .login-panel .segment {
+      height:52px;
+      min-height:52px;
+      margin-bottom:12px;
+      padding:4px;
+      gap:4px;
+      border-radius:15px;
+    }
+    .login-panel .segment button {
+      min-height:44px;
+      height:44px;
+      border-radius:11px;
+    }
+    .login-panel .form-stack { gap:12px; }
+    .login-panel .form-stack > div,
+    .login-panel .form-stack > .student-only-wide { min-height:52px; }
+    .login-panel .field-wrap,
+    .login-panel .input,
+    .login-panel .login-btn {
+      min-height:52px;
+      height:52px;
+    }
+    .login-panel .login-btn { margin-top:0; }
+    .login-panel .field-icon,
+    .login-panel .password-toggle { align-items:center; }
+
+    /* Kredit footer dibuat regular dan biru solid, link TikTok tetap aktif. */
+    .login-credit {
+      font-weight:400;
+      background:none;
+      -webkit-background-clip:initial;
+      background-clip:initial;
+      color:var(--blue);
+    }
+    .login-credit:hover { color:var(--blue); }
+
+    @media (max-width:600px) and (orientation:portrait) {
+      .dashboard-hero .hero-user-name {
+        display:inline-flex;
+        width:max-content;
+        max-width:calc(100% - 62px);
+        margin-top:6px;
+        padding:5px 9px;
+        border:1px solid rgba(255,255,255,.20);
+        border-radius:999px;
+        background:rgba(255,255,255,.08);
+        color:#fff;
+        font-size:10px;
+        line-height:1;
+        font-weight:400;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        backdrop-filter:blur(6px);
+        -webkit-backdrop-filter:blur(6px);
+      }
+      .dashboard-hero .hero-user-name + .hero-title { margin-top:8px; }
+    }
+
+    /* Pada landscape nama tetap hanya di header agar tidak dobel. */
+    @media (orientation:landscape) {
+      .dashboard-hero .hero-user-name { display:none !important; }
+    }
+
 </style>
 </head>
 <body>
@@ -1435,7 +1505,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.10';
+    const APP_REVISION = 'Versi 1.11';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -1458,7 +1528,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.10'
+      revision: '1.11'
     };
 
     const state = {
@@ -1490,6 +1560,7 @@
 
     const icons = {
       shield: '<path d="M12 3 5.5 5.8v4.7c0 4.1 2.5 7.4 6.5 9.5 4-2.1 6.5-5.4 6.5-9.5V5.8L12 3Z"/><path d="m9.5 12 1.7 1.7 3.6-4"/>',
+      lock: '<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
       home: '<path d="m3 11 9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/>',
       users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
       chart: '<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/>',
@@ -2133,20 +2204,17 @@
               ${student ? `
                 <form class="form-stack" onsubmit="loginStudent(event)">
                   <div class="student-only-wide">
-                    <label class="label" for="nisn">NISN</label>
-                    <div class="field-wrap"><span class="field-icon">${icon('user')}</span><input class="input" id="nisn" inputmode="numeric" autocomplete="off" placeholder="Masukkan NISN" required></div>
+                    <div class="field-wrap"><span class="field-icon">${icon('user')}</span><input class="input" id="nisn" inputmode="numeric" autocomplete="off" placeholder="Masukkan NISN" aria-label="NISN" required></div>
                   </div>
                   <button class="btn btn-primary login-btn student-only-wide" type="submit">Lihat Pembayaran ${icon('arrow')}</button>
                 </form>
               ` : `
                 <form class="form-stack" onsubmit="loginStaff(event)">
                   <div>
-                    <label class="label" for="username">Username</label>
-                    <div class="field-wrap"><span class="field-icon">${icon('user')}</span><input class="input" id="username" autocomplete="username" placeholder="Username" required></div>
+                    <div class="field-wrap"><span class="field-icon">${icon('user')}</span><input class="input" id="username" autocomplete="username" placeholder="Username" aria-label="Username" required></div>
                   </div>
                   <div>
-                    <label class="label" for="password">Kata sandi</label>
-                    <div class="field-wrap password-wrap"><span class="field-icon">${icon('shield')}</span><input class="input" id="password" type="password" autocomplete="current-password" placeholder="Kata sandi" required><button class="password-toggle" type="button" onclick="togglePasswordVisibility()" aria-label="Tampilkan kata sandi" title="Tampilkan kata sandi">${icon('eye')}</button></div>
+                    <div class="field-wrap password-wrap"><span class="field-icon">${icon('lock')}</span><input class="input" id="password" type="password" autocomplete="current-password" placeholder="Kata sandi" aria-label="Kata sandi" required><button class="password-toggle" type="button" onclick="togglePasswordVisibility()" aria-label="Tampilkan kata sandi" title="Tampilkan kata sandi">${icon('eye')}</button></div>
                   </div>
                   <button class="btn btn-primary login-btn" type="submit">Masuk ${icon('arrow')}</button>
                 </form>
@@ -2600,6 +2668,7 @@
         <section class="hero dashboard-hero">
           <button id="dashboardFilterToggle" class="hero-filter-toggle" onclick="togglePeriodFilter()" title="${state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter'}" aria-label="${state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter'}" aria-expanded="${state.filterOpen}">${icon(state.filterOpen ? 'up' : 'filter')}</button>
           <div class="hero-kicker">${isB ? 'Dashboard Bendahara' : 'Dashboard Wali Kelas • '+escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</div>
+          <div class="hero-user-name">${escapeHtml(state.user?.nama || '')}</div>
           <div class="hero-title">${escapeHtml(label)}</div>
           <div class="hero-sub">Status Pembayaran Komite • ${money(state.config.amount)} per siswa${Number(s.future||0)>0 ? ` • ${s.future} belum jatuh tempo` : ''}</div>
           <div class="hero-stats">
