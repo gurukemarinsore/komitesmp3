@@ -876,6 +876,148 @@
       .brand-mark-logo img { border-radius: calc(13px - 4px); }
     }
 
+
+    /* ===== Versi 1.07: full-bleed dashboard, bottom sheet HP, kontrol konsisten ===== */
+
+    /* Logo Komite tampil langsung tanpa badge/wadah putih. */
+    .brand-mark.brand-mark-logo,
+    .login-brand .brand-mark.brand-mark-logo {
+      padding: 0 !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      overflow: visible;
+    }
+    .brand-mark-logo img,
+    .login-brand .brand-mark-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 0 !important;
+      background: transparent !important;
+    }
+
+    /* Tinggi card filter dan tombol lingkarannya seragam. */
+    .period-nav,
+    .period-static,
+    .period-class,
+    .period-class-readonly {
+      min-height: 48px;
+      height: 48px;
+    }
+    .period-nav { grid-template-columns: 48px minmax(0,1fr) 48px; }
+    .period-arrow,
+    .select-arrow-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+    }
+    .period-arrow svg,
+    .select-arrow-badge svg {
+      width: 17px;
+      height: 17px;
+    }
+    .select-arrow-badge { right: 6px; }
+    .select-badge-wrap .select { padding-right: 50px; }
+
+    /* Aksen rekening: Bank Papua kuning, BRI biru di sisi kiri. */
+    .bank-papua-card {
+      background:
+        radial-gradient(circle at 92% 12%, rgba(255,214,64,.28) 0%, rgba(255,214,64,.10) 17%, transparent 34%),
+        linear-gradient(140deg,#092f55 0%,#1265b8 62%,#3f9cf0 100%);
+      box-shadow: inset 4px 0 0 rgba(255,214,64,.88), 0 16px 34px rgba(10,52,92,.16);
+    }
+    .bank-papua-card .bank-card-mark {
+      border-color: rgba(255,222,91,.48);
+      background: rgba(255,214,64,.12);
+    }
+    .bri-card {
+      box-shadow: inset 4px 0 0 rgba(111,198,255,.82), 0 16px 34px rgba(10,52,92,.16);
+    }
+
+    /* Hover card bulan hanya untuk perangkat yang benar-benar memiliki mouse. */
+    @media (hover: hover) and (pointer: fine) {
+      .month-card.selectable:hover {
+        border-color: #8fc2f4;
+        background: #f8fbff;
+        transform: translateY(-1px);
+      }
+    }
+
+    /* Hilangkan ghost/sticky hover dan fokus palsu pada perangkat sentuh. */
+    @media (hover: none), (pointer: coarse) {
+      .month-card.selectable:hover:not(.selected),
+      .month-card.selectable:focus:not(:focus-visible):not(.selected) {
+        border-color: var(--line) !important;
+        background: #fff !important;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+      .month-card.selectable.selected:hover,
+      .month-card.selectable.selected:focus {
+        border-color: #5aa8ee !important;
+        background: #eef7ff !important;
+        box-shadow: 0 0 0 3px rgba(23,105,210,.08) !important;
+        transform: none !important;
+      }
+    }
+
+    @media (max-width: 860px) {
+      /* Dashboard Bendahara/Wali menyatu dengan header dan full-bleed ke sisi layar. */
+      .main > .dashboard-hero:first-child {
+        width: 100vw;
+        max-width: none;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        margin-top: -14px;
+        border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      }
+    }
+
+    @media (max-width: 600px) {
+      /* Inset selector dibuat setara dengan padding atas/bawah. */
+      .period-segment {
+        padding: 5px !important;
+        scroll-padding-inline: 5px;
+      }
+
+      /* Card bulan dan dropdown kelas memiliki tinggi dan kontrol yang identik. */
+      .period-nav,
+      .period-static,
+      .period-class,
+      .period-class-readonly {
+        min-height: 48px !important;
+        height: 48px !important;
+      }
+      .period-arrow,
+      .select-arrow-badge {
+        width: 36px !important;
+        height: 36px !important;
+      }
+
+      /* Dashboard benar-benar menempel ke header di HP; hanya sudut bawah yang rounded. */
+      .main > .dashboard-hero:first-child {
+        border-radius: 0 0 24px 24px;
+      }
+
+      /* Semua modal mobile menjadi bottom sheet full-bleed kiri/kanan/bawah. */
+      .modal-backdrop {
+        padding: 0 !important;
+        align-items: end !important;
+        justify-items: stretch !important;
+      }
+      .modal,
+      .modal.large {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 92dvh;
+        margin: 0 !important;
+        border-radius: 24px 24px 0 0 !important;
+        padding-bottom: var(--safe-bottom);
+      }
+      .modal-head { border-radius: 24px 24px 0 0; }
+    }
+
   </style>
 </head>
 <body>
@@ -891,7 +1033,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.06';
+    const APP_REVISION = 'Versi 1.07';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -914,7 +1056,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.05'
+      revision: '1.07'
     };
 
     const state = {
