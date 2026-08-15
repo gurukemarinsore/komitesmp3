@@ -1201,7 +1201,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.08';
+    const APP_REVISION = 'Versi 1.09';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -1224,7 +1224,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.08'
+      revision: '1.09'
     };
 
     const state = {
@@ -1232,6 +1232,7 @@
       token: localStorage.getItem(STORAGE.TOKEN) || '',
       user: safeJson(localStorage.getItem(STORAGE.USER)),
       loginRole: 'SISWA',
+      loginSheetOpen: false,
       currentView: 'home',
       students: [],
       payments: [],
@@ -1554,6 +1555,7 @@
     function logout() {
       clearSession(true);
       state.loginRole = 'SISWA';
+      state.loginSheetOpen = false;
       renderLogin();
     }
 
@@ -1867,23 +1869,25 @@
       const role = state.loginRole;
       const student = role === 'SISWA';
       app.innerHTML = `
-        <div class="login-page">
+        <div class="login-page ${state.loginSheetOpen ? 'login-sheet-open' : ''}">
           <section class="login-art">
             <div class="login-brand">
               <div class="brand-mark brand-mark-logo">${appLogo()}</div>
               <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</div></div>
             </div>
             <div class="login-copy">
-              <h1><span class="login-copy-desktop">Ringkas.<br>Aman.<br>Mudah dipantau.</span><span class="login-copy-mobile">Ringkas. Aman. Mudah dipantau.</span></h1>
-              <p><span class="login-copy-desktop">Pembayaran Komite kelas 7 dalam satu aplikasi yang ringan untuk bendahara, wali kelas, dan siswa.</span><span class="login-copy-mobile">Pembayaran Komite kelas 7 dalam satu aplikasi.</span></p>
+              <h1><span class="login-copy-desktop">Ringkas.<br>Aman.<br>Mudah dipantau.</span><span class="login-copy-mobile">Ringkas.<br>Aman.<br>Mudah dipantau.</span></h1>
+              <p><span class="login-copy-desktop">Pembayaran Komite kelas 7 dalam satu aplikasi yang ringan untuk bendahara, wali kelas, dan siswa.</span><span class="login-copy-mobile">Pembayaran Komite kelas 7 dalam satu aplikasi yang ringan untuk bendahara, wali kelas, dan siswa.</span></p>
+              <button class="login-mobile-cta" type="button" onclick="openLoginSheet()">Masuk ke aplikasi ${icon('arrow')}</button>
             </div>
             <div class="login-mini"><span>Juli 2026 — Juni 2027</span><span>${money(state.config.amount)} / bulan</span><span>Kelas 7A — 7J</span></div>
           </section>
-          <section class="login-panel">
+          <button class="login-sheet-backdrop" type="button" onclick="closeLoginSheet()" aria-label="Tutup menu login"></button>
+          <section class="login-panel" role="dialog" aria-modal="true" aria-label="Masuk ke aplikasi">
             <div class="login-box">
               <div class="login-mobile-brand">
                 <div class="brand-mark brand-mark-logo">${appLogo()}</div>
-                <div><strong>${escapeHtml(state.config.schoolName)}</strong><div class="brand-sub">${escapeHtml(state.config.schoolYear)}</div></div>
+                <div><strong>${escapeHtml(state.config.schoolName)}</strong><div class="brand-sub">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</div></div>
               </div>
               <h2>Selamat datang</h2>
               <p>${student ? 'Masukkan NISN untuk melihat status dan riwayat Pembayaran Komite.' : 'Masuk menggunakan akun Anda untuk mengakses layanan Pembayaran Komite.'}</p>
@@ -1918,6 +1922,17 @@
           </section>
         </div>`;
       if (!isApiConfigured()) setTimeout(() => toast('Konfigurasi layanan belum lengkap.', 'warning', 'Belum siap digunakan'), 250);
+    }
+
+    function openLoginSheet() {
+      state.loginSheetOpen = true;
+      document.querySelector('.login-page')?.classList.add('login-sheet-open');
+      window.setTimeout(() => document.querySelector('.login-panel .input')?.focus({preventScroll:true}), 220);
+    }
+
+    function closeLoginSheet() {
+      state.loginSheetOpen = false;
+      document.querySelector('.login-page')?.classList.remove('login-sheet-open');
     }
 
     function switchLoginRole(role) {
@@ -2724,7 +2739,241 @@
     function printReceipt(tx) {
       const w = window.open('', '_blank', 'width=520,height=720');
       if (!w) { toast('Izinkan pop-up browser untuk mencetak bukti.','warning'); return; }
-      w.document.write(`<!doctype html><html><head><title>Bukti Pembayaran Komite</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#16314d}main{max-width:420px;margin:auto;border:1px solid #dce6ef;border-radius:18px;padding:24px}h2{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#65758a;font-size:12px}.amount{text-align:center;font-size:30px;font-weight:700;margin:20px 0}.row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf1f5;font-size:12px}.foot{text-align:center;color:#738395;font-size:10px;margin-top:20px}@media print{body{padding:0}main{border:0}}</style></head><body><main><h2>Komite SMP Negeri 3 Jayapura</h2><div class="sub">Bukti Pembayaran Komite</div><div class="amount">${money(tx.nominal)}</div><div class="row"><span>Nama</span><strong>${escapeHtml(tx.student.nama)}</strong></div><div class="row"><span>Kelas</span><strong>${escapeHtml(normalizeClassLabel(tx.student.kelas))}</strong></div><div class="row"><span>Periode</span><strong>${titleCase(tx.bulan)} ${tx.tahun}</strong></div><div class="row"><span>Tanggal</span><strong>${escapeHtml(tx.tanggalBayar)}</strong></div><div class="row"><span>Status</span><strong>LUNAS</strong></div><div class="foot">SMP Negeri 3 Jayapura • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div></main><script>window.onload=()=>{window.print()}<\/script></body></html>`);
+      w.document.write(`<!doctype html><html><head><title>Bukti Pembayaran Komite</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#16314d}main{max-width:420px;margin:auto;border:1px solid #dce6ef;border-radius:18px;padding:24px}h2{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#65758a;font-size:12px}.amount{text-align:center;font-size:30px;font-weight:700;margin:20px 0}.row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf1f5;font-size:12px}.foot{text-align:center;color:#738395;font-size:10px;margin-top:20px}@media print{body{padding:0}main{border:0}}
+
+    /* ===== Versi 1.09: hero login HP penuh + login bottom sheet ===== */
+    .login-mobile-cta,
+    .login-sheet-backdrop { display:none; }
+
+    @media (max-width: 860px) {
+      html:has(.login-page),
+      body:has(.login-page) { height:100%; overflow:hidden; }
+
+      .login-page {
+        position:relative;
+        display:block;
+        height:100vh;
+        height:100dvh;
+        min-height:0 !important;
+        overflow:hidden;
+        background:#092c50;
+      }
+
+      .login-art {
+        display:flex !important;
+        width:100%;
+        height:100%;
+        min-height:0;
+        padding:clamp(24px,6.2vh,52px) clamp(22px,6vw,40px) calc(clamp(22px,4.5vh,34px) + var(--safe-bottom));
+        flex-direction:column;
+        justify-content:space-between;
+        gap:clamp(14px,3vh,24px);
+      }
+      .login-art::before {
+        width:min(92vw,430px); height:min(92vw,430px);
+        right:-48%; top:-19%;
+        box-shadow:0 0 0 38px rgba(255,255,255,.025),0 0 0 76px rgba(255,255,255,.016);
+      }
+      .login-art::after {
+        display:block;
+        width:min(72vw,320px); height:min(72vw,320px);
+        left:-47%; bottom:-24%;
+        box-shadow:0 0 0 34px rgba(255,255,255,.022);
+      }
+      .login-brand { gap:11px; flex:0 0 auto; }
+      .login-brand .brand-mark-logo { width:44px !important; height:44px !important; }
+      .login-brand strong { font-size:clamp(14px,4.2vw,18px); }
+      .login-brand > div:last-child > div { font-size:clamp(10px,2.8vw,12px) !important; margin-top:3px !important; }
+
+      .login-copy {
+        max-width:440px;
+        margin:auto 0;
+        text-align:left;
+      }
+      .login-copy-desktop { display:none; }
+      .login-copy-mobile { display:inline; }
+      .login-copy h1 {
+        margin:0 0 clamp(12px,2.4vh,18px);
+        font-size:clamp(40px,12.7vw,60px);
+        line-height:.96;
+        letter-spacing:-.052em;
+      }
+      .login-copy p {
+        display:block;
+        max-width:420px;
+        margin:0;
+        font-size:clamp(13px,3.65vw,16px);
+        line-height:1.48;
+        opacity:.82;
+      }
+      .login-mobile-cta {
+        margin-top:clamp(18px,3.2vh,26px);
+        min-height:52px;
+        padding:0 20px;
+        border:1px solid rgba(255,255,255,.66);
+        border-radius:16px;
+        background:#fff;
+        color:var(--blue);
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:9px;
+        font-weight:750;
+        box-shadow:0 14px 32px rgba(4,36,70,.16);
+      }
+      .login-mobile-cta svg { width:18px; height:18px; }
+
+      .login-mini {
+        display:flex;
+        flex:0 0 auto;
+        gap:7px;
+        flex-wrap:wrap;
+      }
+      .login-mini span {
+        padding:7px 9px;
+        font-size:clamp(9px,2.55vw,11px);
+        white-space:nowrap;
+      }
+
+      .login-sheet-backdrop {
+        display:block;
+        position:fixed;
+        inset:0;
+        z-index:79;
+        border:0;
+        padding:0;
+        background:rgba(7,27,48,.48);
+        backdrop-filter:blur(7px);
+        -webkit-backdrop-filter:blur(7px);
+        opacity:0;
+        visibility:hidden;
+        pointer-events:none;
+        transition:opacity .2s ease, visibility .2s ease;
+      }
+
+      .login-panel {
+        position:fixed;
+        z-index:80;
+        left:0;
+        right:0;
+        bottom:0;
+        width:100%;
+        min-height:0 !important;
+        max-height:calc(100dvh - 18px);
+        overflow-y:auto;
+        overscroll-behavior:contain;
+        -webkit-overflow-scrolling:touch;
+        margin:0 !important;
+        padding:24px 22px calc(20px + var(--safe-bottom));
+        display:block;
+        background:#fbfdff;
+        border-radius:30px 30px 0 0;
+        box-shadow:0 -24px 64px rgba(7,38,69,.24);
+        transform:translateY(102%);
+        opacity:0;
+        visibility:hidden;
+        pointer-events:none;
+        transition:transform .28s cubic-bezier(.22,.78,.24,1), opacity .2s ease, visibility .28s ease;
+      }
+      .login-sheet-open .login-sheet-backdrop {
+        opacity:1;
+        visibility:visible;
+        pointer-events:auto;
+      }
+      .login-sheet-open .login-panel {
+        transform:translateY(0);
+        opacity:1;
+        visibility:visible;
+        pointer-events:auto;
+      }
+
+      .login-box {
+        width:min(100%,470px);
+        max-width:470px;
+        height:auto;
+        min-height:0;
+        margin:0 auto;
+        display:block;
+      }
+      .login-mobile-brand {
+        display:flex !important;
+        align-items:center;
+        gap:12px;
+        margin:0 0 24px;
+      }
+      .login-mobile-brand .brand-mark-logo { width:44px !important; height:44px !important; }
+      .login-mobile-brand strong { font-size:15px; }
+      .login-mobile-brand .brand-sub { font-size:10px; }
+      .login-box h2 { font-size:28px; line-height:1.12; }
+      .login-box > p { margin:8px 0 22px; font-size:14px; line-height:1.48; }
+      .segment { margin-bottom:22px; padding:5px; }
+      .segment button { min-height:42px; font-size:12px; }
+      .form-stack { display:grid; grid-template-columns:1fr; gap:14px; }
+      .form-stack .login-btn,
+      .form-stack .student-only-wide { grid-column:auto; }
+      .label { margin-bottom:6px; font-size:12px; }
+      .input, .select { min-height:49px; }
+      .login-btn { min-height:51px; margin-top:2px; }
+      .login-foot {
+        display:block !important;
+        margin-top:18px;
+        padding-top:0;
+        font-size:11px;
+        line-height:1.45;
+      }
+    }
+
+    @media (max-width: 390px) and (max-height: 720px) {
+      .login-art {
+        padding:20px 20px calc(18px + var(--safe-bottom));
+        gap:10px;
+      }
+      .login-brand .brand-mark-logo { width:38px !important; height:38px !important; }
+      .login-brand strong { font-size:13px; }
+      .login-brand > div:last-child > div { font-size:9px !important; }
+      .login-copy h1 { font-size:clamp(34px,11.5vw,45px); margin-bottom:10px; }
+      .login-copy p { font-size:12px; line-height:1.38; }
+      .login-mobile-cta { min-height:46px; margin-top:14px; border-radius:14px; font-size:13px; }
+      .login-mini { gap:5px; }
+      .login-mini span { padding:6px 7px; font-size:8.5px; }
+    }
+
+    @media (orientation: landscape) and (max-height: 560px) and (max-width: 960px) {
+      .login-page { display:block; height:100dvh; overflow:hidden; }
+      .login-art {
+        height:100%;
+        padding:18px 26px calc(16px + var(--safe-bottom));
+        display:grid !important;
+        grid-template-columns:minmax(180px,.72fr) minmax(280px,1.28fr);
+        grid-template-rows:auto 1fr auto;
+        align-items:center;
+        gap:10px 28px;
+      }
+      .login-brand { grid-column:1; grid-row:1; }
+      .login-copy { grid-column:2; grid-row:1 / 4; margin:0; align-self:center; }
+      .login-copy h1 { font-size:clamp(31px,7.5vh,44px); margin-bottom:9px; }
+      .login-copy p { font-size:11px; line-height:1.35; max-width:440px; }
+      .login-mobile-cta { min-height:42px; margin-top:12px; padding:0 16px; }
+      .login-mini { grid-column:1; grid-row:3; align-self:end; }
+      .login-mini span { padding:5px 7px; font-size:8px; }
+      .login-panel {
+        max-height:calc(100dvh - 10px);
+        padding:18px 24px calc(12px + var(--safe-bottom));
+        border-radius:26px 26px 0 0;
+      }
+      .login-box { max-width:760px; }
+      .login-mobile-brand { margin-bottom:12px; }
+      .login-box h2 { font-size:22px; }
+      .login-box > p { margin:4px 0 10px; font-size:10px; }
+      .segment { margin-bottom:10px; }
+      .form-stack { grid-template-columns:1fr 1fr; gap:8px 12px; }
+      .form-stack .login-btn, .form-stack .student-only-wide { grid-column:1 / -1; }
+      .label { margin-bottom:3px; font-size:9.5px; }
+      .input, .select { min-height:38px; }
+      .login-btn { min-height:40px; }
+      .login-foot { margin-top:8px; font-size:8.8px; }
+    }
+</style></head><body><main><h2>Komite SMP Negeri 3 Jayapura</h2><div class="sub">Bukti Pembayaran Komite</div><div class="amount">${money(tx.nominal)}</div><div class="row"><span>Nama</span><strong>${escapeHtml(tx.student.nama)}</strong></div><div class="row"><span>Kelas</span><strong>${escapeHtml(normalizeClassLabel(tx.student.kelas))}</strong></div><div class="row"><span>Periode</span><strong>${titleCase(tx.bulan)} ${tx.tahun}</strong></div><div class="row"><span>Tanggal</span><strong>${escapeHtml(tx.tanggalBayar)}</strong></div><div class="row"><span>Status</span><strong>LUNAS</strong></div><div class="foot">SMP Negeri 3 Jayapura • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div></main><script>window.onload=()=>{window.print()}<\/script></body></html>`);
       w.document.close();
     }
 
