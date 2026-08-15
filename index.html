@@ -1490,6 +1490,18 @@
       .dashboard-hero .hero-user-name { display:none !important; }
     }
 
+    /* ===== Versi 1.12: spacing login + versi pada hero HP ===== */
+    .login-brand-sub-mobile { display:none; }
+
+    /* Jarak antarkontrol login dinaikkan 20% dari 12px menjadi 14.4px. */
+    .login-panel .segment { margin-bottom:14.4px; }
+    .login-panel .form-stack { gap:14.4px; }
+
+    @media (max-width:860px) {
+      .login-brand-sub-desktop { display:none; }
+      .login-brand-sub-mobile { display:inline; }
+    }
+
 </style>
 </head>
 <body>
@@ -1505,7 +1517,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.11';
+    const APP_REVISION = 'Versi 1.12';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -1528,7 +1540,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.11'
+      revision: '1.12'
     };
 
     const state = {
@@ -2178,7 +2190,7 @@
           <section class="login-art">
             <div class="login-brand">
               <div class="brand-mark brand-mark-logo">${appLogo()}</div>
-              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</div></div>
+              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px"><span class="login-brand-sub-desktop">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</span><span class="login-brand-sub-mobile">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)} • Versi 1.12</span></div></div>
             </div>
             <div class="login-copy">
               <h1><span class="login-copy-desktop">Ringkas.<br>Aman.<br>Mudah dipantau.</span><span class="login-copy-mobile">Ringkas.<br>Aman.<br>Mudah dipantau.</span></h1>
