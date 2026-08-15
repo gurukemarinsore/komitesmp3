@@ -51,7 +51,7 @@
     }
     button, input, select { font: inherit; }
     button { cursor: pointer; }
-    button:disabled { cursor: not-allowed; opacity: .58; }
+    button:disabled { cursor: not-allowed; opacity: 1; background:#e7ecf2 !important; border-color:#e7ecf2 !important; color:#8b98a8 !important; box-shadow:none !important; transform:none !important; }
     a { color: inherit; }
     .hidden { display: none !important; }
 
@@ -1502,13 +1502,92 @@
       .login-brand-sub-mobile { display:inline; }
     }
 
+
+    /* ===== Versi 1.13 ===== */
+    .loader-card {
+      min-width: min(310px, calc(100vw - 36px));
+      flex-direction: column;
+      align-items: stretch;
+      gap: 9px;
+    }
+    .loader-card #loadingText { display:block; text-align:left; }
+    .spinner { display:none !important; }
+    .loader-stream-track {
+      width:100%;
+      height:3px;
+      border-radius:9999px;
+      background:#dbeafe;
+      overflow:hidden;
+      position:relative;
+    }
+    .loader-stream-bar {
+      width:100%;
+      height:100%;
+      border-radius:9999px;
+      background:linear-gradient(90deg, transparent 0%, #60a5fa 25%, transparent 50%, #1e3a8a 75%, transparent 100%);
+      background-size:200% 100%;
+      animation:doubleStreamAnim 1.6s infinite linear;
+    }
+    @keyframes doubleStreamAnim {
+      0% { background-position:200% 0; }
+      100% { background-position:-200% 0; }
+    }
+
+    .period-class {
+      text-align:center;
+      text-align-last:center;
+      padding-left:52px !important;
+      padding-right:52px !important;
+    }
+    .period-class-readonly { text-align:center; }
+
+    .history-heading-actions { align-items:center; }
+    .print-card-btn { white-space:nowrap; }
+    .print-card-btn svg { width:17px; height:17px; }
+
+    .print-preview-wrap {
+      background:#eef3f8;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:12px;
+      overflow:auto;
+      max-height:62vh;
+    }
+    .print-preview-frame {
+      width:100%;
+      min-height:620px;
+      border:0;
+      border-radius:12px;
+      background:white;
+      display:block;
+    }
+    .print-dialog-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .print-dialog-grid .select-badge-wrap { width:100%; }
+    .print-dialog-grid .select { width:100%; }
+    .action-grid.has-four { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .action-grid.wali-print { grid-template-columns:minmax(0,280px); }
+
+    @media (max-width: 700px) {
+      .print-card-btn .print-card-label { display:none; }
+      .print-card-btn { width:42px; height:42px; padding:0; display:grid; place-items:center; }
+      .print-dialog-grid { grid-template-columns:1fr; }
+      .print-preview-wrap { padding:7px; max-height:64vh; border-radius:14px; }
+      .print-preview-frame { min-height:520px; }
+      .action-grid.has-four { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .action-grid.wali-print { grid-template-columns:1fr; }
+    }
+
 </style>
 </head>
 <body>
   <div id="app" class="app-root"></div>
   <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
   <div id="loadingOverlay" class="loading-overlay hidden">
-    <div class="loader-card"><span class="spinner"></span><span id="loadingText">Memuat data…</span></div>
+    <div class="loader-card"><span id="loadingText">Memuat data…</span><div class="loader-stream-track"><div class="loader-stream-bar"></div></div></div>
   </div>
   <div id="modalRoot"></div>
 
@@ -1517,7 +1596,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.12';
+    const APP_REVISION = 'Versi 1.13';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -1540,7 +1619,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.12'
+      revision: '1.13'
     };
 
     const state = {
@@ -2024,7 +2103,7 @@
           <span class="sync-center-mark">${icon(queue.length ? (offline ? 'offline' : 'cloud') : 'check')}</span>
           <span><strong id="syncCenterTitle">${escapeHtml(title)}</strong><p id="syncCenterDesc">${escapeHtml(desc)}</p></span>
         </div>
-        <div id="syncQueueList" class="sync-queue-list">${queue.length ? queue.map(syncQueueItemHtml).join('') : `<div class="sync-empty">${icon('check')}<strong>Semua data sudah tersinkron</strong><span>Tidak ada antrean pembayaran.</span></div>`}</div>
+        ${queue.length ? `<div id="syncQueueList" class="sync-queue-list">${queue.map(syncQueueItemHtml).join('')}</div>` : ''}
         <div class="modal-actions sync-center-actions">
           <button class="btn btn-soft" onclick="closeModal()">Tutup</button>
           ${queue.length ? `<button id="syncNowBtn" class="btn btn-primary" onclick="startManualSync()" ${offline || syncing ? 'disabled' : ''}>${icon('refresh')} ${syncing ? 'Menyinkronkan…' : 'Sinkronkan Sekarang'}</button>` : ''}
@@ -2190,7 +2269,7 @@
           <section class="login-art">
             <div class="login-brand">
               <div class="brand-mark brand-mark-logo">${appLogo()}</div>
-              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px"><span class="login-brand-sub-desktop">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</span><span class="login-brand-sub-mobile">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)} • Versi 1.12</span></div></div>
+              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px"><span class="login-brand-sub-desktop">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</span><span class="login-brand-sub-mobile">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)} • Versi 1.13</span></div></div>
             </div>
             <div class="login-copy">
               <h1><span class="login-copy-desktop">Ringkas.<br>Aman.<br>Mudah dipantau.</span><span class="login-copy-mobile">Ringkas.<br>Aman.<br>Mudah dipantau.</span></h1>
@@ -2207,7 +2286,7 @@
                 <div><strong>${escapeHtml(state.config.schoolName)}</strong><div class="brand-sub">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</div></div>
               </div>
               <h2>Selamat datang</h2>
-              <p>${student ? 'Masukkan NISN untuk melihat status dan riwayat Pembayaran Komite.' : 'Masuk menggunakan akun Anda untuk mengakses layanan Pembayaran Komite.'}</p>
+              <p>${student ? 'Masukkan NISN dan kata sandi untuk melihat status dan riwayat Pembayaran Komite.' : 'Masuk menggunakan akun Anda untuk mengakses layanan Pembayaran Komite.'}</p>
               <div class="segment">
                 <button data-key="BENDAHARA" class="${role==='BENDAHARA'?'active':''}" onclick="switchLoginRole('BENDAHARA')">Bendahara</button>
                 <button data-key="WALI" class="${role==='WALI'?'active':''}" onclick="switchLoginRole('WALI')">Wali Kelas</button>
@@ -2217,6 +2296,9 @@
                 <form class="form-stack" onsubmit="loginStudent(event)">
                   <div class="student-only-wide">
                     <div class="field-wrap"><span class="field-icon">${icon('user')}</span><input class="input" id="nisn" inputmode="numeric" autocomplete="off" placeholder="Masukkan NISN" aria-label="NISN" required></div>
+                  </div>
+                  <div class="student-only-wide">
+                    <div class="field-wrap password-wrap"><span class="field-icon">${icon('lock')}</span><input class="input" id="password" type="password" autocomplete="current-password" placeholder="Kata sandi" aria-label="Kata sandi" required><button class="password-toggle" type="button" onclick="togglePasswordVisibility()" aria-label="Tampilkan kata sandi" title="Tampilkan kata sandi">${icon('eye')}</button></div>
                   </div>
                   <button class="btn btn-primary login-btn student-only-wide" type="submit">Lihat Pembayaran ${icon('arrow')}</button>
                 </form>
@@ -2276,7 +2358,7 @@
           username: document.getElementById('username').value.trim(),
           password: document.getElementById('password').value,
           expectedRole
-        }, {loadingText:'Memeriksa akun dan menyiapkan data…', timeout:22000});
+        }, {loadingText:'Memeriksa akun…', timeout:22000});
         if (data.user.role !== expectedRole) throw new Error(`Akun ini adalah akun ${data.user.role === 'WALI' ? 'Wali Kelas' : 'Bendahara'}. Pilih jenis login yang sesuai.`);
         setSession(data.token, data.user);
         applyBootstrap(data.bootstrap, false);
@@ -2293,7 +2375,7 @@
     async function loginStudent(e) {
       e.preventDefault();
       try {
-        const data = await api('loginStudent', {nisn: document.getElementById('nisn').value.trim()}, {loadingText:'Mencari data siswa…'});
+        const data = await api('loginStudent', {nisn: document.getElementById('nisn').value.trim(), password: document.getElementById('password').value}, {loadingText:'Memeriksa data siswa…'});
         state.config = Object.assign({}, state.config, data.config || {});
         state.config.classes = (state.config.classes || []).map(c=>Object.assign({},c,{nama:normalizeClassLabel(c.nama)}));
         setSession(data.token, data.user);
@@ -2304,7 +2386,7 @@
         renderStudentApp(data.detail);
         setTimeout(() => showRoleNotification(), 240);
       } catch (err) {
-        toast(err.message || 'NISN tidak ditemukan.', 'error');
+        toast(err.message || 'NISN atau kata sandi salah.', 'error');
       }
     }
 
@@ -2326,6 +2408,14 @@
           <button class="icon-btn" onclick="logout()" title="Keluar" aria-label="Keluar">${icon('logout')}</button>
         </div>
       </div></div>`;
+    }
+
+    function formatNaturalList(items) {
+      const list = (items || []).filter(Boolean);
+      if (!list.length) return '';
+      if (list.length === 1) return list[0];
+      if (list.length === 2) return `${list[0]} dan ${list[1]}`;
+      return `${list.slice(0,-1).join(', ')}, dan ${list[list.length-1]}`;
     }
 
     function roleNotificationData() {
@@ -2371,14 +2461,14 @@
         if (success) {
           const dueLabel = n.latestDue?.label || `${titleCase(n.latestDue?.bulan || '')} ${n.latestDue?.tahun || ''}`.trim();
           const future = (n.futurePaid || []).map(p => `${titleCase(p.bulan)} ${p.tahun}`);
-          body = `<p>Pembayaran Komite sampai <strong>${escapeHtml(dueLabel)}</strong> sudah lunas.</p>${future.length ? `<div class="notice-extra">Pembayaran <strong>${escapeHtml(future.join(' dan '))}</strong> juga sudah tercatat lebih awal.</div>` : '<div class="notice-extra">Tidak ada pembayaran yang tertunggak.</div>'}`;
+          body = `<p>Pembayaran Komite hingga <strong>${escapeHtml(dueLabel)}</strong> telah lunas.</p>${future.length ? `<div class="notice-extra">Pembayaran Komite untuk <strong>${escapeHtml(formatNaturalList(future))}</strong> juga telah lunas lebih awal.</div>` : '<div class="notice-extra">Tidak ada pembayaran yang tertunggak.</div>'}`;
         } else {
           body = `<p>Terdapat <strong>${n.unpaid.length} bulan</strong> pembayaran Komite yang sudah jatuh tempo dan belum dibayar.</p><div class="notice-list">${n.unpaid.map(p=>`<div><span>${escapeHtml(titleCase(p.bulan))} ${p.tahun}</span><strong>Belum Bayar</strong></div>`).join('')}</div><div class="notice-extra warning">Silakan melakukan pembayaran untuk periode yang telah jatuh tempo.</div>`;
         }
       } else {
         if (success) {
           const dueLabel = n.latestDue?.label || `${titleCase(n.latestDue?.bulan || '')} ${n.latestDue?.tahun || ''}`.trim();
-          body = `<p>Seluruh pembayaran siswa kelas <strong>${escapeHtml(normalizeClassLabel(state.user?.kelas || ''))}</strong> sampai <strong>${escapeHtml(dueLabel)}</strong> sudah lunas.</p><div class="notice-extra">Terima kasih telah memantau pembayaran kelas.</div>`;
+          body = `<p>Seluruh pembayaran siswa kelas <strong>${escapeHtml(normalizeClassLabel(state.user?.kelas || ''))}</strong> sampai <strong>${escapeHtml(dueLabel)}</strong> telah lunas.</p><div class="notice-extra">Terima kasih telah memantau pembayaran kelas.</div>`;
         } else {
           body = `<p>Masih ada pembayaran siswa yang belum lunas pada periode yang sudah jatuh tempo.</p><div class="notice-list">${n.pendingByPeriod.map(x=>`<div><span>${escapeHtml(titleCase(x.bulan))} ${x.tahun}</span><strong>${x.count} siswa belum membayar</strong></div>`).join('')}</div>`;
         }
@@ -2558,7 +2648,7 @@
       const isB = state.user?.role === 'BENDAHARA';
       const scopeLabel = localScopeDefinition().label;
       return `${isMonth ? `<div class="period-nav"><button class="period-arrow" onclick="moveScopeMonth(-1)" ${state.scopeMonthIndex<=0?'disabled':''} aria-label="Bulan sebelumnya">${icon('left')}</button><div class="period-label">${escapeHtml(p?.label || '')}</div><button class="period-arrow" onclick="moveScopeMonth(1)" ${state.scopeMonthIndex>=state.config.periods.length-1?'disabled':''} aria-label="Bulan berikutnya">${icon('right')}</button></div>` : `<div class="period-static">${escapeHtml(scopeLabel)}</div>`}
-        ${isB ? `<div class="select-badge-wrap"><select class="select period-class" onchange="changeScopeClass(this.value)"><option value="" ${!state.scopeClass?'selected':''}>Semua Kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}" ${normalizeClassLabel(state.scopeClass)===normalizeClassLabel(c.nama)?'selected':''}>${escapeHtml(normalizeClassLabel(c.nama))}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>` : `<div class="period-class-readonly">${escapeHtml(normalizeClassLabel(state.user?.kelas || ''))}</div>`}`;
+        ${isB ? `<div class="select-badge-wrap"><select class="select period-class" onchange="changeScopeClass(this.value)"><option value="" ${!state.scopeClass?'selected':''}>Semua Kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}" ${normalizeClassLabel(state.scopeClass)===normalizeClassLabel(c.nama)?'selected':''}>Kelas ${escapeHtml(normalizeClassLabel(c.nama))}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>` : `<div class="period-class-readonly">Kelas ${escapeHtml(normalizeClassLabel(state.user?.kelas || ''))}</div>`}`;
     }
 
     function periodControlsHtml(collapsible=false) {
@@ -2692,12 +2782,17 @@
         ${periodControlsHtml(true)}
         ${isB ? `
           <div class="section-head"><div><h2>Akses cepat</h2><p>Fitur utama untuk pencatatan dan pemantauan Komite.</p></div></div>
-          <div class="action-grid">
+          <div class="action-grid has-four">
             <button class="action-card primary" onclick="openPaymentSearch()"><span class="action-icon">${icon('plus')}</span><strong>Catat Pembayaran</strong><span class="action-desc">Cari siswa dan pilih bulan</span></button>
             <button class="action-card" onclick="navigate('students')"><span class="action-icon">${icon('users')}</span><strong>Data Siswa</strong><span class="action-desc">Lihat status pembayaran</span></button>
             <button class="action-card" onclick="navigate('summary')"><span class="action-icon">${icon('chart')}</span><strong>Rekap</strong><span class="action-desc">Bulan, semester, tahun ajaran</span></button>
+            <button class="action-card" onclick="openSemesterRecapDialog()"><span class="action-icon">${icon('printer')}</span><strong>Cetak Rekap Semester</strong><span class="action-desc">Preview rekap satu kelas</span></button>
           </div>
         ` : `
+          <div class="section-head"><div><h2>Akses cepat</h2><p>Cetak rekap Pembayaran Komite kelas.</p></div></div>
+          <div class="action-grid wali-print">
+            <button class="action-card" onclick="openSemesterRecapDialog()"><span class="action-icon">${icon('printer')}</span><strong>Cetak Rekap Semester</strong><span class="action-desc">Preview rekap kelas ${escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</span></button>
+          </div>
           <div class="section-head"><div><h2>Siswa Kelas ${escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</h2><p>${escapeHtml(label)} • seluruh siswa pada periode yang dipilih.</p></div></div>
           <div class="card card-pad">${summaryStudentsHtml(state.summary?.summary?.students || [], false)}</div>
         `}`;
@@ -2724,7 +2819,7 @@
         <section class="card card-pad">
           <div class="toolbar ${canClass?'three':''}">
             <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="studentSearch" class="input" placeholder="Cari nama atau NISN" oninput="filterStudentsView()"></div>
-            ${canClass ? `<div class="select-badge-wrap"><select id="studentClass" class="select" onchange="filterStudentsView()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>` : ''}
+            ${canClass ? `<div class="select-badge-wrap"><select id="studentClass" class="select" onchange="filterStudentsView()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">Kelas ${escapeHtml(normalizeClassLabel(c.nama))}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>` : ''}
             <div></div>
           </div>
           <div id="studentList" class="student-list"></div>
@@ -2765,7 +2860,7 @@
           ${queueCount()?`<div class="sync-notice">${icon('clock')} <span><strong>${queueCount()} pembayaran menunggu sinkronisasi.</strong> Anda tetap dapat mencatat pembayaran berikutnya.</span></div>`:''}
           <div class="toolbar three">
             <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="paySearch" class="input" placeholder="Cari nama atau NISN" oninput="filterPaymentStudents()" autofocus></div>
-            <div class="select-badge-wrap"><select id="payClass" class="select" onchange="filterPaymentStudents()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>
+            <div class="select-badge-wrap"><select id="payClass" class="select" onchange="filterPaymentStudents()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">Kelas ${escapeHtml(normalizeClassLabel(c.nama))}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>
             <div></div>
           </div>
           <div id="payStudentList" class="student-list"></div>
@@ -2845,7 +2940,7 @@
           <div class="section-head" style="margin-top:0"><div><h2>Pembayaran ${escapeHtml(state.config.schoolYear)}</h2><p>${paymentMode?'Pilih satu atau beberapa bulan yang akan dicatat.':'Status Pembayaran Komite per bulan.'}</p></div><span class="status-pill ok">${icon('check')} ${money(d.paidAmount)}</span></div>
           <div class="months-grid">${d.periods.map(p=>monthCardHtml(p, s.idSiswa, paymentMode)).join('')}</div>
           ${paymentMode ? paymentSelectionPanelHtml(s.idSiswa) : ''}
-          <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>${d.history.length ? d.history.length+' transaksi lunas' : 'Belum ada transaksi'}</p></div></div>
+          <div class="section-head history-heading-actions"><div><h2>Riwayat Pembayaran</h2><p>${d.history.length ? d.history.length+' transaksi lunas' : 'Belum ada transaksi'}</p></div>${!paymentMode && state.user.role === 'BENDAHARA' ? `<button class="btn btn-soft btn-sm print-card-btn" onclick="previewStudentCard('${escapeHtml(s.idSiswa)}')" title="Cetak Kartu Komite">${icon('printer')}<span class="print-card-label">Cetak Kartu Komite</span></button>` : ''}</div>
           <div class="card card-pad">${historyHtml(d.history, state.user.role === 'BENDAHARA')}</div>
         </div>`;
     }
@@ -3035,6 +3130,215 @@
       }
     }
 
+    function shortPaymentDate(value) {
+      const raw = String(value || '').trim();
+      if (!raw) return '';
+      const parts = raw.split(/[\/\-]/);
+      if (parts.length >= 2) {
+        const d = Number(parts[0]);
+        const m = Number(parts[1]);
+        if (d && m) return `${d}/${m}`;
+      }
+      return raw;
+    }
+
+    function printStatusLabel(status) {
+      const s = String(status || '').toUpperCase();
+      if (s === 'LUNAS') return 'Lunas';
+      if (s === 'BELUM_BAYAR') return 'Belum Bayar';
+      return 'Belum Jatuh Tempo';
+    }
+
+    function printableStudentDetail(idSiswa) {
+      const current = state.selectedStudentDetail;
+      if (current?.student?.idSiswa === idSiswa) return current;
+      if (state.detailCache[idSiswa]) return state.detailCache[idSiswa];
+      return buildLocalStudentDetail(idSiswa);
+    }
+
+    function commonPrintCss(compact=false) {
+      return `
+        @page{size:A4 portrait;margin:${compact?'7mm':'11mm'}}
+        *{box-sizing:border-box}
+        html,body{margin:0;padding:0;background:#fff;color:#10233a;font-family:Arial,Helvetica,sans-serif}
+        body{font-size:${compact?'7.2pt':'9.5pt'}}
+        .paper{width:100%;margin:0 auto}
+        .doc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;border-bottom:2px solid #145ca8;padding-bottom:${compact?'5mm':'6mm'};margin-bottom:${compact?'4mm':'6mm'}}
+        .school{font-size:${compact?'13pt':'16pt'};font-weight:700;color:#0b3158;line-height:1.1}
+        .doc-title{font-size:${compact?'10pt':'12pt'};font-weight:700;margin-top:4px}
+        .meta{color:#65758a;font-size:${compact?'7pt':'8.5pt'};line-height:1.45}
+        .pill{display:inline-block;border:1px solid #cfe4f8;background:#eef7ff;color:#1769d2;border-radius:999px;padding:3px 7px;font-size:${compact?'6.6pt':'8pt'};white-space:nowrap}
+        .identity{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid #dfe9f3;border-radius:14px;overflow:hidden;margin-bottom:6mm}
+        .identity>div{padding:8px 10px;border-bottom:1px solid #edf2f7}
+        .identity>div:nth-last-child(-n+2){border-bottom:0}
+        .identity span{display:block;color:#65758a;font-size:7.5pt;margin-bottom:2px}
+        .identity strong{font-size:9pt}
+        .summary{display:flex;gap:8px;margin:0 0 5mm}
+        .summary>div{flex:1;border:1px solid #dfe9f3;border-radius:12px;padding:8px 10px}
+        .summary span{display:block;color:#65758a;font-size:7.5pt}
+        .summary strong{display:block;margin-top:2px;font-size:11pt}
+        .table-wrap{border:1px solid #dce6f0;border-radius:12px;overflow:hidden}
+        table{width:100%;border-collapse:collapse;table-layout:fixed}
+        thead th{background:#0b4c87;color:#fff;font-weight:700;text-align:center}
+        th,td{border-right:1px solid #dce6f0;border-bottom:1px solid #dce6f0;padding:5px 6px;vertical-align:middle}
+        th:last-child,td:last-child{border-right:0}
+        tbody tr:last-child td{border-bottom:0}
+        td.center{text-align:center}
+        .ok{color:#168b63;font-weight:700}
+        .muted{color:#8b98a8}
+        .check{font-size:11pt;line-height:1;color:#168b63;font-weight:700}
+        .paydate{font-size:${compact?'6pt':'7.2pt'};color:#65758a;margin-top:1px;line-height:1}
+        .foot{text-align:center;color:#7a8999;font-size:${compact?'6.2pt':'7.5pt'};margin-top:5mm}
+        @media print{.paper{break-inside:avoid}.no-print{display:none!important}}
+      `;
+    }
+
+    function buildStudentCardDocument(d) {
+      const s = d.student;
+      const historyMap = new Map((d.history || []).map(h => [`${String(h.bulan).toUpperCase()}-${Number(h.tahun)}`, h]));
+      const rows = (d.periods || []).map((p,i) => {
+        const h = historyMap.get(`${String(p.bulan).toUpperCase()}-${Number(p.tahun)}`);
+        const paid = p.status === 'LUNAS';
+        return `<tr>
+          <td class="center">${i+1}</td>
+          <td><strong>${escapeHtml(titleCase(p.bulan))}</strong><div class="meta">${p.tahun}</div></td>
+          <td class="center ${paid?'ok':'muted'}">${escapeHtml(printStatusLabel(p.status))}</td>
+          <td class="center">${paid ? escapeHtml(h?.tanggalBayar || '') : '—'}</td>
+          <td style="text-align:right">${paid ? escapeHtml(money(h?.nominal || p.nominal || state.config.amount)) : '—'}</td>
+        </tr>`;
+      }).join('');
+      return `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kartu Komite - ${escapeHtml(s.nama)}</title><style>${commonPrintCss(false)}</style></head><body>
+        <main class="paper">
+          <div class="doc-head"><div><div class="school">${escapeHtml(state.config.schoolName)}</div><div class="doc-title">Kartu Pembayaran Komite Digital</div><div class="meta">Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div></div><span class="pill">Kumulatif 12 Bulan</span></div>
+          <section class="identity">
+            <div><span>Nama Siswa</span><strong>${escapeHtml(s.nama)}</strong></div>
+            <div><span>Kelas</span><strong>Kelas ${escapeHtml(normalizeClassLabel(s.kelas))}</strong></div>
+            <div><span>NISN</span><strong>${escapeHtml(s.nisn)}</strong></div>
+            <div><span>Komite per Bulan</span><strong>${escapeHtml(money(state.config.amount))}</strong></div>
+          </section>
+          <section class="summary">
+            <div><span>Bulan Lunas</span><strong>${Number(d.paidMonths||0)}/${Number(d.totalMonths||12)}</strong></div>
+            <div><span>Total Dibayar</span><strong>${escapeHtml(money(d.paidAmount||0))}</strong></div>
+          </section>
+          <div class="table-wrap"><table>
+            <thead><tr><th style="width:7%">No</th><th style="width:24%">Bulan</th><th style="width:23%">Status</th><th style="width:22%">Tanggal Bayar</th><th style="width:24%">Nominal</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table></div>
+          <div class="foot">Dokumen ini menampilkan status pembayaran terbaru yang tersedia pada aplikasi.</div>
+        </main></body></html>`;
+    }
+
+    function previewStudentCard(idSiswa) {
+      const d = printableStudentDetail(idSiswa);
+      if (!d) { toast('Data siswa belum tersedia.', 'warning'); return; }
+      openPrintPreview('Kartu Pembayaran Komite', buildStudentCardDocument(d));
+    }
+
+    function semesterPeriods(semester) {
+      const periods = state.config.periods || [];
+      return String(semester).toUpperCase() === 'SEM2' ? periods.slice(6,12) : periods.slice(0,6);
+    }
+
+    function openSemesterRecapDialog() {
+      const isB = state.user?.role === 'BENDAHARA';
+      if (!['BENDAHARA','WALI'].includes(state.user?.role || '')) return;
+      const currentClass = normalizeClassLabel(isB ? (state.scopeClass || state.config.classes?.[0]?.nama || '7A') : state.user?.kelas || '');
+      openModal(`
+        <div class="modal-head"><div><h3>Cetak Rekap Semester</h3><p>Siapkan rekap satu kelas dalam format A4 portrait.</p></div><button class="icon-btn" onclick="closeModal()" aria-label="Tutup">${icon('x')}</button></div>
+        <div class="modal-body">
+          <div class="print-dialog-grid">
+            ${isB ? `<div><div class="meta" style="margin-bottom:6px">Kelas</div><div class="select-badge-wrap"><select id="semesterPrintClass" class="select period-class">${(state.config.classes||[]).map(c=>{const k=normalizeClassLabel(c.nama);return `<option value="${escapeHtml(k)}" ${k===currentClass?'selected':''}>Kelas ${escapeHtml(k)}</option>`}).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div></div>` : `<div><div class="meta" style="margin-bottom:6px">Kelas</div><div class="period-class-readonly">Kelas ${escapeHtml(currentClass)}</div><input type="hidden" id="semesterPrintClass" value="${escapeHtml(currentClass)}"></div>`}
+            <div><div class="meta" style="margin-bottom:6px">Semester</div><div class="select-badge-wrap"><select id="semesterPrintTerm" class="select period-class"><option value="SEM1">Semester 1</option><option value="SEM2">Semester 2</option></select><span class="select-arrow-badge">${icon('down')}</span></div></div>
+          </div>
+        </div>
+        <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary" onclick="previewSemesterRecapFromDialog()">${icon('printer')} Lihat Preview</button></div>
+      `);
+    }
+
+    function previewSemesterRecapFromDialog() {
+      const kelas = normalizeClassLabel(document.getElementById('semesterPrintClass')?.value || state.user?.kelas || '');
+      const semester = document.getElementById('semesterPrintTerm')?.value || 'SEM1';
+      if (!kelas) { toast('Pilih kelas terlebih dahulu.', 'warning'); return; }
+      const students = (state.students || []).filter(s => normalizeClassLabel(s.kelas) === kelas);
+      if (!students.length) { toast(`Data siswa Kelas ${kelas} belum tersedia.`, 'warning'); return; }
+      openPrintPreview(`Rekap Semester • Kelas ${kelas}`, buildSemesterRecapDocument(kelas, semester));
+    }
+
+    function buildSemesterRecapDocument(kelas, semester) {
+      const periods = semesterPeriods(semester);
+      const termLabel = String(semester).toUpperCase() === 'SEM2' ? 'Semester 2' : 'Semester 1';
+      const students = (state.students || [])
+        .filter(s => normalizeClassLabel(s.kelas) === normalizeClassLabel(kelas))
+        .slice()
+        .sort((a,b)=>String(a.nama||'').localeCompare(String(b.nama||''),'id'));
+
+      const payMap = new Map();
+      (state.payments || []).forEach(p => {
+        if (normalizeClassLabel(p.kelas || '') && normalizeClassLabel(p.kelas) !== normalizeClassLabel(kelas)) return;
+        if (String(p.status || 'LUNAS').toUpperCase() !== 'LUNAS') return;
+        payMap.set(`${p.idSiswa}|${String(p.bulan).toUpperCase()}-${Number(p.tahun)}`, p);
+      });
+
+      const monthHeads = periods.map(p=>`<th>${escapeHtml(titleCase(p.bulan))}</th>`).join('');
+      const rows = students.map((s,i)=>{
+        const cells = periods.map(p=>{
+          const tx = payMap.get(`${s.idSiswa}|${String(p.bulan).toUpperCase()}-${Number(p.tahun)}`);
+          return tx ? `<td class="center"><div class="check">✓</div><div class="paydate">${escapeHtml(shortPaymentDate(tx.tanggalBayar))}</div></td>` : `<td class="center muted">—</td>`;
+        }).join('');
+        return `<tr><td class="center">${i+1}</td><td><strong>${escapeHtml(s.nama)}</strong></td>${cells}</tr>`;
+      }).join('');
+
+      return `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rekap Komite ${escapeHtml(kelas)} ${termLabel}</title><style>
+        ${commonPrintCss(true)}
+        .doc-head{margin-bottom:3mm}
+        .recap-meta{display:flex;justify-content:space-between;gap:8px;margin-bottom:3mm;font-size:7pt}
+        .recap-table th,.recap-table td{padding:2px 3px;height:13px;line-height:1.05}
+        .recap-table thead th{font-size:6.5pt}
+        .recap-table tbody td{font-size:6.8pt}
+        .recap-table th:nth-child(1),.recap-table td:nth-child(1){width:5%}
+        .recap-table th:nth-child(2),.recap-table td:nth-child(2){width:35%;text-align:left}
+        .recap-table th:nth-child(n+3),.recap-table td:nth-child(n+3){width:10%}
+        .recap-table .check{font-size:8pt}
+        .recap-table .paydate{font-size:5.5pt}
+      </style></head><body>
+        <main class="paper">
+          <div class="doc-head"><div><div class="school">${escapeHtml(state.config.schoolName)}</div><div class="doc-title">Rekap Pembayaran Komite</div></div><span class="pill">${termLabel}</span></div>
+          <div class="recap-meta"><span><strong>Kelas ${escapeHtml(normalizeClassLabel(kelas))}</strong> • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</span><span>${escapeHtml(money(state.config.amount))} / bulan</span></div>
+          <div class="table-wrap"><table class="recap-table"><thead><tr><th>No</th><th>Nama Siswa</th>${monthHeads}</tr></thead><tbody>${rows}</tbody></table></div>
+          <div class="foot">✓ = lunas • angka kecil menunjukkan tanggal pembayaran (tanggal/bulan)</div>
+        </main></body></html>`;
+    }
+
+    function openPrintPreview(title, documentHtml) {
+      state.printDocument = { title, html:documentHtml };
+      openModal(`
+        <div class="modal-head"><div><h3>${escapeHtml(title)}</h3><p>Periksa hasil sebelum mencetak atau menyimpan sebagai PDF.</p></div><button class="icon-btn" onclick="closeModal()" aria-label="Tutup">${icon('x')}</button></div>
+        <div class="modal-body"><div class="print-preview-wrap"><iframe id="printPreviewFrame" class="print-preview-frame" title="Preview cetak"></iframe></div></div>
+        <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Tutup</button><button class="btn btn-primary" onclick="printCurrentPreview()">${icon('printer')} Cetak / Simpan PDF</button></div>
+      `, true);
+      setTimeout(()=>{
+        const frame = document.getElementById('printPreviewFrame');
+        if (frame) frame.srcdoc = documentHtml;
+      },0);
+    }
+
+    function printCurrentPreview() {
+      const frame = document.getElementById('printPreviewFrame');
+      try {
+        if (frame?.contentWindow) {
+          frame.contentWindow.focus();
+          frame.contentWindow.print();
+          return;
+        }
+      } catch (err) {}
+      const html = state.printDocument?.html;
+      if (!html) { toast('Preview cetak tidak tersedia.', 'warning'); return; }
+      const w = window.open('', '_blank');
+      if (!w) { toast('Browser memblokir jendela cetak.', 'warning'); return; }
+      w.document.open(); w.document.write(html); w.document.close();
+      w.onload = () => { w.focus(); w.print(); };
+    }
+
     function printHistoryReceipt(idTransaksi) {
       const d = state.selectedStudentDetail;
       const h = d?.history?.find(x => x.idTransaksi === idTransaksi);
@@ -3173,7 +3477,7 @@
         </section>
         <div class="section-head"><div><h2>Status Pembayaran</h2><p>${escapeHtml(state.config.startMonth)} — ${escapeHtml(state.config.endMonth)}</p></div><span class="status-pill ok">${money(state.config.amount)} / bulan</span></div>
         <div class="months-grid">${d.periods.map(p=>monthCardHtml(p,s.idSiswa,false)).join('')}</div>
-        <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>Transaksi Pembayaran Komite yang sudah lunas.</p></div></div>
+        <div class="section-head history-heading-actions"><div><h2>Riwayat Pembayaran</h2><p>Transaksi Pembayaran Komite yang telah lunas.</p></div><button class="btn btn-soft btn-sm print-card-btn" onclick="previewStudentCard('${escapeHtml(s.idSiswa)}')" title="Cetak Kartu Komite">${icon('printer')}<span class="print-card-label">Cetak Kartu Komite</span></button></div>
         <section class="card card-pad">${historyHtml(d.history,false)}</section>
         ${treasurerAccountsHtml()}
       </main>`;
