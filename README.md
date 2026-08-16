@@ -1,0 +1,1 @@
+komite SMP3
