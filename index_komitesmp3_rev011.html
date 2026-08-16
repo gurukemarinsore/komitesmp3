@@ -1,0 +1,3268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="color-scheme" content="light" />
+  <title>Komite SMP Negeri 3 Jayapura</title>
+  <link rel="icon" type="image/png" href="https://i.imgur.com/GO3QUoB.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f8fc;
+      --surface: #ffffff;
+      --surface-2: #f8fbff;
+      --text: #10233a;
+      --muted: #65758a;
+      --line: #e5edf6;
+      --navy: #0b3158;
+      --blue: #1769d2;
+      --blue-2: #3d8df5;
+      --cyan: #8bdcff;
+      --green: #168b63;
+      --green-soft: #eaf8f2;
+      --orange: #d97706;
+      --orange-soft: #fff5e8;
+      --red: #c43b4d;
+      --red-soft: #fff0f2;
+      --shadow: 0 14px 40px rgba(25, 65, 110, .09);
+      --shadow-soft: 0 8px 26px rgba(25, 65, 110, .07);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Google Sans Flex", "Google Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-optical-sizing: auto;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .58; }
+    a { color: inherit; }
+    .hidden { display: none !important; }
+
+    .app-root { min-height: 100vh; }
+    .page { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    .main { padding: 24px 0 104px; }
+
+    .topbar-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(255,255,255,.91);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(229,237,246,.88);
+    }
+    .topbar {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark {
+      width: 44px; height: 44px; border-radius: 15px;
+      display: grid; place-items: center; color: white;
+      background: linear-gradient(145deg, var(--navy), var(--blue) 60%, #6dc8f8);
+      box-shadow: 0 10px 24px rgba(23,105,210,.24);
+      flex: 0 0 auto;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+    .brand-text { min-width: 0; }
+    .brand-title { font-weight: 720; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand-sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .user-pill {
+      display: flex; align-items: center; gap: 9px; padding: 8px 12px;
+      border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+      color: var(--muted); font-size: 13px;
+    }
+    .user-pill strong { color: var(--text); font-weight: 650; }
+    .icon-btn {
+      width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 14px;
+      background: var(--surface); color: var(--text); display: grid; place-items: center;
+      transition: .18s ease;
+    }
+    .icon-btn:hover { transform: translateY(-1px); border-color: #cbdced; background: var(--surface-2); }
+    .icon-btn svg { width: 20px; height: 20px; }
+
+    .desktop-nav { display: flex; gap: 6px; padding: 10px; background: white; border: 1px solid var(--line); border-radius: 18px; margin-top: 18px; }
+    .nav-chip {
+      flex: 0 0 auto; border: 0; background: transparent; color: var(--muted); border-radius: 12px;
+      padding: 10px 14px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;
+    }
+    .nav-chip.active { background: #eef6ff; color: var(--blue); }
+    .nav-chip svg { width: 18px; height: 18px; }
+
+    .hero {
+      margin-top: 22px;
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      color: white;
+      background:
+        radial-gradient(circle at 82% 15%, rgba(139,220,255,.38), transparent 31%),
+        radial-gradient(circle at 15% 90%, rgba(61,141,245,.25), transparent 38%),
+        linear-gradient(135deg, #092f55 0%, #0f579e 52%, #2b87e9 100%);
+      box-shadow: 0 20px 50px rgba(9, 60, 110, .18);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::after {
+      content: ""; position: absolute; width: 240px; height: 240px; right: -100px; bottom: -160px;
+      border: 1px solid rgba(255,255,255,.18); border-radius: 50%; box-shadow: 0 0 0 28px rgba(255,255,255,.035), 0 0 0 56px rgba(255,255,255,.025);
+    }
+    .hero-kicker { font-size: 13px; opacity: .78; letter-spacing: .02em; }
+    .hero-title { margin: 7px 0 4px; font-size: clamp(25px, 4vw, 40px); font-weight: 760; letter-spacing: -.035em; }
+    .hero-sub { opacity: .78; font-size: 14px; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 28px; max-width: 720px; }
+    .hero-stat { padding: 14px 16px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.08); border-radius: 17px; backdrop-filter: blur(8px); }
+    .hero-stat small { display: block; opacity: .72; font-size: 12px; }
+    .hero-stat strong { display: block; margin-top: 4px; font-size: clamp(20px, 3vw, 29px); font-weight: 730; }
+
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 14px; margin: 28px 0 14px; }
+    .section-head h2 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+
+    .action-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .action-card {
+      border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-lg); padding: 18px;
+      text-align: left; min-height: 134px; box-shadow: var(--shadow-soft); transition: .18s ease; color: var(--text);
+    }
+    .action-card:hover { transform: translateY(-2px); border-color: #cfe0f1; box-shadow: var(--shadow); }
+    .action-icon { width: 42px; height: 42px; border-radius: 14px; background: #eef6ff; color: var(--blue); display: grid; place-items: center; }
+    .action-icon svg { width: 21px; height: 21px; }
+    .action-card strong { display: block; margin-top: 18px; font-weight: 690; }
+    .action-card > span:not(.action-icon) { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .action-card.primary { background: linear-gradient(145deg, #f4f9ff, #ffffff); border-color: #cfe6ff; }
+
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
+    .card-pad { padding: 20px; }
+    .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+    .toolbar.three { grid-template-columns: 1fr 180px 180px; }
+    .field-wrap { position: relative; }
+    .field-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #8192a6; pointer-events: none; display: grid; }
+    .field-icon svg { width: 18px; height: 18px; }
+    .input, .select {
+      width: 100%; min-height: 48px; border: 1px solid var(--line); border-radius: 14px; background: #fbfdff;
+      color: var(--text); padding: 0 14px; outline: none; transition: .16s ease;
+    }
+    .field-wrap .input { padding-left: 43px; }
+    .input:focus, .select:focus { border-color: #80b9f4; box-shadow: 0 0 0 4px rgba(23,105,210,.08); background: white; }
+    .label { display: block; color: var(--muted); font-size: 12px; font-weight: 600; margin: 0 0 7px 2px; }
+
+    .btn {
+      min-height: 46px; border: 0; border-radius: 14px; padding: 0 17px; display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; font-weight: 650; transition: .18s ease; white-space: nowrap;
+    }
+    .btn svg { width: 18px; height: 18px; }
+    .btn-primary { color: white; background: linear-gradient(135deg, var(--navy), var(--blue) 68%, #4ea4f3); box-shadow: 0 9px 22px rgba(23,105,210,.19); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 11px 26px rgba(23,105,210,.24); }
+    .btn-soft { color: var(--blue); background: #edf6ff; border: 1px solid #d8ebff; }
+    .btn-ghost { color: var(--text); background: white; border: 1px solid var(--line); }
+    .btn-danger { color: var(--red); background: var(--red-soft); border: 1px solid #ffd8dd; }
+    .btn-sm { min-height: 38px; padding: 0 12px; border-radius: 12px; font-size: 13px; }
+
+    .student-list { display: grid; gap: 9px; margin-top: 16px; }
+    .student-row {
+      width: 100%; display: grid; grid-template-columns: 44px minmax(0,1fr) auto; align-items: center; gap: 12px;
+      padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: white; color: var(--text); text-align: left; transition: .16s ease;
+    }
+    .student-row:hover { border-color: #cfe0f1; background: #fbfdff; }
+    .avatar { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: #edf6ff; color: var(--blue); font-weight: 730; }
+    .student-main { min-width: 0; }
+    .student-main strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .student-meta { color: var(--muted); font-size: 12px; margin-top: 3px; display: flex; gap: 7px; flex-wrap: wrap; }
+    .chev { color: #9aabba; display: grid; }
+    .chev svg { width: 18px; height: 18px; }
+
+    .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 9px; border-radius: 999px; font-size: 11px; font-weight: 650; white-space: nowrap; }
+    .status-pill.ok { background: var(--green-soft); color: var(--green); }
+    .status-pill.wait { background: var(--orange-soft); color: var(--orange); }
+    .status-pill.future { background: #f1f4f7; color: #77879a; }
+    .status-pill.cancel { background: var(--red-soft); color: var(--red); }
+    .status-pill svg { width: 14px; height: 14px; }
+
+    .months-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+    .month-card { border: 1px solid var(--line); border-radius: 17px; padding: 14px; background: white; min-height: 100px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+    .month-card.clickable { cursor: pointer; transition: .16s ease; }
+    .month-card.clickable:hover { border-color: #8fc2f4; background: #f8fbff; transform: translateY(-1px); }
+    .month-name { font-size: 12px; font-weight: 700; letter-spacing: .03em; color: var(--text); }
+    .month-year { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+    .history-list { display: grid; gap: 10px; }
+    .history-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .history-row:last-child { border-bottom: 0; }
+    .history-row strong { display: block; font-size: 14px; }
+    .history-row .meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .history-amount { text-align: right; }
+    .history-amount strong { font-variant-numeric: tabular-nums; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-top: 16px; }
+    .metric { padding: 17px; border: 1px solid var(--line); border-radius: 18px; background: white; }
+    .metric span { color: var(--muted); font-size: 12px; }
+    .metric strong { display: block; margin-top: 5px; font-size: 24px; letter-spacing: -.03em; }
+
+    .empty { text-align: center; padding: 42px 20px; color: var(--muted); }
+    .empty-icon { width: 54px; height: 54px; margin: 0 auto 12px; border-radius: 18px; display: grid; place-items: center; background: #f1f6fb; color: #7c91a7; }
+    .empty-icon svg { width: 24px; height: 24px; }
+    .empty strong { color: var(--text); display: block; margin-bottom: 4px; }
+
+    .bottom-nav {
+      display: none; position: fixed; z-index: 35; left: 50%; transform: translateX(-50%); bottom: calc(10px + var(--safe-bottom));
+      width: min(94%, 480px); padding: 7px; background: rgba(255,255,255,.95); border: 1px solid var(--line); border-radius: 22px;
+      box-shadow: 0 18px 48px rgba(18, 57, 95, .16); backdrop-filter: blur(18px);
+    }
+    .bottom-nav button { flex: 1; min-height: 54px; border: 0; background: transparent; border-radius: 16px; color: var(--muted); display: grid; place-items: center; gap: 2px; font-size: 10px; }
+    .bottom-nav button.active { color: var(--blue); background: #eef6ff; }
+    .bottom-nav svg { width: 20px; height: 20px; }
+
+    .login-page {
+      min-height: 100vh; display: grid; grid-template-columns: minmax(0,1.1fr) minmax(400px,.9fr); background: white;
+    }
+    .login-art {
+      position: relative; overflow: hidden; padding: 52px; color: white;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(139,220,255,.38), transparent 28%),
+        radial-gradient(circle at 78% 78%, rgba(58,144,245,.28), transparent 36%),
+        linear-gradient(145deg, #092c50 0%, #0f4e8d 48%, #2481df 100%);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .login-art::before, .login-art::after { content: ""; position: absolute; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; }
+    .login-art::before { width: 480px; height: 480px; right: -260px; top: -180px; box-shadow: 0 0 0 54px rgba(255,255,255,.025), 0 0 0 108px rgba(255,255,255,.018); }
+    .login-art::after { width: 320px; height: 320px; left: -180px; bottom: -170px; box-shadow: 0 0 0 42px rgba(255,255,255,.022); }
+    .login-brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; }
+    .login-brand .brand-mark { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); box-shadow: none; }
+    .login-copy { position: relative; z-index: 1; max-width: 620px; }
+    .login-copy h1 { font-size: clamp(36px,5vw,68px); line-height: .99; letter-spacing: -.052em; margin: 0 0 18px; font-weight: 780; }
+    .login-copy p { max-width: 520px; margin: 0; opacity: .76; font-size: 16px; line-height: 1.55; }
+    .login-mini { position: relative; z-index: 1; display: flex; gap: 10px; flex-wrap: wrap; }
+    .login-mini span { padding: 8px 11px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.07); border-radius: 999px; font-size: 11px; opacity: .88; }
+    .login-panel { display: grid; place-items: center; padding: 34px; background: #fbfdff; }
+    .login-box { width: min(100%, 470px); }
+    .login-mobile-brand { display: none; margin-bottom: 24px; }
+    .login-box h2 { margin: 0; font-size: 30px; letter-spacing: -.035em; }
+    .login-box > p { margin: 8px 0 22px; color: var(--muted); line-height: 1.5; }
+    .segment { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; padding: 5px; background: #eef3f8; border-radius: 15px; margin-bottom: 22px; }
+    .segment button { border: 0; background: transparent; min-height: 42px; border-radius: 11px; color: var(--muted); font-size: 12px; font-weight: 650; }
+    .segment button.active { background: white; color: var(--blue); box-shadow: 0 3px 12px rgba(25,65,110,.08); }
+    .form-stack { display: grid; gap: 14px; }
+    .login-btn { min-height: 51px; width: 100%; margin-top: 2px; }
+    .login-foot { color: var(--muted); font-size: 11px; line-height: 1.45; margin-top: 18px; text-align: center; }
+
+    .student-profile-hero { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 18px; }
+    .student-profile-hero .amount { font-size: clamp(29px,5vw,48px); font-weight: 760; letter-spacing: -.045em; margin-top: 18px; }
+    .student-profile-hero .amount-label { font-size: 12px; opacity: .7; }
+    .student-profile-hero .paid-circle { width: 112px; height: 112px; border-radius: 50%; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08); display: grid; place-items: center; text-align: center; }
+    .paid-circle strong { font-size: 27px; display: block; }
+    .paid-circle span { opacity: .72; font-size: 11px; }
+
+    .modal-backdrop { position: fixed; inset: 0; z-index: 70; background: rgba(9,30,52,.46); backdrop-filter: blur(5px); display: grid; place-items: center; padding: 18px; animation: fadeIn .16s ease; }
+    .modal {
+      width: min(760px, 100%); max-height: min(90vh, 900px); overflow: auto; background: white; border: 1px solid rgba(255,255,255,.7);
+      border-radius: 26px; box-shadow: 0 28px 80px rgba(5,31,58,.25); animation: pop .2s ease;
+    }
+    .modal.large { width: min(920px, 100%); }
+    .modal-head { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 20px 20px 14px; background: rgba(255,255,255,.95); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+    .modal-head h3 { margin: 0; font-size: 19px; }
+    .modal-head p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .modal-body { padding: 20px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 9px; padding: 14px 20px 20px; }
+
+    .receipt { text-align: center; padding: 6px 4px; }
+    .success-mark { width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 22px; display: grid; place-items: center; color: var(--green); background: var(--green-soft); }
+    .success-mark svg { width: 32px; height: 32px; }
+    .receipt h3 { margin: 0; font-size: 23px; }
+    .receipt .receipt-name { margin-top: 18px; font-size: 17px; font-weight: 680; }
+    .receipt .receipt-amount { font-size: 31px; font-weight: 770; letter-spacing: -.035em; margin: 7px 0; }
+    .receipt-details { margin: 18px auto 0; max-width: 450px; border: 1px solid var(--line); border-radius: 17px; overflow: hidden; text-align: left; }
+    .receipt-details div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 13px; border-bottom: 1px solid var(--line); font-size: 12px; }
+    .receipt-details div:last-child { border-bottom: 0; }
+    .receipt-details span { color: var(--muted); }
+
+    .toast-container { position: fixed; z-index: 100; top: 18px; right: 18px; width: min(390px, calc(100% - 28px)); display: grid; gap: 10px; pointer-events: none; }
+    .toast { pointer-events: auto; display: grid; grid-template-columns: 34px minmax(0,1fr) 28px; gap: 9px; align-items: center; padding: 11px; background: rgba(255,255,255,.98); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 16px 46px rgba(15,47,80,.16); animation: toastIn .25s ease; }
+    .toast-icon { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; }
+    .toast-icon svg { width: 17px; height: 17px; }
+    .toast.success .toast-icon { color: var(--green); background: var(--green-soft); }
+    .toast.error .toast-icon { color: var(--red); background: var(--red-soft); }
+    .toast.warning .toast-icon { color: var(--orange); background: var(--orange-soft); }
+    .toast.info .toast-icon { color: var(--blue); background: #edf6ff; }
+    .toast strong { display: block; font-size: 13px; }
+    .toast p { margin: 2px 0 0; color: var(--muted); font-size: 11px; line-height: 1.35; }
+    .toast-close { width: 28px; height: 28px; display: grid; place-items: center; border: 0; background: transparent; color: #91a0ae; border-radius: 9px; }
+    .toast-close svg { width: 15px; height: 15px; }
+
+    .loading-overlay { position: fixed; inset: 0; z-index: 90; background: rgba(248,251,255,.76); backdrop-filter: blur(4px); display: grid; place-items: center; }
+    .loader-card { display: flex; align-items: center; gap: 11px; padding: 13px 16px; background: white; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); color: var(--muted); font-size: 13px; }
+    .spinner { width: 19px; height: 19px; border: 2px solid #d7e5f3; border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; } }
+    @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.985); } }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-8px); } }
+
+    @media (max-width: 860px) {
+      .login-page { grid-template-columns: 1fr; background: #fbfdff; }
+      .login-art { display: none; }
+      .login-panel { padding: 24px; min-height: 100vh; }
+      .login-mobile-brand { display: flex; align-items: center; gap: 12px; }
+      .desktop-nav { display: none; }
+      .bottom-nav { display: flex; }
+      .main { padding-top: 14px; }
+      .action-grid { grid-template-columns: repeat(3,1fr); }
+      .action-card { min-height: 120px; padding: 15px; }
+      .toolbar.three { grid-template-columns: 1fr 145px; }
+      .toolbar.three > :last-child { grid-column: 1 / -1; }
+      .summary-grid { grid-template-columns: repeat(2,1fr); }
+      .months-grid { grid-template-columns: repeat(3,1fr); }
+      .user-pill { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .page { width: min(100% - 22px, 1180px); }
+      .topbar { min-height: 64px; }
+      .brand-mark { width: 40px; height: 40px; border-radius: 13px; }
+      .brand-title { font-size: 14px; max-width: 210px; }
+      .brand-sub { font-size: 10px; }
+      .hero { padding: 21px; border-radius: 24px; margin-top: 13px; }
+      .hero-stats { grid-template-columns: repeat(3,1fr); gap: 7px; margin-top: 22px; }
+      .hero-stat { padding: 11px 9px; border-radius: 14px; }
+      .hero-stat strong { font-size: 21px; }
+      .hero-stat small { font-size: 10px; }
+      .action-grid { grid-template-columns: repeat(3,1fr); gap: 8px; }
+      .action-card { min-height: 108px; border-radius: 17px; padding: 12px; }
+      .action-icon { width: 36px; height: 36px; border-radius: 12px; }
+      .action-card strong { margin-top: 12px; font-size: 12px; }
+      .action-card > span:not(.action-icon) { display: none; }
+      .section-head { margin-top: 23px; }
+      .card-pad { padding: 14px; }
+      .toolbar, .toolbar.three { grid-template-columns: 1fr; }
+      .toolbar.three > :last-child { grid-column: auto; }
+      .months-grid { grid-template-columns: repeat(3,1fr); gap: 7px; }
+      .month-card { min-height: 90px; padding: 11px; border-radius: 14px; }
+      .summary-grid { gap: 8px; }
+      .metric { padding: 14px; border-radius: 16px; }
+      .metric strong { font-size: 21px; }
+      .modal-backdrop { padding: 10px; align-items: end; }
+      .modal { width: 100%; max-height: 92vh; border-radius: 24px 24px 18px 18px; }
+      .modal.large { width: 100%; }
+      .toast-container { left: 50%; right: auto; transform: translateX(-50%); top: 12px; width: calc(100% - 24px); }
+      .student-profile-hero { grid-template-columns: 1fr; }
+      .student-profile-hero .paid-circle { width: 92px; height: 92px; position: absolute; right: 20px; top: 22px; }
+      .login-panel { padding: 20px; }
+      .login-box h2 { font-size: 27px; }
+    }
+
+    @media (orientation: landscape) and (max-height: 560px) and (max-width: 960px) {
+      .login-panel { min-height: 100vh; padding: 16px 24px; }
+      .login-mobile-brand { margin-bottom: 12px; }
+      .login-box h2 { font-size: 24px; }
+      .login-box > p { margin: 4px 0 12px; }
+      .segment { margin-bottom: 12px; }
+      .form-stack { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .form-stack .login-btn, .form-stack .student-only-wide { grid-column: 1 / -1; }
+      .login-foot { display: none; }
+      .hero { padding: 20px 24px; }
+      .hero-stats { margin-top: 15px; }
+    }
+
+    /* ===== Revisi 1.02: kelas ringkas, slider smooth, periode lokal, pembayaran multi-bulan ===== */
+    .status-pill.sync { background: #edf6ff; color: var(--blue); }
+
+    .refresh-btn.spinning svg { animation: spin .75s linear infinite; }
+
+    .sync-chip {
+      min-height: 38px; border: 1px solid var(--line); border-radius: 999px; padding: 0 11px;
+      display: inline-flex; align-items: center; gap: 7px; background: white; color: var(--muted);
+      font-size: 11px; font-weight: 650; transition: .18s ease;
+    }
+    .sync-chip svg { width: 16px; height: 16px; }
+    .sync-chip.ok { color: var(--green); background: var(--green-soft); border-color: #d4efe4; }
+    .sync-chip.pending { color: var(--orange); background: var(--orange-soft); border-color: #ffe2ba; }
+    .sync-chip.offline { color: var(--red); background: var(--red-soft); border-color: #ffd9df; }
+
+    .period-panel {
+      margin-top: 18px; padding: 12px; border: 1px solid var(--line); border-radius: 20px;
+      background: rgba(255,255,255,.97); box-shadow: var(--shadow-soft); transition: opacity .18s ease;
+    }
+    .period-panel.busy { opacity: .62; pointer-events: none; }
+    .period-segment {
+      display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 5px; padding: 5px;
+      background: #eef3f8; border-radius: 15px;
+    }
+    .period-segment button {
+      min-height: 39px; border: 0; border-radius: 11px; background: transparent; color: var(--muted);
+      font-size: 12px; font-weight: 650; transition: .16s ease;
+    }
+    .period-segment button.active { color: var(--blue); background: white; box-shadow: 0 4px 14px rgba(25,65,110,.08); }
+    .period-row { display: grid; grid-template-columns: minmax(0,1fr) 190px; gap: 10px; align-items: center; margin-top: 10px; }
+    .period-nav { min-height: 46px; display: grid; grid-template-columns: 42px minmax(0,1fr) 42px; align-items: center; border: 1px solid var(--line); border-radius: 14px; background: #fbfdff; }
+    .period-arrow { width: 42px; height: 42px; border: 0; background: transparent; display: grid; place-items: center; color: var(--blue); border-radius: 12px; }
+    .period-arrow:disabled { color: #b9c5d0; opacity: .55; }
+    .period-arrow svg { width: 18px; height: 18px; }
+    .period-label, .period-static { text-align: center; font-weight: 680; letter-spacing: -.01em; }
+    .period-static { min-height: 46px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 14px; background: #fbfdff; }
+    .period-class { min-height: 46px; }
+    .period-class-readonly { min-height: 46px; display: grid; place-items: center; color: var(--muted); border: 1px solid var(--line); border-radius: 14px; background: #fbfdff; font-size: 13px; }
+
+    .sync-notice {
+      display: flex; align-items: center; gap: 10px; padding: 11px 13px; margin-bottom: 12px;
+      border: 1px solid #d8ebff; border-radius: 14px; background: #f1f8ff; color: var(--blue); font-size: 12px;
+    }
+    .sync-notice svg { width: 18px; height: 18px; flex: 0 0 auto; }
+    .sync-notice span { color: var(--muted); }
+    .sync-notice strong { color: var(--blue); }
+
+    .toast {
+      position: relative; grid-template-columns: 34px minmax(0,1fr); padding: 12px 42px 12px 11px;
+      touch-action: none; user-select: none; will-change: transform, opacity;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+    .toast.dragging { transition: none !important; cursor: grabbing; }
+    .toast-copy { min-width: 0; }
+    .toast-close { position: absolute; top: 6px; right: 6px; }
+
+    @media (max-width: 860px) {
+      .sync-chip span { display: none; }
+      .sync-chip { width: 42px; height: 42px; min-height: 42px; padding: 0; justify-content: center; border-radius: 14px; }
+      .period-row { grid-template-columns: minmax(0,1fr) 150px; }
+    }
+
+    @media (max-width: 600px) {
+      .period-panel { margin-top: 12px; padding: 9px; border-radius: 17px; }
+      .period-segment { grid-template-columns: repeat(2,1fr); }
+      .period-segment button { min-height: 37px; font-size: 11px; }
+      .period-row { grid-template-columns: 1fr; gap: 7px; }
+      .period-class, .period-class-readonly { min-height: 43px; }
+      .top-actions { gap: 5px; }
+      .icon-btn, .sync-chip { width: 39px; height: 39px; min-height: 39px; border-radius: 12px; }
+      .brand-title { max-width: 170px; }
+    }
+
+    /* Rev 1.02: profil seragam + sliding indicator */
+    .user-pill { border-radius: 16px; padding: 5px 10px 5px 5px; gap: 9px; min-width: 0; }
+    .user-avatar {
+      width: 34px; height: 34px; flex: 0 0 34px; border-radius: 11px; display:grid; place-items:center;
+      color: var(--blue); background:#eef6ff; border:1px solid #d8ebff;
+    }
+    .user-avatar svg { width:18px; height:18px; }
+    .user-copy { min-width:0; line-height:1.12; }
+    .user-copy strong { display:block; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+    .user-copy span { display:block; margin-top:3px; color:var(--muted); font-size:10px; white-space:nowrap; }
+
+    [data-sliding-group] { position:relative; isolation:isolate; }
+    [data-sliding-group] > button { position:relative; z-index:2; background:transparent !important; transition:color .2s ease, transform .2s ease; }
+    .slide-indicator {
+      position:absolute; z-index:1; pointer-events:none; border-radius:12px;
+      transition:transform .28s cubic-bezier(.22,.8,.2,1), width .28s cubic-bezier(.22,.8,.2,1), height .28s cubic-bezier(.22,.8,.2,1), opacity .18s ease;
+      will-change:transform,width,height;
+    }
+    .desktop-nav .slide-indicator, .bottom-nav .slide-indicator { background:#eef6ff; }
+    .segment .slide-indicator, .period-segment .slide-indicator { background:#fff; box-shadow:0 4px 14px rgba(25,65,110,.08); }
+    .segment button.active, .period-segment button.active, .nav-chip.active, .bottom-nav button.active { background:transparent !important; color:var(--blue); }
+
+    .month-card.selectable { cursor:pointer; transition:border-color .16s ease, background .16s ease, transform .16s ease, box-shadow .16s ease; }
+    .month-card.selectable:hover { border-color:#8fc2f4; background:#f8fbff; transform:translateY(-1px); }
+    .month-card.selected { border-color:#5aa8ee; background:#eef7ff; box-shadow:0 0 0 3px rgba(23,105,210,.08); }
+    .month-card.selected .month-name { color:var(--blue); }
+    .payment-selection {
+      margin-top:14px; display:grid; grid-template-columns:minmax(0,1fr) 180px auto; gap:10px; align-items:end;
+      padding:14px; border:1px solid #d8ebff; background:#f7fbff; border-radius:17px;
+    }
+    .payment-selection-summary { min-width:0; }
+    .payment-selection-summary strong { display:block; font-size:14px; }
+    .payment-selection-summary span { display:block; color:var(--muted); font-size:11px; margin-top:4px; }
+    .payment-date-wrap .input { min-height:44px; }
+    .payment-selection .btn { min-height:44px; }
+
+    @media (max-width:860px) {
+      .user-pill { display:flex; max-width:210px; }
+      .payment-selection { grid-template-columns:1fr 155px; }
+      .payment-selection .btn { grid-column:1/-1; }
+    }
+    @media (max-width:600px) {
+      .user-pill { display:none; }
+      .payment-selection { grid-template-columns:1fr; }
+      .payment-selection .btn { grid-column:auto; width:100%; }
+    }
+
+
+
+    /* ===== Versi 1.03: cepat, responsif, tanpa slider ===== */
+    body, .app-root { overflow-x: hidden; }
+    .page, .main, .card, .modal, .modal-body, .months-grid { min-width: 0; max-width: 100%; }
+
+    /* Navigasi normal: indikator aktif langsung, tanpa animasi slider. */
+    .nav-chip, .segment button, .period-segment button, .bottom-nav button { transition: background-color .12s ease, color .12s ease, border-color .12s ease; }
+    .nav-chip.active, .bottom-nav button.active { background: #eef6ff !important; color: var(--blue); }
+    .segment button.active, .period-segment button.active { background: white !important; color: var(--blue); box-shadow: 0 3px 12px rgba(25,65,110,.08); }
+
+    /* Bottom navigation harus selalu floating pada layar mobile. */
+    .bottom-nav { position: fixed !important; }
+
+    /* Sistem icon seragam dan tepat di tengah. */
+    .nav-chip svg, .bottom-nav svg, .action-icon svg, .icon-btn svg, .user-avatar svg { display: block; flex: 0 0 auto; }
+    .nav-chip { line-height: 1; }
+    .action-card .action-icon {
+      width: 42px; height: 42px; margin: 0 !important; padding: 0; border-radius: 14px;
+      display: grid !important; place-items: center !important; color: var(--blue) !important;
+      background: #eef6ff !important; font-size: initial !important;
+    }
+    .action-card .action-icon svg { width: 21px; height: 21px; margin: 0; }
+    .action-card > .action-desc { color: var(--muted); font-size: 12px; margin-top: 3px; }
+
+    /* Profil kanan atas rapi dua baris dan proporsional. */
+    .user-pill { align-items: center; min-height: 50px; padding: 5px 12px 5px 5px; }
+    .user-avatar { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 13px; }
+    .user-avatar svg { width: 20px; height: 20px; }
+    .user-copy strong { max-width: 190px; font-size: 12px; line-height: 1.2; }
+    .user-copy span { max-width: 190px; overflow: hidden; text-overflow: ellipsis; font-size: 10px; line-height: 1.2; }
+
+    /* Password Bendahara/Wali dapat ditampilkan atau disembunyikan. */
+    .password-wrap .input { padding-right: 48px; }
+    .password-toggle {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      width: 38px; height: 38px; border: 0; border-radius: 11px; background: transparent;
+      color: #74869a; display: grid; place-items: center;
+    }
+    .password-toggle:hover { background: #eef6ff; color: var(--blue); }
+    .password-toggle svg { width: 18px; height: 18px; }
+
+    /* Nama bulan penuh dan status pilihan biru. */
+    .month-name { letter-spacing: 0; font-size: 12px; line-height: 1.2; }
+    .status-pill.selected { background: #eaf4ff; color: var(--blue); }
+
+    /* Cegah modal dan halaman melebar horizontal. */
+    .modal { overflow-y: auto; overflow-x: hidden; }
+    .modal-body { overflow-x: hidden; }
+    .months-grid { width: 100%; }
+    .month-card { min-width: 0; overflow: hidden; }
+
+    @media (max-width: 860px) {
+      .bottom-nav { display: flex !important; }
+      .main { padding-bottom: calc(96px + var(--safe-bottom)); }
+      .action-card .action-icon { display: grid !important; }
+      .months-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 600px) {
+      .action-card .action-icon { width: 34px; height: 34px; border-radius: 11px; display: grid !important; }
+      .action-card .action-icon svg { width: 18px; height: 18px; }
+      .action-card > .action-desc { display: none; }
+      .months-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+      .month-card { min-height: 96px; padding: 11px; gap: 8px; }
+      .month-card .status-pill {
+        width: 100%; max-width: 100%; min-width: 0; padding: 6px 7px; gap: 5px;
+        white-space: normal; line-height: 1.15; font-size: 9.5px; justify-content: flex-start;
+      }
+      .month-card .status-pill svg { width: 12px; height: 12px; flex: 0 0 12px; }
+      .student-profile-hero { grid-template-columns: 1fr; align-items: start; gap: 14px; }
+      .student-profile-hero .paid-circle {
+        position: static; width: 84px; height: 84px; justify-self: end; margin: 0;
+      }
+      .student-profile-hero .paid-circle strong { font-size: 22px; }
+      .student-profile-hero .paid-circle span { font-size: 9px; }
+      .student-profile-hero .hero-title { padding-right: 0; overflow-wrap: anywhere; }
+      .student-profile-hero .hero-sub { max-width: 100%; line-height: 1.4; }
+      .student-profile-hero .amount { margin-top: 14px; }
+      .history-row { grid-template-columns: minmax(0,1fr) auto; gap: 8px; }
+      .history-amount { min-width: 0; }
+    }
+
+    @media (max-width: 350px) {
+      .months-grid { grid-template-columns: 1fr; }
+      .month-card .status-pill { font-size: 10px; }
+    }
+
+    /* ===== Versi 1.04: wali satu halaman, sticky header, touch bersih, status lunas jelas ===== */
+    html, body { overflow-x: clip; }
+    .app-root { overflow-x: clip; }
+    .topbar-wrap {
+      position: sticky !important;
+      position: -webkit-sticky !important;
+      top: 0 !important;
+      z-index: 50;
+      isolation: isolate;
+      background: rgba(255,255,255,.96);
+    }
+
+    /* Hilangkan flash biru bawaan browser saat touch tanpa menghapus fokus keyboard. */
+    button, a, input, select, textarea, .student-row, .month-card.selectable, .action-card, .nav-chip, .period-arrow {
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:focus, a:focus, input:focus, select:focus, textarea:focus { outline: none; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible,
+    .student-row:focus-visible, .month-card.selectable:focus-visible {
+      outline: 2px solid rgba(23,105,210,.48);
+      outline-offset: 2px;
+    }
+
+    /* Bulan lunas mudah dibedakan, tetap halus dan profesional. */
+    .month-card.lunas {
+      border-color: rgba(22,139,99,.52);
+      box-shadow: 0 0 0 2px rgba(22,139,99,.07), 0 8px 22px rgba(22,139,99,.08);
+      background: linear-gradient(180deg, #ffffff 0%, #fbfffd 100%);
+    }
+    .month-card.lunas .month-name { color: #116f50; }
+
+    /* Wali Kelas hanya satu halaman utama, tanpa ruang ekstra untuk bottom navigation. */
+    .wali-main { padding-bottom: 42px; }
+
+    /* Pusat sinkronisasi. */
+    .sync-center-body { padding-top: 16px; }
+    .sync-center-summary {
+      display: grid; grid-template-columns: 48px minmax(0,1fr); gap: 12px; align-items: center;
+      padding: 14px; border: 1px solid var(--line); border-radius: 18px; background: #f8fbff;
+    }
+    .sync-center-summary.ok { background: var(--green-soft); border-color: #d0eddf; }
+    .sync-center-summary.offline { background: var(--orange-soft); border-color: #ffe0b2; }
+    .sync-center-mark {
+      width: 48px; height: 48px; display: grid; place-items: center; border-radius: 15px;
+      background: white; color: var(--blue); border: 1px solid rgba(23,105,210,.12);
+    }
+    .sync-center-summary.ok .sync-center-mark { color: var(--green); }
+    .sync-center-summary.offline .sync-center-mark { color: var(--orange); }
+    .sync-center-mark svg { width: 23px; height: 23px; }
+    .sync-center-summary strong { display: block; font-size: 14px; }
+    .sync-center-summary p { margin: 3px 0 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+
+    .sync-queue-list { display: grid; gap: 9px; margin-top: 14px; max-height: 48vh; overflow-y: auto; overflow-x: hidden; }
+    .sync-queue-item {
+      display: grid; grid-template-columns: 40px minmax(0,1fr) auto; gap: 10px; align-items: center;
+      padding: 11px; border: 1px solid var(--line); border-radius: 15px; background: white;
+      transition: opacity .16s ease, transform .16s ease, max-height .18s ease;
+    }
+    .sync-queue-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background:#eef6ff; color:var(--blue); }
+    .sync-queue-icon svg { width: 19px; height: 19px; }
+    .sync-queue-copy { min-width: 0; }
+    .sync-queue-copy strong { display:block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sync-queue-copy span { display:block; margin-top:3px; color:var(--muted); font-size:10px; line-height:1.35; overflow-wrap:anywhere; }
+    .sync-queue-copy small { display:block; margin-top:4px; color:var(--orange); font-size:9px; line-height:1.3; }
+    .sync-center-actions { padding: 14px 0 0; }
+    .sync-empty { display:grid; place-items:center; text-align:center; padding:28px 16px; color:var(--muted); }
+    .sync-empty svg { width:30px; height:30px; color:var(--green); margin-bottom:8px; }
+    .sync-empty strong { color:var(--text); font-size:13px; }
+    .sync-empty span { font-size:10px; margin-top:3px; }
+
+    /* Popup hasil penyimpanan. */
+    .payment-result { padding: 18px 4px 6px; }
+    .payment-result-sub { max-width: 440px; margin: 8px auto 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .queued-mark {
+      width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 22px;
+      display:grid; place-items:center; color:var(--orange); background:var(--orange-soft);
+    }
+    .queued-mark svg { width:31px; height:31px; }
+    .payment-result-actions { display:flex; justify-content:center; gap:9px; margin-top:20px; flex-wrap:wrap; }
+    .payment-result .receipt-details strong { max-width: 68%; text-align: right; overflow-wrap: anywhere; }
+
+    @media (max-width: 860px) {
+      body:has(.wali-main) .bottom-nav { display: none !important; }
+      .wali-main { padding-bottom: 38px !important; }
+    }
+
+    @media (max-width: 600px) {
+      .sync-queue-item { grid-template-columns: 36px minmax(0,1fr); }
+      .sync-queue-item > .status-pill { grid-column: 2; justify-self:start; }
+      .sync-queue-icon { width:36px; height:36px; border-radius:11px; }
+      .sync-center-actions { display:grid; grid-template-columns:1fr; }
+      .sync-center-actions .btn { width:100%; }
+      .payment-result-actions { display:grid; grid-template-columns:1fr; }
+      .payment-result-actions .btn { width:100%; }
+    }
+
+
+    /* ===== Versi 1.05: filter ringkas, bottom nav penuh, kontrol mobile, rekening bendahara ===== */
+    .dashboard-hero { padding-right: 82px; }
+    .hero-filter-toggle {
+      position: absolute; z-index: 2; top: 18px; right: 18px;
+      width: 44px; height: 44px; display: grid; place-items: center;
+      border: 1px solid rgba(255,255,255,.24); border-radius: 15px;
+      color: white; background: rgba(255,255,255,.12); backdrop-filter: blur(8px);
+      transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
+    }
+    .hero-filter-toggle:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.34); transform: translateY(-1px); }
+    .hero-filter-toggle svg { width: 21px; height: 21px; }
+
+    .period-panel { margin-top: 14px; }
+    .period-arrow {
+      width: 36px; height: 36px; justify-self: center; border-radius: 50%;
+      color: var(--blue); background: rgba(139,220,255,.22); border: 1px solid rgba(23,105,210,.10);
+    }
+    .period-arrow:hover:not(:disabled) { background: rgba(139,220,255,.36); }
+    .period-arrow:disabled {
+      color: #a9b5c1; background: #eef1f4; border-color: #e1e6eb; opacity: 1;
+    }
+    .period-nav { grid-template-columns: 48px minmax(0,1fr) 48px; }
+
+    .select-badge-wrap { position: relative; min-width: 0; width: 100%; }
+    .select-badge-wrap .select { appearance: none; -webkit-appearance: none; padding-right: 52px; }
+    .select-arrow-badge {
+      position: absolute; pointer-events: none; right: 9px; top: 50%; transform: translateY(-50%);
+      width: 31px; height: 31px; border-radius: 50%; display: grid; place-items: center;
+      color: var(--blue); background: rgba(139,220,255,.22); border: 1px solid rgba(23,105,210,.09);
+    }
+    .select-arrow-badge svg { width: 16px; height: 16px; }
+
+    .treasurer-accounts-wrap { margin-top: 28px; }
+    .treasurer-accounts {
+      overflow: hidden; border: 1px solid var(--line); border-radius: 22px;
+      background: var(--surface); box-shadow: var(--shadow-soft);
+    }
+    .treasurer-accounts > summary {
+      list-style: none; cursor: pointer; min-height: 76px; padding: 14px 16px;
+      display: grid; grid-template-columns: 46px minmax(0,1fr) 36px; gap: 12px; align-items: center;
+      -webkit-tap-highlight-color: transparent; user-select: none;
+    }
+    .treasurer-accounts > summary::-webkit-details-marker { display: none; }
+    .accounts-summary-icon {
+      width: 46px; height: 46px; border-radius: 15px; display: grid; place-items: center;
+      color: var(--blue); background: #eef6ff; border: 1px solid #d8ebff;
+    }
+    .accounts-summary-icon svg { width: 22px; height: 22px; }
+    .accounts-summary-copy { min-width: 0; }
+    .accounts-summary-copy strong { display: block; font-size: 14px; }
+    .accounts-summary-copy small { display: block; color: var(--muted); font-size: 11px; margin-top: 3px; line-height: 1.35; }
+    .accounts-summary-chevron {
+      width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+      color: var(--blue); background: #f0f7ff; transition: transform .18s ease;
+    }
+    .accounts-summary-chevron svg { width: 17px; height: 17px; }
+    .treasurer-accounts[open] .accounts-summary-chevron { transform: rotate(180deg); }
+    .accounts-expanded { border-top: 1px solid var(--line); padding: 16px; }
+    .bank-card-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+    .bank-card {
+      min-width: 0; min-height: 190px; padding: 20px; border-radius: 22px; color: white;
+      display: flex; flex-direction: column; position: relative; overflow: hidden;
+      box-shadow: 0 16px 34px rgba(10,52,92,.16);
+    }
+    .bank-card::before, .bank-card::after { content:""; position:absolute; border-radius:50%; pointer-events:none; }
+    .bank-card::before { width: 190px; height: 190px; right:-86px; top:-100px; border:1px solid rgba(255,255,255,.18); box-shadow: 0 0 0 28px rgba(255,255,255,.025); }
+    .bank-card::after { width: 120px; height: 120px; left:-68px; bottom:-72px; background:rgba(255,255,255,.04); }
+    .bank-papua-card { background: linear-gradient(140deg,#092f55 0%,#1265b8 62%,#3f9cf0 100%); }
+    .bri-card { background: linear-gradient(140deg,#0b3b6f 0%,#1769d2 58%,#62b8f4 100%); }
+    .bank-card-top, .bank-card-bottom { position: relative; z-index: 1; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .bank-name { font-size: 15px; font-weight: 760; letter-spacing: .03em; }
+    .bank-card-mark { font-size: 10px; padding: 6px 9px; border: 1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.09); border-radius:999px; }
+    .bank-account-label { position:relative; z-index:1; margin-top:30px; font-size:10px; opacity:.7; }
+    .bank-account-number { position:relative; z-index:1; margin-top:5px; font-size:clamp(19px,3vw,25px); font-weight:720; letter-spacing:.035em; white-space:nowrap; }
+    .bank-card-bottom { margin-top:auto; align-items:end; }
+    .bank-card-bottom > div span { display:block; font-size:9px; opacity:.7; }
+    .bank-card-bottom > div strong { display:block; margin-top:3px; font-size:12px; letter-spacing:.025em; }
+    .copy-account-btn {
+      min-height: 36px; padding: 0 11px; border:1px solid rgba(255,255,255,.22); border-radius:12px;
+      display:inline-flex; align-items:center; gap:6px; color:white; background:rgba(255,255,255,.11);
+      font-size:10px; font-weight:650; -webkit-tap-highlight-color:transparent;
+    }
+    .copy-account-btn:hover { background:rgba(255,255,255,.18); }
+    .copy-account-btn svg { width:15px; height:15px; }
+    .transfer-confirmation { text-align:center; padding:18px 8px 4px; }
+    .transfer-confirmation p { margin:0 auto 12px; max-width:540px; color:var(--muted); font-size:12px; line-height:1.5; }
+    .whatsapp-link {
+      display:inline-flex; align-items:center; gap:8px; padding:9px 13px; border-radius:999px;
+      color:#159447; background:#edf9f1; border:1px solid #d1efdc; text-decoration:none; font-weight:700; font-size:13px;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .whatsapp-link:hover { background:#e5f7ec; }
+    .whatsapp-link svg { width:21px; height:21px; }
+
+    @media (max-width: 860px) {
+      .bottom-nav {
+        left: 0 !important; right: 0 !important; transform: none !important; bottom: 0 !important;
+        width: 100% !important; max-width: none !important;
+        padding: 7px 10px calc(7px + var(--safe-bottom)) !important;
+        border-left: 0 !important; border-right: 0 !important; border-bottom: 0 !important;
+        border-radius: 22px 22px 0 0 !important;
+        box-shadow: 0 -10px 30px rgba(18,57,95,.12) !important;
+      }
+      .bendahara-main { padding-bottom: calc(94px + var(--safe-bottom)); }
+      .wali-main { padding-bottom: 42px !important; }
+    }
+
+    @media (max-width: 600px) {
+      .dashboard-hero { padding-right: 64px; }
+      .hero-filter-toggle { width:39px; height:39px; top:14px; right:14px; border-radius:13px; }
+      .hero-filter-toggle svg { width:19px; height:19px; }
+      .period-segment {
+        display:flex; grid-template-columns:none; overflow-x:auto; overflow-y:hidden; gap:5px;
+        scroll-snap-type:x proximity; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+      }
+      .period-segment::-webkit-scrollbar { display:none; }
+      .period-segment button { flex:0 0 auto; min-width:96px; padding:0 13px; scroll-snap-align:start; }
+      .period-segment button:nth-child(n+2) { min-width:116px; }
+      .period-row { margin-top:8px; }
+      .bank-card-grid { grid-template-columns:1fr; }
+      .bank-card { min-height:184px; padding:18px; }
+      .bank-account-number { font-size:20px; }
+      .accounts-expanded { padding:12px; }
+      .treasurer-accounts > summary { padding:12px; grid-template-columns:42px minmax(0,1fr) 32px; }
+      .accounts-summary-icon { width:42px; height:42px; border-radius:14px; }
+      .accounts-summary-copy strong { font-size:13px; }
+      .accounts-summary-copy small { font-size:10px; }
+    }
+
+
+    /* ===== Versi 1.06: penyempurnaan HP, identitas logo, aksen Bank Papua ===== */
+    .brand-mark-logo {
+      padding: 3px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid rgba(23,105,210,.10);
+    }
+    .brand-mark-logo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: calc(15px - 4px);
+      background: #fff;
+    }
+    .login-brand .brand-mark-logo {
+      padding: 3px;
+      background: rgba(255,255,255,.96);
+      border-color: rgba(255,255,255,.28);
+    }
+
+    .bank-papua-card {
+      background:
+        radial-gradient(circle at 92% 12%, rgba(255,153,51,.34) 0%, rgba(255,153,51,.13) 17%, transparent 34%),
+        linear-gradient(140deg,#092f55 0%,#1265b8 62%,#3f9cf0 100%);
+      box-shadow: inset 4px 0 0 rgba(255,159,67,.72), 0 16px 34px rgba(10,52,92,.16);
+    }
+    .bank-papua-card .bank-card-mark {
+      border-color: rgba(255,184,92,.48);
+      background: rgba(255,153,51,.14);
+    }
+
+    @media (max-width: 600px) {
+      /* Statistik dashboard memenuhi lebar hero tanpa ruang kosong di kanan. */
+      .dashboard-hero { padding-right: 21px; }
+      .dashboard-hero .hero-kicker,
+      .dashboard-hero .hero-title,
+      .dashboard-hero .hero-sub { padding-right: 43px; }
+      .dashboard-hero .hero-stats {
+        width: 100%;
+        max-width: none;
+        grid-template-columns: repeat(3, minmax(0,1fr));
+        gap: 7px;
+      }
+      .dashboard-hero .hero-stat {
+        width: 100%;
+        min-width: 0;
+      }
+
+      /* Inset selector periode seimbang di kiri/kanan saat di-scroll. */
+      .period-segment {
+        padding: 5px 10px;
+        scroll-padding-inline: 10px;
+      }
+      .period-segment button:first-child { margin-left: 0; }
+      .period-segment button:last-child { margin-right: 0; }
+
+      .brand-mark-logo img { border-radius: calc(13px - 4px); }
+    }
+
+
+    /* ===== Versi 1.07: full-bleed dashboard, bottom sheet HP, kontrol konsisten ===== */
+
+    /* Logo Komite tampil langsung tanpa badge/wadah putih. */
+    .brand-mark.brand-mark-logo,
+    .login-brand .brand-mark.brand-mark-logo {
+      padding: 0 !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      overflow: visible;
+    }
+    .brand-mark-logo img,
+    .login-brand .brand-mark-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 0 !important;
+      background: transparent !important;
+    }
+
+    /* Tinggi card filter dan tombol lingkarannya seragam. */
+    .period-nav,
+    .period-static,
+    .period-class,
+    .period-class-readonly {
+      min-height: 48px;
+      height: 48px;
+    }
+    .period-nav { grid-template-columns: 48px minmax(0,1fr) 48px; }
+    .period-arrow,
+    .select-arrow-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+    }
+    .period-arrow svg,
+    .select-arrow-badge svg {
+      width: 17px;
+      height: 17px;
+    }
+    .select-arrow-badge { right: 6px; }
+    .select-badge-wrap .select { padding-right: 50px; }
+
+    /* Aksen rekening: Bank Papua kuning, BRI biru di sisi kiri. */
+    .bank-papua-card {
+      background:
+        radial-gradient(circle at 92% 12%, rgba(255,214,64,.28) 0%, rgba(255,214,64,.10) 17%, transparent 34%),
+        linear-gradient(140deg,#092f55 0%,#1265b8 62%,#3f9cf0 100%);
+      box-shadow: inset 4px 0 0 rgba(255,214,64,.88), 0 16px 34px rgba(10,52,92,.16);
+    }
+    .bank-papua-card .bank-card-mark {
+      border-color: rgba(255,222,91,.48);
+      background: rgba(255,214,64,.12);
+    }
+    .bri-card {
+      box-shadow: inset 4px 0 0 rgba(111,198,255,.82), 0 16px 34px rgba(10,52,92,.16);
+    }
+
+    /* Hover card bulan hanya untuk perangkat yang benar-benar memiliki mouse. */
+    @media (hover: hover) and (pointer: fine) {
+      .month-card.selectable:hover {
+        border-color: #8fc2f4;
+        background: #f8fbff;
+        transform: translateY(-1px);
+      }
+    }
+
+    /* Hilangkan ghost/sticky hover dan fokus palsu pada perangkat sentuh. */
+    @media (hover: none), (pointer: coarse) {
+      .month-card.selectable:hover:not(.selected),
+      .month-card.selectable:focus:not(:focus-visible):not(.selected) {
+        border-color: var(--line) !important;
+        background: #fff !important;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+      .month-card.selectable.selected:hover,
+      .month-card.selectable.selected:focus {
+        border-color: #5aa8ee !important;
+        background: #eef7ff !important;
+        box-shadow: 0 0 0 3px rgba(23,105,210,.08) !important;
+        transform: none !important;
+      }
+    }
+
+    @media (max-width: 860px) {
+      /* Dashboard Bendahara/Wali menyatu dengan header dan full-bleed ke sisi layar. */
+      .main > .dashboard-hero:first-child {
+        width: 100vw;
+        max-width: none;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        margin-top: -14px;
+        border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      }
+    }
+
+    @media (max-width: 600px) {
+      /* Inset selector dibuat setara dengan padding atas/bawah. */
+      .period-segment {
+        padding: 5px !important;
+        scroll-padding-inline: 5px;
+      }
+
+      /* Card bulan dan dropdown kelas memiliki tinggi dan kontrol yang identik. */
+      .period-nav,
+      .period-static,
+      .period-class,
+      .period-class-readonly {
+        min-height: 48px !important;
+        height: 48px !important;
+      }
+      .period-arrow,
+      .select-arrow-badge {
+        width: 36px !important;
+        height: 36px !important;
+      }
+
+      /* Dashboard benar-benar menempel ke header di HP; hanya sudut bawah yang rounded. */
+      .main > .dashboard-hero:first-child {
+        border-radius: 0 0 24px 24px;
+      }
+
+      /* Semua modal mobile menjadi bottom sheet full-bleed kiri/kanan/bawah. */
+      .modal-backdrop {
+        padding: 0 !important;
+        align-items: end !important;
+        justify-items: stretch !important;
+      }
+      .modal,
+      .modal.large {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 92dvh;
+        margin: 0 !important;
+        border-radius: 24px 24px 0 0 !important;
+        padding-bottom: var(--safe-bottom);
+      }
+      .modal-head { border-radius: 24px 24px 0 0; }
+    }
+
+    /* ===== Versi 1.08: login HP branded, hero siswa konsisten, notifikasi siswa/wali ===== */
+    .login-copy-mobile { display:none; }
+    .login-credit {
+      display:inline-block; font-weight:700; text-decoration:none;
+      background:linear-gradient(90deg,#0b3158 0%,#1769d2 55%,#8bdcff 100%);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .login-credit:hover { text-decoration:underline; text-decoration-color:rgba(23,105,210,.35); }
+
+    .notification-btn { position:relative; overflow:visible; }
+    .notification-badge {
+      position:absolute; top:-5px; right:-5px; min-width:18px; height:18px; padding:0 4px;
+      border-radius:999px; display:grid; place-items:center; background:#d92d3f; color:white;
+      border:2px solid white; font-size:9px; line-height:1; font-weight:800; box-shadow:0 3px 8px rgba(196,59,77,.26);
+    }
+    .notification-head { padding-bottom:0; border-bottom:0; background:white; }
+    .role-notice { text-align:center; padding:0 4px 4px; }
+    .role-notice-mark {
+      width:72px; height:72px; margin:0 auto 14px; border-radius:50%; display:grid; place-items:center;
+      border:1px solid transparent;
+    }
+    .role-notice-mark svg { width:32px; height:32px; stroke-width:2; }
+    .role-notice.success .role-notice-mark { color:var(--green); background:rgba(22,139,99,.09); border-color:rgba(22,139,99,.16); }
+    .role-notice.warning .role-notice-mark { color:#d98200; background:rgba(255,190,55,.15); border-color:rgba(217,130,0,.18); }
+    .role-notice h3 { margin:0 0 8px; font-size:23px; letter-spacing:-.025em; }
+    .role-notice > p { margin:0 auto 16px; max-width:530px; color:var(--muted); font-size:13px; line-height:1.55; }
+    .notice-list { margin:14px auto; max-width:520px; border:1px solid var(--line); border-radius:17px; overflow:hidden; text-align:left; }
+    .notice-list > div { display:flex; justify-content:space-between; gap:14px; align-items:center; padding:11px 13px; border-bottom:1px solid var(--line); font-size:12px; }
+    .notice-list > div:last-child { border-bottom:0; }
+    .notice-list span { color:var(--text); }
+    .role-notice.warning .notice-list strong { color:#b76a00; }
+    .notice-extra { max-width:520px; margin:10px auto 0; padding:10px 12px; border-radius:13px; background:var(--green-soft); color:#116f50; font-size:12px; line-height:1.45; }
+    .notice-extra.warning { background:var(--orange-soft); color:#9a5b00; }
+    .role-notice-ok { min-width:128px; margin-top:18px; }
+    .btn-warning { background:linear-gradient(135deg,#d98200,#f3a31b); color:white; border:1px solid rgba(185,105,0,.16); box-shadow:0 8px 18px rgba(217,130,0,.17); }
+
+    .student-progress-inline { display:none; }
+
+    @media (max-width: 860px) {
+      .main > .student-profile-hero:first-child {
+        width:100vw; max-width:none;
+        margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw);
+        margin-top:-14px; border-radius:0 0 var(--radius-xl) var(--radius-xl);
+      }
+    }
+
+    @media (max-width: 600px) {
+      /* Login HP: satu viewport, hero biru di atas, form putih melengkung di bawah. */
+      .login-page {
+        height:100vh; height:100dvh; min-height:0 !important; overflow:hidden;
+        display:grid; grid-template-columns:1fr; grid-template-rows:minmax(156px, 31dvh) minmax(0,1fr);
+        background:linear-gradient(145deg,#092c50 0%,#0f4e8d 48%,#2481df 100%);
+      }
+      .login-art {
+        display:flex !important; min-height:0; padding:18px 20px 34px; justify-content:center; gap:14px;
+        background:
+          radial-gradient(circle at 18% 12%, rgba(139,220,255,.38), transparent 28%),
+          radial-gradient(circle at 82% 72%, rgba(58,144,245,.28), transparent 36%),
+          linear-gradient(145deg,#092c50 0%,#0f4e8d 48%,#2481df 100%);
+      }
+      .login-art::before { width:250px; height:250px; right:-150px; top:-105px; box-shadow:0 0 0 34px rgba(255,255,255,.025),0 0 0 68px rgba(255,255,255,.016); }
+      .login-art::after { width:180px; height:180px; left:-110px; bottom:-105px; }
+      .login-brand { gap:10px; }
+      .login-brand .brand-mark-logo { width:40px !important; height:40px !important; }
+      .login-brand strong { font-size:13px; }
+      .login-brand > div:last-child > div { font-size:10px !important; }
+      .login-copy { max-width:none; }
+      .login-copy-desktop { display:none; }
+      .login-copy-mobile { display:inline; }
+      .login-copy h1 { margin:0 0 6px; font-size:clamp(21px,6.2vw,27px); line-height:1.05; letter-spacing:-.038em; }
+      .login-copy p { font-size:11px; line-height:1.35; opacity:.78; max-width:360px; }
+      .login-mini { display:none; }
+
+      .login-panel {
+        min-height:0 !important; height:auto; overflow:hidden; z-index:2; align-self:stretch;
+        margin-top:-26px; padding:23px 18px max(8px,var(--safe-bottom));
+        background:#fbfdff; border-radius:30px 30px 0 0; display:block;
+      }
+      .login-box { width:100%; max-width:470px; margin:0 auto; height:100%; display:flex; flex-direction:column; min-height:0; }
+      .login-mobile-brand { display:none !important; }
+      .login-box h2 { font-size:23px; line-height:1.1; }
+      .login-box > p { margin:5px 0 10px; font-size:11px; line-height:1.35; }
+      .segment { margin-bottom:10px; padding:4px; border-radius:13px; gap:4px; }
+      .segment button { min-height:38px; font-size:11px; border-radius:10px; }
+      .form-stack { gap:8px; }
+      .label { margin-bottom:4px; font-size:11px; }
+      .input, .select { min-height:44px; }
+      .login-btn { min-height:45px; margin-top:1px; }
+      .login-foot { display:block !important; margin-top:auto; padding-top:9px; font-size:9.5px; line-height:1.35; }
+
+      /* Hero siswa sama dengan dashboard role lain. */
+      .main > .student-profile-hero:first-child { margin-top:-14px; border-radius:0 0 24px 24px; }
+      .student-profile-hero { padding:20px 24px; }
+      .student-profile-hero .paid-circle { display:none; }
+      .student-progress-inline {
+        display:inline-flex; width:max-content; max-width:100%; margin-top:14px; padding:5px 9px;
+        border:1px solid rgba(255,255,255,.22); border-radius:999px;
+        background:rgba(255,255,255,.09); color:white; font-size:10px; line-height:1; font-weight:650;
+        backdrop-filter:blur(6px);
+      }
+      .student-profile-hero .amount { margin-top:7px !important; font-size:31px; }
+      .student-profile-hero .amount-label { font-size:10px; }
+      .student-profile-hero .hero-title { font-size:27px; }
+
+      .role-notice-mark { width:64px; height:64px; margin-bottom:12px; }
+      .role-notice-mark svg { width:28px; height:28px; }
+      .role-notice h3 { font-size:21px; }
+      .notice-list > div { font-size:11px; padding:10px 11px; }
+      .role-notice-ok { width:100%; }
+    }
+
+    @media (max-width:600px) and (max-height:650px) {
+      .login-page { grid-template-rows:145px minmax(0,1fr); }
+      .login-art { padding:12px 18px 28px; gap:8px; }
+      .login-copy h1 { font-size:20px; margin-bottom:4px; }
+      .login-copy p { font-size:10px; }
+      .login-brand .brand-mark-logo { width:34px !important; height:34px !important; }
+      .login-panel { margin-top:-22px; padding:18px 16px max(5px,var(--safe-bottom)); border-radius:26px 26px 0 0; }
+      .login-box h2 { font-size:21px; }
+      .login-box > p { margin:3px 0 7px; font-size:10px; }
+      .segment { margin-bottom:7px; }
+      .segment button { min-height:34px; font-size:10px; }
+      .form-stack { gap:6px; }
+      .input, .select { min-height:40px; }
+      .login-btn { min-height:41px; }
+      .login-foot { padding-top:5px; font-size:8.8px; }
+    }
+
+    @media (orientation: landscape) and (max-height:560px) and (max-width:960px) {
+      .login-page {
+        height:100vh; height:100dvh; min-height:0 !important; overflow:hidden;
+        display:grid; grid-template-columns:1fr; grid-template-rows:108px minmax(0,1fr);
+        background:linear-gradient(145deg,#092c50 0%,#0f4e8d 48%,#2481df 100%);
+      }
+      .login-art {
+        display:flex !important; min-height:0; padding:10px 28px 24px; flex-direction:row;
+        align-items:center; justify-content:space-between; gap:24px;
+      }
+      .login-art::before { width:220px; height:220px; right:-120px; top:-120px; }
+      .login-art::after { display:none; }
+      .login-brand { flex:0 0 auto; }
+      .login-brand .brand-mark-logo { width:38px !important; height:38px !important; }
+      .login-brand strong { font-size:12px; }
+      .login-brand > div:last-child > div { font-size:9px !important; }
+      .login-copy { max-width:360px; text-align:right; }
+      .login-copy-desktop { display:none; }
+      .login-copy-mobile { display:inline; }
+      .login-copy h1 { margin:0; font-size:20px; line-height:1.05; }
+      .login-copy p { display:none; }
+      .login-mini { display:none; }
+      .login-panel {
+        min-height:0 !important; height:auto; overflow:hidden; z-index:2; margin-top:-18px;
+        padding:12px 28px max(5px,var(--safe-bottom)); background:#fbfdff; border-radius:26px 26px 0 0; display:block;
+      }
+      .login-box { width:100%; max-width:780px; height:100%; margin:0 auto; display:flex; flex-direction:column; }
+      .login-mobile-brand { display:none !important; }
+      .login-box h2 { font-size:20px; }
+      .login-box > p { margin:2px 0 6px; font-size:9.5px; line-height:1.25; }
+      .segment { margin-bottom:6px; padding:3px; }
+      .segment button { min-height:30px; font-size:9.5px; }
+      .form-stack { grid-template-columns:1fr 1fr; gap:7px 10px; }
+      .form-stack .login-btn, .form-stack .student-only-wide { grid-column:1 / -1; }
+      .label { margin-bottom:2px; font-size:9.5px; }
+      .input, .select { min-height:36px; }
+      .login-btn { min-height:36px; }
+      .login-foot { display:block !important; margin-top:auto; padding-top:4px; font-size:8.5px; line-height:1.25; }
+    }
+
+  
+    /* ===== Versi 1.10: perbaikan hero login HP + login bottom sheet ===== */
+    .login-mobile-cta,
+    .login-sheet-backdrop { display:none; }
+
+    @media (max-width: 860px) {
+      html:has(.login-page),
+      body:has(.login-page) { height:100%; overflow:hidden; }
+
+      .login-page {
+        position:relative;
+        display:block;
+        height:100vh;
+        height:100dvh;
+        min-height:0 !important;
+        overflow:hidden;
+        background:#092c50;
+      }
+
+      .login-art {
+        display:flex !important;
+        width:100%;
+        height:100%;
+        min-height:0;
+        padding:clamp(24px,6.2vh,52px) clamp(22px,6vw,40px) calc(clamp(22px,4.5vh,34px) + var(--safe-bottom));
+        flex-direction:column;
+        justify-content:space-between;
+        gap:clamp(14px,3vh,24px);
+      }
+      .login-art::before {
+        width:min(92vw,430px); height:min(92vw,430px);
+        right:-48%; top:-19%;
+        box-shadow:0 0 0 38px rgba(255,255,255,.025),0 0 0 76px rgba(255,255,255,.016);
+      }
+      .login-art::after {
+        display:block;
+        width:min(72vw,320px); height:min(72vw,320px);
+        left:-47%; bottom:-24%;
+        box-shadow:0 0 0 34px rgba(255,255,255,.022);
+      }
+      .login-brand { gap:11px; flex:0 0 auto; }
+      .login-brand .brand-mark-logo { width:44px !important; height:44px !important; }
+      .login-brand strong { font-size:clamp(14px,4.2vw,18px); }
+      .login-brand > div:last-child > div { font-size:clamp(10px,2.8vw,12px) !important; margin-top:3px !important; }
+
+      .login-copy {
+        max-width:440px;
+        margin:auto 0;
+        text-align:left;
+      }
+      .login-copy-desktop { display:none; }
+      .login-copy-mobile { display:inline; }
+      .login-copy h1 {
+        margin:0 0 clamp(12px,2.4vh,18px);
+        font-size:clamp(40px,12.7vw,60px);
+        line-height:.96;
+        letter-spacing:-.052em;
+      }
+      .login-copy p {
+        display:block;
+        max-width:420px;
+        margin:0;
+        font-size:clamp(13px,3.65vw,16px);
+        line-height:1.48;
+        opacity:.82;
+      }
+      .login-mobile-cta {
+        margin-top:clamp(18px,3.2vh,26px);
+        min-height:52px;
+        padding:0 20px;
+        border:1px solid rgba(255,255,255,.66);
+        border-radius:16px;
+        background:#fff;
+        color:var(--blue);
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:9px;
+        font-weight:750;
+        box-shadow:0 14px 32px rgba(4,36,70,.16);
+      }
+      .login-mobile-cta svg { width:18px; height:18px; }
+
+      .login-mini {
+        display:flex;
+        flex:0 0 auto;
+        gap:7px;
+        flex-wrap:wrap;
+      }
+      .login-mini span {
+        padding:7px 9px;
+        font-size:clamp(9px,2.55vw,11px);
+        white-space:nowrap;
+      }
+
+      .login-sheet-backdrop {
+        display:block;
+        position:fixed;
+        inset:0;
+        z-index:79;
+        border:0;
+        padding:0;
+        background:rgba(7,27,48,.48);
+        backdrop-filter:blur(7px);
+        -webkit-backdrop-filter:blur(7px);
+        opacity:0;
+        visibility:hidden;
+        pointer-events:none;
+        transition:opacity .2s ease, visibility .2s ease;
+      }
+
+      .login-panel {
+        position:fixed;
+        z-index:80;
+        left:0;
+        right:0;
+        bottom:0;
+        width:100%;
+        min-height:0 !important;
+        max-height:calc(100dvh - 18px);
+        overflow-y:auto;
+        overscroll-behavior:contain;
+        -webkit-overflow-scrolling:touch;
+        margin:0 !important;
+        padding:24px 22px calc(20px + var(--safe-bottom));
+        display:block;
+        background:#fbfdff;
+        border-radius:30px 30px 0 0;
+        box-shadow:0 -24px 64px rgba(7,38,69,.24);
+        transform:translateY(102%);
+        opacity:0;
+        visibility:hidden;
+        pointer-events:none;
+        transition:transform .28s cubic-bezier(.22,.78,.24,1), opacity .2s ease, visibility .28s ease;
+      }
+      .login-sheet-open .login-sheet-backdrop {
+        opacity:1;
+        visibility:visible;
+        pointer-events:auto;
+      }
+      .login-sheet-open .login-panel {
+        transform:translateY(0);
+        opacity:1;
+        visibility:visible;
+        pointer-events:auto;
+      }
+
+      .login-box {
+        width:min(100%,470px);
+        max-width:470px;
+        height:auto;
+        min-height:0;
+        margin:0 auto;
+        display:block;
+      }
+      .login-mobile-brand {
+        display:flex !important;
+        align-items:center;
+        gap:12px;
+        margin:0 0 24px;
+      }
+      .login-mobile-brand .brand-mark-logo { width:44px !important; height:44px !important; }
+      .login-mobile-brand strong { font-size:15px; }
+      .login-mobile-brand .brand-sub { font-size:10px; }
+      .login-box h2 { font-size:28px; line-height:1.12; }
+      .login-box > p { margin:8px 0 22px; font-size:14px; line-height:1.48; }
+      .segment { margin-bottom:22px; padding:5px; }
+      .segment button { min-height:42px; font-size:12px; }
+      .form-stack { display:grid; grid-template-columns:1fr; gap:14px; }
+      .form-stack .login-btn,
+      .form-stack .student-only-wide { grid-column:auto; }
+      .label { margin-bottom:6px; font-size:12px; }
+      .input, .select { min-height:49px; }
+      .login-btn { min-height:51px; margin-top:2px; }
+      .login-foot {
+        display:block !important;
+        margin-top:18px;
+        padding-top:0;
+        font-size:11px;
+        line-height:1.45;
+      }
+    }
+
+    @media (max-width: 390px) and (max-height: 720px) {
+      .login-art {
+        padding:20px 20px calc(18px + var(--safe-bottom));
+        gap:10px;
+      }
+      .login-brand .brand-mark-logo { width:38px !important; height:38px !important; }
+      .login-brand strong { font-size:13px; }
+      .login-brand > div:last-child > div { font-size:9px !important; }
+      .login-copy h1 { font-size:clamp(34px,11.5vw,45px); margin-bottom:10px; }
+      .login-copy p { font-size:12px; line-height:1.38; }
+      .login-mobile-cta { min-height:46px; margin-top:14px; border-radius:14px; font-size:13px; }
+      .login-mini { gap:5px; }
+      .login-mini span { padding:6px 7px; font-size:8.5px; }
+    }
+
+    @media (orientation: landscape) and (max-height: 560px) and (max-width: 960px) {
+      .login-page { display:block; height:100dvh; overflow:hidden; }
+      .login-art {
+        height:100%;
+        padding:18px 26px calc(16px + var(--safe-bottom));
+        display:grid !important;
+        grid-template-columns:minmax(180px,.72fr) minmax(280px,1.28fr);
+        grid-template-rows:auto 1fr auto;
+        align-items:center;
+        gap:10px 28px;
+      }
+      .login-brand { grid-column:1; grid-row:1; }
+      .login-copy { grid-column:2; grid-row:1 / 4; margin:0; align-self:center; }
+      .login-copy h1 { font-size:clamp(31px,7.5vh,44px); margin-bottom:9px; }
+      .login-copy p { font-size:11px; line-height:1.35; max-width:440px; }
+      .login-mobile-cta { min-height:42px; margin-top:12px; padding:0 16px; }
+      .login-mini { grid-column:1; grid-row:3; align-self:end; }
+      .login-mini span { padding:5px 7px; font-size:8px; }
+      .login-panel {
+        max-height:calc(100dvh - 10px);
+        padding:18px 24px calc(12px + var(--safe-bottom));
+        border-radius:26px 26px 0 0;
+      }
+      .login-box { max-width:760px; }
+      .login-mobile-brand { margin-bottom:12px; }
+      .login-box h2 { font-size:22px; }
+      .login-box > p { margin:4px 0 10px; font-size:10px; }
+      .segment { margin-bottom:10px; }
+      .form-stack { grid-template-columns:1fr 1fr; gap:8px 12px; }
+      .form-stack .login-btn, .form-stack .student-only-wide { grid-column:1 / -1; }
+      .label { margin-bottom:3px; font-size:9.5px; }
+      .input, .select { min-height:38px; }
+      .login-btn { min-height:40px; }
+      .login-foot { margin-top:8px; font-size:8.8px; }
+    }
+
+
+
+    /* ===== Versi 1.11: identitas dashboard HP + form login ringkas ===== */
+    .hero-user-name { display:none; }
+
+    /* Form login: tanpa label berulang, tinggi dan jarak kontrol seragam. */
+    .login-panel .segment {
+      height:52px;
+      min-height:52px;
+      margin-bottom:12px;
+      padding:4px;
+      gap:4px;
+      border-radius:15px;
+    }
+    .login-panel .segment button {
+      min-height:44px;
+      height:44px;
+      border-radius:11px;
+    }
+    .login-panel .form-stack { gap:12px; }
+    .login-panel .form-stack > div,
+    .login-panel .form-stack > .student-only-wide { min-height:52px; }
+    .login-panel .field-wrap,
+    .login-panel .input,
+    .login-panel .login-btn {
+      min-height:52px;
+      height:52px;
+    }
+    .login-panel .login-btn { margin-top:0; }
+    .login-panel .field-icon,
+    .login-panel .password-toggle { align-items:center; }
+
+    /* Kredit footer dibuat regular dan biru solid, link TikTok tetap aktif. */
+    .login-credit {
+      font-weight:400;
+      background:none;
+      -webkit-background-clip:initial;
+      background-clip:initial;
+      color:var(--blue);
+    }
+    .login-credit:hover { color:var(--blue); }
+
+    @media (max-width:600px) and (orientation:portrait) {
+      .dashboard-hero .hero-user-name {
+        display:inline-flex;
+        width:max-content;
+        max-width:calc(100% - 62px);
+        margin-top:6px;
+        padding:5px 9px;
+        border:1px solid rgba(255,255,255,.20);
+        border-radius:999px;
+        background:rgba(255,255,255,.08);
+        color:#fff;
+        font-size:10px;
+        line-height:1;
+        font-weight:400;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        backdrop-filter:blur(6px);
+        -webkit-backdrop-filter:blur(6px);
+      }
+      .dashboard-hero .hero-user-name + .hero-title { margin-top:8px; }
+    }
+
+    /* Pada landscape nama tetap hanya di header agar tidak dobel. */
+    @media (orientation:landscape) {
+      .dashboard-hero .hero-user-name { display:none !important; }
+    }
+
+</style>
+</head>
+<body>
+  <div id="app" class="app-root"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loader-card"><span class="spinner"></span><span id="loadingText">Memuat data…</span></div>
+  </div>
+  <div id="modalRoot"></div>
+
+  <script>
+    // ==========================================================
+    // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
+    // ==========================================================
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
+    const APP_REVISION = 'Versi 1.11';
+    const STORAGE = {
+      TOKEN: 'komite_token',
+      USER: 'komite_user',
+      QUEUE: 'komite_payment_queue_v1',
+      STAFF_SNAPSHOT: 'komite_staff_snapshot_v2',
+      STUDENT_SNAPSHOT: 'komite_student_snapshot_v2'
+    };
+
+    const DEFAULT_CONFIG = {
+      appName: 'Komite SMP Negeri 3 Jayapura',
+      schoolName: 'SMP Negeri 3 Jayapura',
+      schoolYear: '2026/2027',
+      level: '7',
+      amount: 50000,
+      startMonth: 'JULI 2026',
+      endMonth: 'JUNI 2027',
+      periods: [
+        ['JULI',2026],['AGUSTUS',2026],['SEPTEMBER',2026],['OKTOBER',2026],['NOVEMBER',2026],['DESEMBER',2026],
+        ['JANUARI',2027],['FEBRUARI',2027],['MARET',2027],['APRIL',2027],['MEI',2027],['JUNI',2027]
+      ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
+      classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
+      currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
+      revision: '1.11'
+    };
+
+    const state = {
+      config: DEFAULT_CONFIG,
+      token: localStorage.getItem(STORAGE.TOKEN) || '',
+      user: safeJson(localStorage.getItem(STORAGE.USER)),
+      loginRole: 'SISWA',
+      loginSheetOpen: false,
+      currentView: 'home',
+      students: [],
+      payments: [],
+      summary: null,
+      dashboard: null,
+      selectedStudentDetail: null,
+      detailCache: {},
+      summaryCache: {},
+      scopeMode: 'MONTH',
+      scopeMonthIndex: 0,
+      scopeClass: '',
+      filterOpen: false,
+      syncing: false,
+      syncPromise: null,
+      refreshBusy: false,
+      silentRefreshTimer: null,
+      paymentSelection: [],
+      paymentSelectionStudent: '',
+      paymentDate: ''
+    };
+
+    const icons = {
+      shield: '<path d="M12 3 5.5 5.8v4.7c0 4.1 2.5 7.4 6.5 9.5 4-2.1 6.5-5.4 6.5-9.5V5.8L12 3Z"/><path d="m9.5 12 1.7 1.7 3.6-4"/>',
+      lock: '<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+      home: '<path d="m3 11 9-7 9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/>',
+      users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+      chart: '<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/>',
+      plus: '<path d="M12 5v14M5 12h14"/>',
+      search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+      logout: '<path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>',
+      bell: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/>',
+      chevron: '<path d="m9 18 6-6-6-6"/>',
+      left: '<path d="m15 18-6-6 6-6"/>',
+      right: '<path d="m9 18 6-6-6-6"/>',
+      up: '<path d="m6 15 6-6 6 6"/>',
+      down: '<path d="m6 9 6 6 6-6"/>',
+      filter: '<path d="M4 5h16"/><path d="M7 12h10"/><path d="M10 19h4"/>',
+      copy: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+      check: '<path d="m5 12 4 4L19 6"/>',
+      clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+      info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
+      alert: '<path d="M10.3 3.7 2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.7a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+      x: '<path d="M6 6l12 12M18 6 6 18"/>',
+      receipt: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/>',
+      download: '<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
+      wallet: '<path d="M4 6h15a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2V7a4 4 0 0 1 4-4h10"/><path d="M16 11h5v4h-5a2 2 0 0 1 0-4Z"/>',
+      user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+      eye: '<path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/>',
+      eyeOff: '<path d="M3 3l18 18"/><path d="M10.6 6.2A10.6 10.6 0 0 1 12 6c6 0 9.5 6 9.5 6a15.5 15.5 0 0 1-3.1 3.8"/><path d="M6.2 6.2C3.8 7.8 2.5 12 2.5 12S6 18 12 18c1.6 0 3-.4 4.2-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+      trash: '<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="m7 7 1 14h8l1-14"/><path d="M10 11v6M14 11v6"/>',
+      printer: '<path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/>',
+      calendar: '<path d="M6 3v3M18 3v3"/><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/>',
+      arrow: '<path d="M5 12h14"/><path d="m14 7 5 5-5 5"/>',
+      refresh: '<path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M6.1 9a7 7 0 0 1 11.5-2.6L20 11"/><path d="m4 13 2.4 4.6A7 7 0 0 0 18 15"/>',
+      cloud: '<path d="M17.5 19H7a5 5 0 1 1 1.2-9.85A6.5 6.5 0 0 1 20 12.5 3.5 3.5 0 0 1 17.5 19Z"/><path d="m9.5 14 1.7 1.7 3.6-4"/>',
+      offline: '<path d="M17.5 19H7a5 5 0 0 1-1.6-9.74"/><path d="M8.2 6.7A6.5 6.5 0 0 1 20 12.5c0 .3 0 .6-.1.9"/><path d="M3 3l18 18"/>'
+    };
+
+    function icon(name, cls='') {
+      return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.info}</svg>`;
+    }
+
+    function appLogo() {
+      return `<img src="https://i.imgur.com/GO3QUoB.png" alt="Logo Komite" loading="eager" decoding="async">`;
+    }
+
+    function whatsappIcon(cls='') {
+      return `<svg class="${cls}" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M26.576 5.363c-2.69-2.69-6.406-4.354-10.511-4.354-8.209 0-14.865 6.655-14.865 14.865 0 2.732.737 5.291 2.022 7.491l-.038-.07-2.109 7.702 7.879-2.067c2.051 1.139 4.498 1.809 7.102 1.809h.006c8.209-.003 14.862-6.659 14.862-14.868 0-4.103-1.662-7.817-4.349-10.507l0 0zM16.062 28.228h-.005c-2.319 0-4.489-.64-6.342-1.753l.056.031-.451-.267-4.675 1.227 1.247-4.559-.294-.467c-1.185-1.862-1.889-4.131-1.889-6.565 0-6.822 5.531-12.353 12.353-12.353s12.353 5.531 12.353 12.353c0 6.822-5.53 12.353-12.353 12.353zM22.838 18.977c-.371-.186-2.197-1.083-2.537-1.208-.341-.124-.589-.185-.837.187-.246.371-.958 1.207-1.175 1.455-.216.249-.434.279-.805.094-1.15-.466-2.138-1.087-2.997-1.852l.01.009c-.799-.74-1.484-1.587-2.037-2.521l-.028-.052c-.216-.371-.023-.572.162-.757.167-.166.372-.434.557-.65.146-.179.271-.384.366-.604l.006-.017c.043-.087.068-.188.068-.296 0-.131-.037-.253-.101-.357l.002.003c-.094-.186-.836-2.014-1.145-2.758-.302-.724-.609-.625-.836-.637-.216-.01-.464-.012-.712-.012-.395.01-.746.188-.988.463l-.001.002c-.802.761-1.3 1.834-1.3 3.023 0 .026 0 .053.001.079v-.004c.131 1.467.681 2.784 1.527 3.857l-.012-.015c1.604 2.379 3.742 4.282 6.251 5.564l.094.043c.548.248 1.25.513 1.968.74l.149.041c.442.14.951.221 1.479.221.303 0 .601-.027.889-.078l-.031.004c1.069-.223 1.956-.868 2.497-1.749l.009-.017c.165-.366.261-.793.261-1.242 0-.185-.016-.366-.047-.542l.003.019c-.092-.155-.34-.247-.712-.434z"/></svg>`;
+    }
+
+    function treasurerAccountsHtml() {
+      return `<section class="treasurer-accounts-wrap">
+        <details class="treasurer-accounts">
+          <summary>
+            <span class="accounts-summary-icon">${icon('wallet')}</span>
+            <span class="accounts-summary-copy"><strong>Nomor Rekening Bendahara</strong><small>Tekan untuk melihat rekening pembayaran</small></span>
+            <span class="accounts-summary-chevron">${icon('down')}</span>
+          </summary>
+          <div class="accounts-expanded">
+            <div class="bank-card-grid">
+              <article class="bank-card bank-papua-card">
+                <div class="bank-card-top"><span class="bank-name">BANK PAPUA</span><span class="bank-card-mark">Komite</span></div>
+                <div class="bank-account-label">Nomor Rekening</div>
+                <div class="bank-account-number">1000 2052 1188 7</div>
+                <div class="bank-card-bottom"><div><span>Atas Nama</span><strong>INTI HAYATI</strong></div><button type="button" class="copy-account-btn" onclick="event.preventDefault();event.stopPropagation();copyAccountNumber('1000205211887')">${icon('copy')}<span>Salin</span></button></div>
+              </article>
+              <article class="bank-card bri-card">
+                <div class="bank-card-top"><span class="bank-name">BRI</span><span class="bank-card-mark">Komite</span></div>
+                <div class="bank-account-label">Nomor Rekening</div>
+                <div class="bank-account-number">4915 0101 4988 532</div>
+                <div class="bank-card-bottom"><div><span>Atas Nama</span><strong>INTI HAYATI</strong></div><button type="button" class="copy-account-btn" onclick="event.preventDefault();event.stopPropagation();copyAccountNumber('491501014988532')">${icon('copy')}<span>Salin</span></button></div>
+              </article>
+            </div>
+            <div class="transfer-confirmation">
+              <p>Sudah melakukan transfer? Silakan kirim bukti transfer melalui WhatsApp.</p>
+              <a class="whatsapp-link" href="https://wa.me/6282199661697" target="_blank" rel="noopener noreferrer" aria-label="Kirim bukti transfer melalui WhatsApp kepada Inti Hayati">${whatsappIcon()}<span>Inti Hayati</span></a>
+            </div>
+          </div>
+        </details>
+      </section>`;
+    }
+
+    async function copyAccountNumber(number) {
+      const text = String(number || '').replace(/\D/g,'');
+      if (!text) return;
+      try {
+        if (navigator.clipboard?.writeText && window.isSecureContext) await navigator.clipboard.writeText(text);
+        else {
+          const area = document.createElement('textarea');
+          area.value = text; area.setAttribute('readonly',''); area.style.position='fixed'; area.style.opacity='0'; area.style.pointerEvents='none';
+          document.body.appendChild(area); area.select();
+          const ok = document.execCommand('copy'); area.remove();
+          if (!ok) throw new Error('copy');
+        }
+        toast('Nomor rekening berhasil disalin.', 'success');
+      } catch (_) {
+        toast('Nomor rekening belum dapat disalin. Silakan salin secara manual.', 'warning');
+      }
+    }
+
+    function safeJson(text) {
+      try { return text ? JSON.parse(text) : null; } catch (_) { return null; }
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    }
+
+    function titleCase(text) {
+      const s = String(text || '').toLowerCase();
+      return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+    }
+
+    function normalizeClassLabel(value) {
+      let s = String(value || '').toUpperCase().trim().replace(/[._-]+/g,' ').replace(/\s+/g,' ');
+      let m = s.match(/^VII\s*([A-J])$/);
+      if (m) return '7' + m[1];
+      m = s.match(/^7\s*([A-J])$/);
+      return m ? '7' + m[1] : s;
+    }
+
+    function todayJayapuraIso() {
+      const parts = new Intl.DateTimeFormat('en-US', {timeZone:'Asia/Jayapura', year:'numeric', month:'2-digit', day:'2-digit'}).formatToParts(new Date());
+      const o = Object.fromEntries(parts.filter(x=>x.type!=='literal').map(x=>[x.type,x.value]));
+      return `${o.year}-${o.month}-${o.day}`;
+    }
+
+    function money(value) {
+      return new Intl.NumberFormat('id-ID', {style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(value || 0));
+    }
+
+    function initials(name) {
+      const p = String(name || '').trim().split(/\s+/).filter(Boolean);
+      return (p[0]?.[0] || '') + (p[1]?.[0] || p[0]?.[1] || '');
+    }
+
+    function isApiConfigured() {
+      return /^https:\/\/.+\/exec(?:\?.*)?$/.test(API_URL) && !API_URL.includes('PASTE_URL');
+    }
+
+    function isSessionError(message) {
+      return /sesi (tidak valid|telah berakhir)/i.test(String(message || ''));
+    }
+
+    function isNetworkLikeError(err) {
+      const m = String(err?.message || err || '');
+      return !navigator.onLine || /fetch|network|failed|abort|timeout|terhubung/i.test(m);
+    }
+
+    async function api(action, data = {}, opts = {}) {
+      if (!isApiConfigured()) throw new Error('Konfigurasi layanan belum lengkap.');
+      const timeout = Number(opts.timeout || 18000);
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
+      if (!opts.silent) loading(true, opts.loadingText || 'Memuat data…');
+      try {
+        const payload = Object.assign({ action }, data);
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: new URLSearchParams({ payload: JSON.stringify(payload) }),
+          redirect: 'follow',
+          signal: controller.signal
+        });
+        const text = await res.text();
+        let json;
+        try { json = JSON.parse(text); }
+        catch (_) { throw new Error('Layanan sedang tidak dapat diakses. Silakan coba lagi.'); }
+        if (!json.ok) throw new Error(json.message || 'Permintaan gagal.');
+        return json.data;
+      } catch (err) {
+        const mapped = err?.name === 'AbortError' ? new Error('Koneksi terlalu lambat. Silakan coba lagi.') : err;
+        if (isSessionError(mapped?.message)) {
+          clearSession(false);
+          renderLogin();
+        }
+        throw mapped;
+      } finally {
+        clearTimeout(timer);
+        if (!opts.silent) loading(false);
+      }
+    }
+
+    function loading(show, text='Memuat data…') {
+      const label = document.getElementById('loadingText');
+      const overlay = document.getElementById('loadingOverlay');
+      if (label) label.textContent = text;
+      if (overlay) overlay.classList.toggle('hidden', !show);
+    }
+
+    function toast(message, type='info', title='', duration) {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const map = {
+        success: {icon:'check', title:'Berhasil'},
+        error: {icon:'alert', title:'Terjadi kesalahan'},
+        warning: {icon:'alert', title:'Perhatian'},
+        info: {icon:'info', title:'Informasi'}
+      };
+      const m = map[type] || map.info;
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.innerHTML = `<div class="toast-icon">${icon(m.icon)}</div><div class="toast-copy"><strong>${escapeHtml(title || m.title)}</strong><p>${escapeHtml(message)}</p></div><button class="toast-close" aria-label="Tutup">${icon('x')}</button>`;
+      container.appendChild(el);
+
+      let timer = setTimeout(() => dismissToast(el, 'fade'), Number(duration || (type === 'error' ? 5600 : type === 'warning' ? 4800 : 3900)));
+      el._toastTimer = timer;
+      el.querySelector('.toast-close').addEventListener('click', e => {
+        e.stopPropagation();
+        dismissToast(el, 'right');
+      });
+      attachToastGesture(el);
+    }
+
+    function attachToastGesture(el) {
+      let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false;
+      el.addEventListener('pointerdown', e => {
+        if (e.target.closest('.toast-close')) return;
+        dragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        dx = 0; dy = 0;
+        el.classList.add('dragging');
+        try { el.setPointerCapture(e.pointerId); } catch (_) {}
+        if (el._toastTimer) clearTimeout(el._toastTimer);
+      });
+      el.addEventListener('pointermove', e => {
+        if (!dragging) return;
+        dx = e.clientX - startX;
+        dy = Math.min(0, e.clientY - startY);
+        const opacity = Math.max(.28, 1 - Math.max(Math.abs(dx) / 210, Math.abs(dy) / 150));
+        el.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+        el.style.opacity = String(opacity);
+      });
+      const finish = e => {
+        if (!dragging) return;
+        dragging = false;
+        el.classList.remove('dragging');
+        try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+        if (Math.abs(dx) >= 68) dismissToast(el, dx < 0 ? 'left' : 'right');
+        else if (dy <= -48) dismissToast(el, 'up');
+        else {
+          el.style.transform = '';
+          el.style.opacity = '';
+          el._toastTimer = setTimeout(() => dismissToast(el, 'fade'), 2400);
+        }
+      };
+      el.addEventListener('pointerup', finish);
+      el.addEventListener('pointercancel', finish);
+    }
+
+    function dismissToast(el, direction='fade') {
+      if (!el || !el.isConnected || el.dataset.closing === '1') return;
+      el.dataset.closing = '1';
+      if (el._toastTimer) clearTimeout(el._toastTimer);
+      el.classList.remove('dragging');
+      el.style.transition = 'transform .22s ease, opacity .22s ease';
+      if (direction === 'left') el.style.transform = 'translate3d(-120%,0,0)';
+      else if (direction === 'right') el.style.transform = 'translate3d(120%,0,0)';
+      else el.style.transform = 'translate3d(0,-28px,0)';
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 230);
+    }
+
+    function openModal(html, large=false) {
+      const root = document.getElementById('modalRoot');
+      root.innerHTML = `<div class="modal-backdrop" id="modalBackdrop"><div class="modal ${large ? 'large' : ''}" role="dialog" aria-modal="true">${html}</div></div>`;
+      const back = document.getElementById('modalBackdrop');
+      back.addEventListener('mousedown', e => { if (e.target === back) closeModal(); });
+      document.addEventListener('keydown', modalEsc, {once:true});
+    }
+
+    function modalEsc(e) { if (e.key === 'Escape') closeModal(); }
+    function closeModal() { document.getElementById('modalRoot').innerHTML = ''; }
+
+    function setSession(token, user) {
+      const normalizedUser = Object.assign({}, user || {});
+      if (normalizedUser.kelas) normalizedUser.kelas = normalizeClassLabel(normalizedUser.kelas);
+      state.token = token;
+      state.user = normalizedUser;
+      state.filterOpen = false;
+      localStorage.setItem(STORAGE.TOKEN, token);
+      localStorage.setItem(STORAGE.USER, JSON.stringify(normalizedUser));
+    }
+
+    function clearSession(showToast=true) {
+      state.token = '';
+      state.user = null;
+      state.students = [];
+      state.payments = [];
+      state.summary = null;
+      state.dashboard = null;
+      state.selectedStudentDetail = null;
+      state.detailCache = {};
+      state.summaryCache = {};
+      localStorage.removeItem(STORAGE.TOKEN);
+      localStorage.removeItem(STORAGE.USER);
+      if (showToast) toast('Anda telah keluar dari aplikasi.', 'info');
+    }
+
+    function logout() {
+      clearSession(true);
+      state.loginRole = 'SISWA';
+      state.loginSheetOpen = false;
+      renderLogin();
+    }
+
+    function saveStaffSnapshot() {
+      if (!state.user || !['BENDAHARA','WALI'].includes(state.user.role)) return;
+      try {
+        localStorage.setItem(STORAGE.STAFF_SNAPSHOT, JSON.stringify({
+          userKey: state.user.idUser || state.user.username,
+          savedAt: Date.now(),
+          config: state.config,
+          students: state.students,
+          payments: state.payments,
+          summary: state.summary,
+          dashboard: state.dashboard,
+          scopeMode: state.scopeMode,
+          scopeMonthIndex: state.scopeMonthIndex,
+          scopeClass: state.scopeClass
+        }));
+      } catch (_) {}
+    }
+
+    function loadStaffSnapshot() {
+      const snap = safeJson(localStorage.getItem(STORAGE.STAFF_SNAPSHOT));
+      if (!snap || !state.user) return null;
+      const key = state.user.idUser || state.user.username;
+      return snap.userKey === key ? snap : null;
+    }
+
+    function saveStudentSnapshot(detail) {
+      if (!state.user || state.user.role !== 'SISWA') return;
+      try { localStorage.setItem(STORAGE.STUDENT_SNAPSHOT, JSON.stringify({nisn:state.user.nisn, savedAt:Date.now(), config:state.config, detail})); } catch (_) {}
+    }
+
+    function loadStudentSnapshot() {
+      const snap = safeJson(localStorage.getItem(STORAGE.STUDENT_SNAPSHOT));
+      return snap && state.user?.nisn === snap.nisn ? snap : null;
+    }
+
+    async function loadPublicConfig() {
+      if (!isApiConfigured() || !navigator.onLine) return;
+      try {
+        const data = await api('publicConfig', {}, {silent:true, timeout:10000});
+        state.config = Object.assign({}, DEFAULT_CONFIG, data || {});
+      } catch (_) {}
+    }
+
+    // ========================= ANTREAN PEMBAYARAN OFFLINE =========================
+
+    function getPaymentQueue() {
+      const q = safeJson(localStorage.getItem(STORAGE.QUEUE));
+      return Array.isArray(q) ? q : [];
+    }
+
+    function savePaymentQueue(queue) {
+      localStorage.setItem(STORAGE.QUEUE, JSON.stringify(queue));
+      updateSyncIndicator();
+    }
+
+    function queueCount() { return getPaymentQueue().length; }
+
+    function pendingPayment(idSiswa, bulan, tahun) {
+      return getPaymentQueue().find(x => x.idSiswa === idSiswa && x.bulan === bulan && Number(x.tahun) === Number(tahun)) || null;
+    }
+
+    function makeClientTransactionId() {
+      const random = (globalThis.crypto?.getRandomValues ? Array.from(crypto.getRandomValues(new Uint32Array(2))).map(n=>n.toString(36)).join('') : Math.random().toString(36).slice(2,14));
+      return `TRX-LOCAL-${Date.now().toString(36)}-${random}`.toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,64);
+    }
+
+    function enqueuePayment(idSiswa, bulan, tahun, student, paymentDate) {
+      const queue = getPaymentQueue();
+      const existing = queue.find(x => x.idSiswa === idSiswa && x.bulan === bulan && Number(x.tahun) === Number(tahun));
+      if (existing) return {item:existing, duplicate:true};
+      const item = {
+        clientId: makeClientTransactionId(),
+        idSiswa,
+        bulan,
+        tahun:Number(tahun),
+        tanggalPembayaran: paymentDate || todayJayapuraIso(),
+        student: {nama:student?.nama || '', nisn:student?.nisn || '', kelas:normalizeClassLabel(student?.kelas || '')},
+        createdAt: Date.now(),
+        attempts: 0,
+        lastError: ''
+      };
+      queue.push(item);
+      savePaymentQueue(queue);
+      return {item, duplicate:false};
+    }
+
+    function removeQueueItem(clientId) {
+      savePaymentQueue(getPaymentQueue().filter(x => x.clientId !== clientId));
+    }
+
+    function updateQueueFailure(clientId, message) {
+      const queue = getPaymentQueue();
+      const item = queue.find(x => x.clientId === clientId);
+      if (item) {
+        item.attempts = Number(item.attempts || 0) + 1;
+        item.lastError = String(message || '');
+        item.lastAttemptAt = Date.now();
+        savePaymentQueue(queue);
+      }
+    }
+
+    function syncChipHtml() {
+      if (state.user?.role !== 'BENDAHARA') return '';
+      const count = queueCount();
+      const offline = !navigator.onLine;
+      const cls = offline ? 'offline' : count ? 'pending' : 'ok';
+      const ic = offline ? 'offline' : count ? 'clock' : 'cloud';
+      const text = offline ? (count ? `${count} tertunda` : 'Offline') : (count ? `${count} tertunda` : 'Sinkron');
+      return `<button id="syncChip" class="sync-chip ${cls}" onclick="openSyncCenter()" title="Status sinkronisasi">${icon(ic)}<span>${escapeHtml(text)}</span></button>`;
+    }
+
+    function updateSyncIndicator() {
+      const old = document.getElementById('syncChip');
+      if (old && state.user?.role === 'BENDAHARA') {
+        const wrap = document.createElement('div');
+        wrap.innerHTML = syncChipHtml();
+        old.replaceWith(wrap.firstElementChild);
+      }
+    }
+
+    function syncQueueItemHtml(item) {
+      const name = item?.student?.nama || 'Siswa';
+      const kelas = normalizeClassLabel(item?.student?.kelas || '');
+      const nisn = item?.student?.nisn || '';
+      const period = `${titleCase(item?.bulan)} ${Number(item?.tahun) || ''}`.trim();
+      const status = item?.lastError
+        ? `<span class="status-pill wait">${icon('alert')} Menunggu ulang</span>`
+        : `<span class="status-pill sync">${icon('clock')} Menunggu</span>`;
+      return `<div class="sync-queue-item" data-sync-client="${escapeHtml(item.clientId || '')}">
+        <span class="sync-queue-icon">${icon('receipt')}</span>
+        <span class="sync-queue-copy"><strong>${escapeHtml(name)}</strong><span>${escapeHtml(period)} • ${money(state.config.amount || 50000)}${kelas ? ` • ${escapeHtml(kelas)}` : ''}${nisn ? ` • NISN ${escapeHtml(nisn)}` : ''}</span>${item?.lastError ? `<small>${escapeHtml(item.lastError)}</small>` : ''}</span>
+        ${status}
+      </div>`;
+    }
+
+    function syncCenterBodyHtml() {
+      const queue = getPaymentQueue();
+      const offline = !navigator.onLine;
+      const syncing = state.syncing;
+      const title = queue.length ? `${queue.length} pembayaran menunggu` : 'Semua data sudah tersinkron';
+      const desc = queue.length
+        ? (offline ? 'Data tetap aman di perangkat. Sinkronisasi akan dilakukan saat koneksi tersedia.' : syncing ? 'Sedang mengirim pembayaran. Daftar akan berkurang setelah setiap data dikonfirmasi.' : 'Pembayaran berikut belum terkirim. Tekan Sinkronkan Sekarang atau tunggu proses otomatis.')
+        : 'Tidak ada pembayaran yang menunggu untuk dikirim.';
+      return `
+        <div class="sync-center-summary ${queue.length ? (offline ? 'offline' : 'pending') : 'ok'}">
+          <span class="sync-center-mark">${icon(queue.length ? (offline ? 'offline' : 'cloud') : 'check')}</span>
+          <span><strong id="syncCenterTitle">${escapeHtml(title)}</strong><p id="syncCenterDesc">${escapeHtml(desc)}</p></span>
+        </div>
+        <div id="syncQueueList" class="sync-queue-list">${queue.length ? queue.map(syncQueueItemHtml).join('') : `<div class="sync-empty">${icon('check')}<strong>Semua data sudah tersinkron</strong><span>Tidak ada antrean pembayaran.</span></div>`}</div>
+        <div class="modal-actions sync-center-actions">
+          <button class="btn btn-soft" onclick="closeModal()">Tutup</button>
+          ${queue.length ? `<button id="syncNowBtn" class="btn btn-primary" onclick="startManualSync()" ${offline || syncing ? 'disabled' : ''}>${icon('refresh')} ${syncing ? 'Menyinkronkan…' : 'Sinkronkan Sekarang'}</button>` : ''}
+        </div>`;
+    }
+
+    function openSyncCenter() {
+      if (state.user?.role !== 'BENDAHARA') return;
+      openModal(`
+        <div class="modal-head"><div><h3>Sinkronisasi Pembayaran</h3><p>Lihat pembayaran yang masih menunggu untuk dikirim.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body sync-center-body">${syncCenterBodyHtml()}</div>
+      `, false);
+      if (queueCount() && navigator.onLine && !state.syncing) {
+        setTimeout(() => startManualSync(), 120);
+      }
+    }
+
+    function renderSyncCenterState() {
+      const body = document.querySelector('.sync-center-body');
+      if (!body) return;
+      body.innerHTML = syncCenterBodyHtml();
+    }
+
+    async function startManualSync() {
+      if (state.user?.role !== 'BENDAHARA') return;
+      if (!navigator.onLine) {
+        renderSyncCenterState();
+        return;
+      }
+      await syncPaymentQueue({manual:true, perItemToasts:true, suppressSummaryToast:true});
+      renderSyncCenterState();
+    }
+
+    function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    async function syncPaymentQueue({manual=false, perItemToasts=false, suppressSummaryToast=false}={}) {
+      if (state.user?.role !== 'BENDAHARA' || !state.token) return {synced:0,confirmed:[],failed:[],attempted:0};
+      if (state.syncPromise) return state.syncPromise;
+
+      state.syncPromise = (async () => {
+        const queue = getPaymentQueue();
+        if (!queue.length) {
+          updateSyncIndicator();
+          if (manual) renderSyncCenterState();
+          return {synced:0,confirmed:[],failed:[],attempted:0};
+        }
+        if (!navigator.onLine) {
+          updateSyncIndicator();
+          if (manual) renderSyncCenterState();
+          return {synced:0,confirmed:[],failed:queue.map(x=>({clientId:x.clientId,message:'Menunggu koneksi.'})),attempted:0};
+        }
+
+        state.syncing = true;
+        updateSyncIndicator();
+        renderSyncCenterState();
+
+        let synced = 0;
+        const confirmed = [];
+        const failed = [];
+        try {
+          const batch = await api('addPaymentsBatch', {
+            token: state.token,
+            items: queue.map(item => ({
+              idSiswa:item.idSiswa, bulan:item.bulan, tahun:item.tahun,
+              tanggalPembayaran:item.tanggalPembayaran, clientTransactionId:item.clientId
+            }))
+          }, {silent:true, timeout:18000});
+          const results = Array.isArray(batch?.results) ? batch.results : [];
+
+          for (const result of results) {
+            const clientId = result?.clientId || '';
+            if (result?.ok && result.transaction) {
+              const queuedItem = getPaymentQueue().find(x => x.clientId === clientId) || queue.find(x => x.clientId === clientId);
+              removeQueueItem(clientId);
+              synced++;
+              confirmed.push({clientId, transaction:result.transaction});
+              applyServerPaymentLocally(result.transaction, true);
+              renderSyncCenterState();
+              if (perItemToasts || document.querySelector('.sync-center-body')) {
+                const tx = result.transaction;
+                toast(`${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} berhasil terkirim.`, 'success', 'Sinkronisasi berhasil', 3400);
+                await delay(120);
+              }
+            } else if (clientId) {
+              const message = result?.message || 'Pembayaran belum tersinkron.';
+              updateQueueFailure(clientId, message);
+              failed.push({clientId,message});
+              renderSyncCenterState();
+            }
+          }
+          if (confirmed.length) finalizeLocalPaymentState();
+        } catch (err) {
+          getPaymentQueue().forEach(item => {
+            updateQueueFailure(item.clientId, err?.message || 'Pembayaran belum tersinkron.');
+            failed.push({clientId:item.clientId,message:err?.message || 'Pembayaran belum tersinkron.'});
+          });
+          renderSyncCenterState();
+          if (isSessionError(err?.message)) toast(err.message, 'error');
+          else if (manual && isNetworkLikeError(err)) toast('Pembayaran belum tersinkron. Data tetap aman di perangkat.', 'warning', 'Sinkronisasi belum selesai');
+        } finally {
+          state.syncing = false;
+          updateSyncIndicator();
+          renderSyncCenterState();
+        }
+
+        if (!suppressSummaryToast && !perItemToasts && !document.querySelector('.sync-center-body')) {
+          if (confirmed.length === 1) {
+            const tx = confirmed[0].transaction;
+            toast(`Pembayaran ${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} berhasil disimpan.`, 'success', 'Pembayaran tersimpan', 4300);
+          } else if (confirmed.length > 1) {
+            toast(`${confirmed.length} pembayaran berhasil disimpan.`, 'success', 'Pembayaran tersimpan', 4300);
+          }
+        }
+
+        return {synced,confirmed,failed,attempted:queue.length};
+      })();
+
+      try {
+        return await state.syncPromise;
+      } finally {
+        state.syncPromise = null;
+      }
+    }
+
+    function applyServerPaymentLocally(tx, deferFinalize=false) {
+      if (!tx?.student?.idSiswa) return;
+      const key = `${tx.bulan}-${tx.tahun}`;
+      if (!Array.isArray(state.payments)) state.payments = [];
+      if (!state.payments.some(x => x.idTransaksi === tx.idTransaksi)) state.payments.push({
+        idTransaksi:tx.idTransaksi, idSiswa:tx.student.idSiswa, bulan:tx.bulan, tahun:Number(tx.tahun),
+        nominal:Number(tx.nominal||state.config.amount||50000), tanggalBayar:tx.tanggalBayar, status:'LUNAS'
+      });
+      const listStudent = state.students.find(s=>s.idSiswa===tx.student.idSiswa);
+      if (listStudent) {
+        listStudent.kelas = normalizeClassLabel(listStudent.kelas);
+        if (!Array.isArray(listStudent.paidPeriods)) listStudent.paidPeriods=[];
+        if (!listStudent.paidPeriods.includes(key)) listStudent.paidPeriods.push(key);
+        listStudent.paidMonths = listStudent.paidPeriods.length;
+        listStudent.unpaidMonths = Math.max(0,(state.config.periods||[]).length-listStudent.paidMonths);
+      }
+      state.detailCache[tx.student.idSiswa] = buildLocalStudentDetail(tx.student.idSiswa);
+      if (state.selectedStudentDetail?.student?.idSiswa === tx.student.idSiswa) state.selectedStudentDetail = state.detailCache[tx.student.idSiswa];
+      if (!deferFinalize) finalizeLocalPaymentState();
+    }
+
+    function finalizeLocalPaymentState() {
+      const local=buildLocalSummaryData();
+      state.summary=local;
+      state.dashboard={user:state.user,scope:local.scope,stats:summaryStatsFromSummary(local.summary),config:state.config};
+      state.summaryCache={};
+      saveStaffSnapshot();
+      if (state.currentView==='home' || state.currentView==='summary') renderCurrentStaffView();
+    }
+
+    // ========================= LOGIN =========================
+
+    function renderLogin() {
+      const app = document.getElementById('app');
+      const role = state.loginRole;
+      const student = role === 'SISWA';
+      app.innerHTML = `
+        <div class="login-page ${state.loginSheetOpen ? 'login-sheet-open' : ''}">
+          <section class="login-art">
+            <div class="login-brand">
+              <div class="brand-mark brand-mark-logo">${appLogo()}</div>
+              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</div></div>
+            </div>
+            <div class="login-copy">
+              <h1><span class="login-copy-desktop">Ringkas.<br>Aman.<br>Mudah dipantau.</span><span class="login-copy-mobile">Ringkas.<br>Aman.<br>Mudah dipantau.</span></h1>
+              <p><span class="login-copy-desktop">Pembayaran Komite kelas 7 dalam satu aplikasi yang ringan untuk bendahara, wali kelas, dan siswa.</span><span class="login-copy-mobile">Pembayaran Komite kelas 7 dalam satu aplikasi yang ringan untuk bendahara, wali kelas, dan siswa.</span></p>
+              <button class="login-mobile-cta" type="button" onclick="openLoginSheet()">Masuk ke aplikasi ${icon('arrow')}</button>
+            </div>
+            <div class="login-mini"><span>Juli 2026 — Juni 2027</span><span>${money(state.config.amount)} / bulan</span><span>Kelas 7A — 7J</span></div>
+          </section>
+          <button class="login-sheet-backdrop" type="button" onclick="closeLoginSheet()" aria-label="Tutup menu login"></button>
+          <section class="login-panel" role="dialog" aria-modal="true" aria-label="Masuk ke aplikasi">
+            <div class="login-box">
+              <div class="login-mobile-brand">
+                <div class="brand-mark brand-mark-logo">${appLogo()}</div>
+                <div><strong>${escapeHtml(state.config.schoolName)}</strong><div class="brand-sub">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</div></div>
+              </div>
+              <h2>Selamat datang</h2>
+              <p>${student ? 'Masukkan NISN untuk melihat status dan riwayat Pembayaran Komite.' : 'Masuk menggunakan akun Anda untuk mengakses layanan Pembayaran Komite.'}</p>
+              <div class="segment">
+                <button data-key="BENDAHARA" class="${role==='BENDAHARA'?'active':''}" onclick="switchLoginRole('BENDAHARA')">Bendahara</button>
+                <button data-key="WALI" class="${role==='WALI'?'active':''}" onclick="switchLoginRole('WALI')">Wali Kelas</button>
+                <button data-key="SISWA" class="${role==='SISWA'?'active':''}" onclick="switchLoginRole('SISWA')">Siswa</button>
+              </div>
+              ${student ? `
+                <form class="form-stack" onsubmit="loginStudent(event)">
+                  <div class="student-only-wide">
+                    <div class="field-wrap"><span class="field-icon">${icon('user')}</span><input class="input" id="nisn" inputmode="numeric" autocomplete="off" placeholder="Masukkan NISN" aria-label="NISN" required></div>
+                  </div>
+                  <button class="btn btn-primary login-btn student-only-wide" type="submit">Lihat Pembayaran ${icon('arrow')}</button>
+                </form>
+              ` : `
+                <form class="form-stack" onsubmit="loginStaff(event)">
+                  <div>
+                    <div class="field-wrap"><span class="field-icon">${icon('user')}</span><input class="input" id="username" autocomplete="username" placeholder="Username" aria-label="Username" required></div>
+                  </div>
+                  <div>
+                    <div class="field-wrap password-wrap"><span class="field-icon">${icon('lock')}</span><input class="input" id="password" type="password" autocomplete="current-password" placeholder="Kata sandi" aria-label="Kata sandi" required><button class="password-toggle" type="button" onclick="togglePasswordVisibility()" aria-label="Tampilkan kata sandi" title="Tampilkan kata sandi">${icon('eye')}</button></div>
+                  </div>
+                  <button class="btn btn-primary login-btn" type="submit">Masuk ${icon('arrow')}</button>
+                </form>
+              `}
+              <div class="login-foot">${escapeHtml(state.config.appName)} • ${APP_REVISION}<br>Dikembangkan oleh <a class="login-credit" href="https://www.tiktok.com/@gurukemarinsore" target="_blank" rel="noopener noreferrer">Gurukemarinsore</a></div>
+            </div>
+          </section>
+        </div>`;
+      if (!isApiConfigured()) setTimeout(() => toast('Konfigurasi layanan belum lengkap.', 'warning', 'Belum siap digunakan'), 250);
+    }
+
+    function openLoginSheet() {
+      state.loginSheetOpen = true;
+      document.querySelector('.login-page')?.classList.add('login-sheet-open');
+      window.setTimeout(() => document.querySelector('.login-panel .input')?.focus({preventScroll:true}), 220);
+    }
+
+    function closeLoginSheet() {
+      state.loginSheetOpen = false;
+      document.querySelector('.login-page')?.classList.remove('login-sheet-open');
+    }
+
+    function switchLoginRole(role) {
+      if (role === state.loginRole) return;
+      state.loginRole = role;
+      renderLogin();
+      setTimeout(() => document.querySelector('.input')?.focus(), 20);
+    }
+
+    function togglePasswordVisibility() {
+      const input = document.getElementById('password');
+      const button = document.querySelector('.password-toggle');
+      if (!input || !button) return;
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      button.innerHTML = icon(show ? 'eyeOff' : 'eye');
+      button.setAttribute('aria-label', show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+      button.title = show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi';
+      input.focus();
+    }
+
+    async function loginStaff(e) {
+      e.preventDefault();
+      try {
+        const expectedRole = state.loginRole;
+        const data = await api('loginStaff', {
+          username: document.getElementById('username').value.trim(),
+          password: document.getElementById('password').value,
+          expectedRole
+        }, {loadingText:'Memeriksa akun dan menyiapkan data…', timeout:22000});
+        if (data.user.role !== expectedRole) throw new Error(`Akun ini adalah akun ${data.user.role === 'WALI' ? 'Wali Kelas' : 'Bendahara'}. Pilih jenis login yang sesuai.`);
+        setSession(data.token, data.user);
+        applyBootstrap(data.bootstrap, false);
+        state.currentView = 'home';
+        renderStaffShell();
+        toast(`Selamat datang, ${data.user.nama}.`, 'success', 'Login berhasil');
+        if (data.user.role === 'WALI') setTimeout(() => showRoleNotification(), 240);
+        if (data.user.role === 'BENDAHARA') setTimeout(() => syncPaymentQueue(), 300);
+      } catch (err) {
+        toast(err.message || 'Login gagal.', 'error');
+      }
+    }
+
+    async function loginStudent(e) {
+      e.preventDefault();
+      try {
+        const data = await api('loginStudent', {nisn: document.getElementById('nisn').value.trim()}, {loadingText:'Mencari data siswa…'});
+        state.config = Object.assign({}, state.config, data.config || {});
+        state.config.classes = (state.config.classes || []).map(c=>Object.assign({},c,{nama:normalizeClassLabel(c.nama)}));
+        setSession(data.token, data.user);
+        state.selectedStudentDetail = data.detail;
+        state.detailCache[data.detail.student.idSiswa] = data.detail;
+        saveStudentSnapshot(data.detail);
+        toast(`Halo, ${data.user.nama}.`, 'success', 'Data ditemukan');
+        renderStudentApp(data.detail);
+        setTimeout(() => showRoleNotification(), 240);
+      } catch (err) {
+        toast(err.message || 'NISN tidak ditemukan.', 'error');
+      }
+    }
+
+    // ========================= SHELL / REFRESH =========================
+
+    function topbar() {
+      const role = state.user?.role || '';
+      const meta = role === 'BENDAHARA' ? 'Bendahara' : role === 'WALI' ? `Wali Kelas • ${normalizeClassLabel(state.user?.kelas || '')}` : `Siswa • ${normalizeClassLabel(state.user?.kelas || '')}`;
+      return `<div class="topbar-wrap"><div class="page topbar">
+        <div class="brand">
+          <div class="brand-mark brand-mark-logo">${appLogo()}</div>
+          <div class="brand-text"><div class="brand-title">${escapeHtml(state.config.appName)}</div><div class="brand-sub">${escapeHtml(state.config.schoolYear)} • ${APP_REVISION}</div></div>
+        </div>
+        <div class="top-actions">
+          ${syncChipHtml()}
+          <div class="user-pill"><span class="user-avatar">${icon('user')}</span><div class="user-copy"><strong>${escapeHtml(state.user?.nama || '')}</strong><span>${escapeHtml(meta)}</span></div></div>
+          <button id="refreshBtn" class="icon-btn refresh-btn ${state.refreshBusy?'spinning':''}" onclick="refreshCurrentData()" title="Perbarui data" aria-label="Perbarui data">${icon('refresh')}</button>
+          ${notificationButtonHtml()}
+          <button class="icon-btn" onclick="logout()" title="Keluar" aria-label="Keluar">${icon('logout')}</button>
+        </div>
+      </div></div>`;
+    }
+
+    function roleNotificationData() {
+      const role = state.user?.role || '';
+      const periods = state.config.periods || [];
+      const duePeriods = periods.filter(isPeriodDueLocal);
+      const latestDue = duePeriods[duePeriods.length - 1] || state.config.currentPeriod || periods[0];
+
+      if (role === 'SISWA') {
+        const d = state.selectedStudentDetail;
+        if (!d?.periods) return {role, badge:0, type:'success', title:'Terima kasih!', latestDue, unpaid:[], futurePaid:[]};
+        const unpaid = d.periods.filter(p => p.status === 'BELUM_BAYAR');
+        const futurePaid = d.periods.filter(p => p.status === 'LUNAS' && !isPeriodDueLocal(p));
+        return {role, badge:unpaid.length, type:unpaid.length ? 'warning' : 'success', title:unpaid.length ? 'Pembayaran perlu diperhatikan' : 'Terima kasih!', latestDue, unpaid, futurePaid};
+      }
+
+      if (role === 'WALI') {
+        const kelas = normalizeClassLabel(state.user?.kelas || '');
+        const students = (state.students || []).filter(s => !kelas || normalizeClassLabel(s.kelas) === kelas);
+        const pendingByPeriod = duePeriods.map(p => {
+          const key = `${p.bulan}-${p.tahun}`;
+          const count = students.reduce((n,s) => n + (new Set(Array.isArray(s.paidPeriods) ? s.paidPeriods : []).has(key) ? 0 : 1), 0);
+          return {bulan:p.bulan,tahun:p.tahun,label:p.label || `${titleCase(p.bulan)} ${p.tahun}`,count};
+        }).filter(x => x.count > 0);
+        return {role, badge:pendingByPeriod.length, type:pendingByPeriod.length ? 'warning' : 'success', title:pendingByPeriod.length ? 'Pembayaran perlu diperhatikan' : 'Terima kasih!', latestDue, pendingByPeriod, totalStudents:students.length};
+      }
+      return {role, badge:0};
+    }
+
+    function notificationButtonHtml() {
+      const role = state.user?.role || '';
+      if (!['SISWA','WALI'].includes(role)) return '';
+      const n = roleNotificationData();
+      return `<button class="icon-btn notification-btn" onclick="showRoleNotification()" title="Notifikasi" aria-label="Notifikasi">${icon('bell')}${n.badge ? `<span class="notification-badge">${Math.min(99,n.badge)}</span>` : ''}</button>`;
+    }
+
+    function showRoleNotification() {
+      const n = roleNotificationData();
+      if (!['SISWA','WALI'].includes(n.role)) return;
+      const success = n.type === 'success';
+      let body = '';
+      if (n.role === 'SISWA') {
+        if (success) {
+          const dueLabel = n.latestDue?.label || `${titleCase(n.latestDue?.bulan || '')} ${n.latestDue?.tahun || ''}`.trim();
+          const future = (n.futurePaid || []).map(p => `${titleCase(p.bulan)} ${p.tahun}`);
+          body = `<p>Pembayaran Komite sampai <strong>${escapeHtml(dueLabel)}</strong> sudah lunas.</p>${future.length ? `<div class="notice-extra">Pembayaran <strong>${escapeHtml(future.join(' dan '))}</strong> juga sudah tercatat lebih awal.</div>` : '<div class="notice-extra">Tidak ada pembayaran yang tertunggak.</div>'}`;
+        } else {
+          body = `<p>Terdapat <strong>${n.unpaid.length} bulan</strong> pembayaran Komite yang sudah jatuh tempo dan belum dibayar.</p><div class="notice-list">${n.unpaid.map(p=>`<div><span>${escapeHtml(titleCase(p.bulan))} ${p.tahun}</span><strong>Belum Bayar</strong></div>`).join('')}</div><div class="notice-extra warning">Silakan melakukan pembayaran untuk periode yang telah jatuh tempo.</div>`;
+        }
+      } else {
+        if (success) {
+          const dueLabel = n.latestDue?.label || `${titleCase(n.latestDue?.bulan || '')} ${n.latestDue?.tahun || ''}`.trim();
+          body = `<p>Seluruh pembayaran siswa kelas <strong>${escapeHtml(normalizeClassLabel(state.user?.kelas || ''))}</strong> sampai <strong>${escapeHtml(dueLabel)}</strong> sudah lunas.</p><div class="notice-extra">Terima kasih telah memantau pembayaran kelas.</div>`;
+        } else {
+          body = `<p>Masih ada pembayaran siswa yang belum lunas pada periode yang sudah jatuh tempo.</p><div class="notice-list">${n.pendingByPeriod.map(x=>`<div><span>${escapeHtml(titleCase(x.bulan))} ${x.tahun}</span><strong>${x.count} siswa belum membayar</strong></div>`).join('')}</div>`;
+        }
+      }
+      openModal(`<div class="modal-head notification-head"><div></div><button class="icon-btn" onclick="closeModal()" aria-label="Tutup">${icon('x')}</button></div><div class="modal-body"><div class="role-notice ${success?'success':'warning'}"><div class="role-notice-mark">${icon(success?'check':'alert')}</div><h3>${escapeHtml(n.title)}</h3>${body}<button class="btn ${success?'btn-primary':'btn-warning'} role-notice-ok" onclick="closeModal()">OK</button></div></div>`, false);
+    }
+
+    function desktopNav() {
+      const role = state.user?.role;
+      if (role !== 'BENDAHARA') return '';
+      const items = [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']];
+      return `<div class="page"><nav class="desktop-nav">${items.map(([view,ic,label]) => `<button data-key="${view}" class="nav-chip ${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}${label}</button>`).join('')}</nav></div>`;
+    }
+
+    function bottomNav() {
+      const role = state.user?.role;
+      if (role !== 'BENDAHARA') return '';
+      const items = [['home','home','Beranda'],['students','users','Siswa'],['summary','chart','Rekap']];
+      return `<nav class="bottom-nav">${items.map(([view,ic,label]) => `<button data-key="${view}" class="${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}<span>${label}</span></button>`).join('')}</nav>`;
+    }
+
+    function updateNavigationActive() {
+      document.querySelectorAll('.desktop-nav, .bottom-nav').forEach(group => {
+        group.querySelectorAll('button[data-key]').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.currentView));
+      });
+    }
+
+    function updatePeriodPanelState(panel) {
+      if (!panel) return;
+      panel.querySelectorAll('.period-segment button[data-key]').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.scopeMode));
+      const row = panel.querySelector('.period-row');
+      if (row) row.innerHTML = periodRowHtml();
+    }
+
+    function renderStaffShell(contentHtml='') {
+      const app = document.getElementById('app');
+      const content = contentHtml || renderHomeContent();
+      const fullContent = `${content}${treasurerAccountsHtml()}`;
+
+      if (state.user?.role === 'WALI') {
+        state.currentView = 'home';
+        app.innerHTML = `${topbar()}<main class="page main wali-main" id="mainContent">${fullContent}</main>`;
+        updateSyncIndicator();
+        return;
+      }
+
+      const existingMain = document.getElementById('mainContent');
+      if (!existingMain || !document.querySelector('.desktop-nav') || !document.querySelector('.bottom-nav')) {
+        app.innerHTML = `${topbar()}${desktopNav()}<main class="page main bendahara-main" id="mainContent">${fullContent}</main>${bottomNav()}`;
+      } else {
+        existingMain.innerHTML = fullContent;
+      }
+      updateNavigationActive();
+      updateSyncIndicator();
+      if (state.filterOpen) requestAnimationFrame(ensureActivePeriodVisible);
+    }
+
+    function ensureActivePeriodVisible() {
+      const segment = document.querySelector('#periodPanel .period-segment');
+      const active = segment?.querySelector('button.active');
+      if (!segment || !active || segment.scrollWidth <= segment.clientWidth) return;
+      const left = active.offsetLeft - 8;
+      const right = active.offsetLeft + active.offsetWidth + 8;
+      if (left < segment.scrollLeft) segment.scrollLeft = Math.max(0, left);
+      else if (right > segment.scrollLeft + segment.clientWidth) segment.scrollLeft = Math.max(0, right - segment.clientWidth);
+    }
+
+    function renderCurrentStaffView() {
+      if (!state.user || state.user.role === 'SISWA') return;
+      if (state.user.role === 'WALI') {
+        state.currentView = 'home';
+        renderStaffShell();
+        return;
+      }
+      if (state.currentView === 'students') renderStudentsView();
+      else if (state.currentView === 'summary') renderSummaryView();
+      else renderStaffShell();
+    }
+
+    async function refreshCurrentData(silent=false) {
+      if (state.refreshBusy || !state.user) return;
+      state.refreshBusy = true;
+      const btn = document.getElementById('refreshBtn');
+      btn?.classList.add('spinning');
+      try {
+        if (state.user.role === 'BENDAHARA') await syncPaymentQueue({manual:false});
+        if (!navigator.onLine) throw new Error('Tidak ada koneksi internet. Data terakhir tetap ditampilkan.');
+
+        if (state.user.role === 'SISWA') {
+          const d = await api('studentDetail', {token:state.token, force:true}, {silent:true, timeout:16000});
+          state.selectedStudentDetail = d;
+          state.detailCache[d.student.idSiswa] = d;
+          saveStudentSnapshot(d);
+          renderStudentApp(d);
+        } else {
+          const data = await api('staffBootstrap', Object.assign({token:state.token, force:true}, scopePayload(false)), {silent:true, timeout:20000});
+          applyBootstrap(data, true);
+          renderCurrentStaffView();
+        }
+        if (!silent) toast('Data berhasil diperbarui.', 'success', 'Data diperbarui');
+      } catch (err) {
+        if (!silent) toast(err.message || 'Data belum dapat diperbarui.', 'warning', 'Refresh gagal');
+      } finally {
+        state.refreshBusy = false;
+        document.getElementById('refreshBtn')?.classList.remove('spinning');
+        updateSyncIndicator();
+      }
+    }
+
+    // ========================= PERIODE / REKAP =========================
+
+    function currentScopePeriod() {
+      const periods = state.config.periods || [];
+      return periods[state.scopeMonthIndex] || state.config.currentPeriod || periods[0];
+    }
+
+    function setDefaultScopeFromConfig() {
+      const p = state.config.currentPeriod || state.config.periods?.[0];
+      const index = state.config.periods.findIndex(x => x.bulan === p?.bulan && Number(x.tahun) === Number(p?.tahun));
+      state.scopeMode = 'MONTH';
+      state.scopeMonthIndex = index >= 0 ? index : 0;
+      state.scopeClass = '';
+    }
+
+    function scopePayload(force=false) {
+      const p = currentScopePeriod();
+      return {
+        mode: state.scopeMode,
+        bulan: p?.bulan || '',
+        tahun: p?.tahun || '',
+        kelas: state.user?.role === 'BENDAHARA' ? state.scopeClass : '',
+        force: !!force
+      };
+    }
+
+    function summaryCacheKey() {
+      const p = currentScopePeriod();
+      return [state.scopeMode, p?.bulan || '', p?.tahun || '', state.user?.role === 'BENDAHARA' ? state.scopeClass : state.user?.kelas || ''].join('|');
+    }
+
+    function rememberCurrentSummary() {
+      if (state.summary) state.summaryCache[summaryCacheKey()] = state.summary;
+    }
+
+    function applyBootstrap(data, preserveScope=true) {
+      if (!data) return;
+      state.config = Object.assign({}, DEFAULT_CONFIG, data.config || state.config || {});
+      state.config.classes = (state.config.classes || []).map(c=>Object.assign({},c,{nama:normalizeClassLabel(c.nama)}));
+      if (Array.isArray(data.students)) state.students = data.students.map(s=>Object.assign({},s,{kelas:normalizeClassLabel(s.kelas)}));
+      if (Array.isArray(data.payments)) state.payments = data.payments.slice();
+      state.dashboard = data.dashboard || state.dashboard;
+      state.summary = data.summary || state.summary;
+      state.detailCache = preserveScope ? state.detailCache : {};
+      state.summaryCache = preserveScope ? state.summaryCache : {};
+      if (state.user?.kelas) state.user.kelas = normalizeClassLabel(state.user.kelas);
+
+      const scope = data.summary?.scope || data.dashboard?.scope;
+      if (scope && !preserveScope) {
+        state.scopeMode = scope.mode || 'MONTH';
+        const anchor = scope.anchor || scope.periods?.[0];
+        const idx = state.config.periods.findIndex(p => p.bulan === anchor?.bulan && Number(p.tahun) === Number(anchor?.tahun));
+        if (idx >= 0) state.scopeMonthIndex = idx;
+      } else if (!scope && !preserveScope) setDefaultScopeFromConfig();
+      if (state.user?.role === 'BENDAHARA' && !preserveScope) state.scopeClass = data.summary?.kelas === 'SEMUA' ? '' : normalizeClassLabel(data.summary?.kelas || '');
+      if (state.students.length) {
+        const local = buildLocalSummaryData();
+        state.summary = local;
+        state.dashboard = {user:state.user,scope:local.scope,stats:summaryStatsFromSummary(local.summary),config:state.config};
+      }
+      rememberCurrentSummary();
+      saveStaffSnapshot();
+    }
+
+    function periodRowHtml() {
+      const p = currentScopePeriod();
+      const isMonth = state.scopeMode === 'MONTH';
+      const isB = state.user?.role === 'BENDAHARA';
+      const scopeLabel = localScopeDefinition().label;
+      return `${isMonth ? `<div class="period-nav"><button class="period-arrow" onclick="moveScopeMonth(-1)" ${state.scopeMonthIndex<=0?'disabled':''} aria-label="Bulan sebelumnya">${icon('left')}</button><div class="period-label">${escapeHtml(p?.label || '')}</div><button class="period-arrow" onclick="moveScopeMonth(1)" ${state.scopeMonthIndex>=state.config.periods.length-1?'disabled':''} aria-label="Bulan berikutnya">${icon('right')}</button></div>` : `<div class="period-static">${escapeHtml(scopeLabel)}</div>`}
+        ${isB ? `<div class="select-badge-wrap"><select class="select period-class" onchange="changeScopeClass(this.value)"><option value="" ${!state.scopeClass?'selected':''}>Semua Kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}" ${normalizeClassLabel(state.scopeClass)===normalizeClassLabel(c.nama)?'selected':''}>${escapeHtml(normalizeClassLabel(c.nama))}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>` : `<div class="period-class-readonly">${escapeHtml(normalizeClassLabel(state.user?.kelas || ''))}</div>`}`;
+    }
+
+    function periodControlsHtml(collapsible=false) {
+      const modes = [['MONTH','Bulan'],['SEM1','Semester 1'],['SEM2','Semester 2'],['YEAR','Tahun Ajaran']];
+      return `<section class="period-panel ${collapsible && !state.filterOpen ? 'hidden' : ''}" id="periodPanel">
+        <div class="period-segment">${modes.map(([mode,label])=>`<button data-key="${mode}" class="${state.scopeMode===mode?'active':''}" onclick="changeScopeMode('${mode}')">${label}</button>`).join('')}</div>
+        <div class="period-row">${periodRowHtml()}</div>
+      </section>`;
+    }
+
+    function togglePeriodFilter() {
+      state.filterOpen = !state.filterOpen;
+      const panel = document.getElementById('periodPanel');
+      if (panel) panel.classList.toggle('hidden', !state.filterOpen);
+      const btn = document.getElementById('dashboardFilterToggle');
+      if (btn) {
+        btn.innerHTML = icon(state.filterOpen ? 'up' : 'filter');
+        btn.setAttribute('aria-expanded', String(state.filterOpen));
+        btn.setAttribute('title', state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter');
+        btn.setAttribute('aria-label', state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter');
+      }
+      if (state.filterOpen) requestAnimationFrame(ensureActivePeriodVisible);
+    }
+
+    function changeScopeMode(mode) {
+      if (!['MONTH','SEM1','SEM2','YEAR'].includes(mode) || mode === state.scopeMode) return;
+      state.scopeMode = mode;
+      loadScopeSummary();
+    }
+
+    function moveScopeMonth(delta) {
+      if (state.scopeMode !== 'MONTH') return;
+      const next = Math.max(0, Math.min(state.config.periods.length - 1, state.scopeMonthIndex + Number(delta || 0)));
+      if (next === state.scopeMonthIndex) return;
+      state.scopeMonthIndex = next;
+      loadScopeSummary();
+    }
+
+    function changeScopeClass(value) {
+      if (state.user?.role !== 'BENDAHARA') return;
+      state.scopeClass = normalizeClassLabel(value || '');
+      loadScopeSummary();
+    }
+
+    function localScopeDefinition() {
+      const periods = state.config.periods || [];
+      if (state.scopeMode === 'SEM1') return {mode:'SEM1',label:'Semester 1',periods:periods.slice(0,6),anchor:periods[0]};
+      if (state.scopeMode === 'SEM2') return {mode:'SEM2',label:'Semester 2',periods:periods.slice(6,12),anchor:periods[6]};
+      if (state.scopeMode === 'YEAR') return {mode:'YEAR',label:`Tahun Ajaran ${state.config.schoolYear}`,periods:periods.slice(),anchor:periods[0]};
+      const p = currentScopePeriod();
+      return {mode:'MONTH',label:p?.label || '',periods:p?[p]:[],anchor:p};
+    }
+
+    function isPeriodDueLocal(period) {
+      const periods = state.config.periods || [];
+      const current = state.config.currentPeriod;
+      const currentIndex = periods.findIndex(p=>p.bulan===current?.bulan && Number(p.tahun)===Number(current?.tahun));
+      const idx = periods.findIndex(p=>p.bulan===period?.bulan && Number(p.tahun)===Number(period?.tahun));
+      if (currentIndex < 0 || idx < 0) return false;
+      return idx <= currentIndex;
+    }
+
+    function buildLocalSummaryData() {
+      const scope = localScopeDefinition();
+      const selectedClass = state.user?.role === 'BENDAHARA' ? normalizeClassLabel(state.scopeClass) : normalizeClassLabel(state.user?.kelas || '');
+      const students = (state.students || []).filter(s => !selectedClass || normalizeClassLabel(s.kelas) === selectedClass);
+      const selectedPeriods = scope.periods || [];
+      const amount = Number(state.config.amount || 50000);
+      let paidSlots=0, unpaidDueSlots=0, futureSlots=0, fullyPaidStudents=0;
+      const list = students.map(s => {
+        const paidSet = new Set(Array.isArray(s.paidPeriods) ? s.paidPeriods : []);
+        let paidCount=0, paidDueCount=0;
+        const duePeriods = selectedPeriods.filter(isPeriodDueLocal);
+        selectedPeriods.forEach(p=>{
+          const key=`${p.bulan}-${p.tahun}`;
+          if (paidSet.has(key)) {
+            paidCount++;
+            if (isPeriodDueLocal(p)) paidDueCount++;
+          }
+        });
+        const dueCount=duePeriods.length;
+        const unpaidDue=Math.max(0,dueCount-paidDueCount);
+        const futureUnpaid=Math.max(0,selectedPeriods.length-dueCount-(paidCount-paidDueCount));
+        paidSlots+=paidCount; unpaidDueSlots+=unpaidDue; futureSlots+=futureUnpaid;
+        if (selectedPeriods.length && paidCount===selectedPeriods.length) fullyPaidStudents++;
+        let status='BELUM_JATUH_TEMPO';
+        if (selectedPeriods.length && paidCount===selectedPeriods.length) status='LUNAS';
+        else if (unpaidDue>0) status='BELUM_BAYAR';
+        else if (paidCount>0) status='SEBAGIAN';
+        return {idSiswa:s.idSiswa,nisn:s.nisn,nama:s.nama,kelas:normalizeClassLabel(s.kelas),paidMonths:paidCount,totalMonths:selectedPeriods.length,unpaidDueMonths:unpaidDue,futureMonths:futureUnpaid,paidAmount:paidCount*amount,status};
+      }).sort((a,b)=>a.nama.localeCompare(b.nama,'id'));
+      const totalSlots=students.length*selectedPeriods.length;
+      return {scope,kelas:selectedClass||'SEMUA',summary:{totalStudents:students.length,totalSlots,paid:paidSlots,unpaid:unpaidDueSlots,future:futureSlots,fullyPaidStudents,percentage:totalSlots?Math.round(paidSlots/totalSlots*100):0,totalAmount:paidSlots*amount,students:list}};
+    }
+
+    function loadScopeSummary() {
+      const data = buildLocalSummaryData();
+      state.summary = data;
+      state.dashboard = {user:state.user, scope:data.scope, stats:summaryStatsFromSummary(data.summary), config:state.config};
+      state.summaryCache[summaryCacheKey()] = data;
+      saveStaffSnapshot();
+      renderCurrentStaffView();
+    }
+
+    function summaryStatsFromSummary(s) {
+      return {totalStudents:s?.totalStudents||0,totalSlots:s?.totalSlots||0,paid:s?.paid||0,unpaid:s?.unpaid||0,future:s?.future||0,fullyPaidStudents:s?.fullyPaidStudents||0,percentage:s?.percentage||0,totalAmount:s?.totalAmount||0};
+    }
+
+    function scopeIsMonth() { return state.scopeMode === 'MONTH'; }
+
+    function renderHomeContent() {
+      const d = state.dashboard;
+      const s = d?.stats || summaryStatsFromSummary(state.summary?.summary);
+      const isB = state.user?.role === 'BENDAHARA';
+      const label = d?.scope?.label || state.summary?.scope?.label || currentScopePeriod()?.label || '';
+      const periodCount = state.summary?.scope?.periods?.length || d?.scope?.periods?.length || 1;
+      const paidLabel = scopeIsMonth() ? 'Lunas' : 'Pembayaran Lunas';
+      return `
+        <section class="hero dashboard-hero">
+          <button id="dashboardFilterToggle" class="hero-filter-toggle" onclick="togglePeriodFilter()" title="${state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter'}" aria-label="${state.filterOpen ? 'Sembunyikan filter' : 'Tampilkan filter'}" aria-expanded="${state.filterOpen}">${icon(state.filterOpen ? 'up' : 'filter')}</button>
+          <div class="hero-kicker">${isB ? 'Dashboard Bendahara' : 'Dashboard Wali Kelas • '+escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</div>
+          <div class="hero-user-name">${escapeHtml(state.user?.nama || '')}</div>
+          <div class="hero-title">${escapeHtml(label)}</div>
+          <div class="hero-sub">Status Pembayaran Komite • ${money(state.config.amount)} per siswa${Number(s.future||0)>0 ? ` • ${s.future} belum jatuh tempo` : ''}</div>
+          <div class="hero-stats">
+            <div class="hero-stat"><small>Siswa</small><strong>${s.totalStudents||0}</strong></div>
+            <div class="hero-stat"><small>${paidLabel}</small><strong>${s.paid||0}${periodCount>1?`/${s.totalSlots||0}`:''}</strong></div>
+            <div class="hero-stat"><small>Belum</small><strong>${s.unpaid||0}</strong></div>
+          </div>
+        </section>
+        ${periodControlsHtml(true)}
+        ${isB ? `
+          <div class="section-head"><div><h2>Akses cepat</h2><p>Fitur utama untuk pencatatan dan pemantauan Komite.</p></div></div>
+          <div class="action-grid">
+            <button class="action-card primary" onclick="openPaymentSearch()"><span class="action-icon">${icon('plus')}</span><strong>Catat Pembayaran</strong><span class="action-desc">Cari siswa dan pilih bulan</span></button>
+            <button class="action-card" onclick="navigate('students')"><span class="action-icon">${icon('users')}</span><strong>Data Siswa</strong><span class="action-desc">Lihat status pembayaran</span></button>
+            <button class="action-card" onclick="navigate('summary')"><span class="action-icon">${icon('chart')}</span><strong>Rekap</strong><span class="action-desc">Bulan, semester, tahun ajaran</span></button>
+          </div>
+        ` : `
+          <div class="section-head"><div><h2>Siswa Kelas ${escapeHtml(normalizeClassLabel(state.user.kelas || ''))}</h2><p>${escapeHtml(label)} • seluruh siswa pada periode yang dipilih.</p></div></div>
+          <div class="card card-pad">${summaryStudentsHtml(state.summary?.summary?.students || [], false)}</div>
+        `}`;
+    }
+
+    async function navigate(view) {
+      if (state.user?.role === 'WALI') {
+        state.currentView = 'home';
+        renderStaffShell();
+        return;
+      }
+      state.currentView = view;
+      if (view === 'home') { renderStaffShell(); return; }
+      if (view === 'students') { renderStudentsView(); return; }
+      if (view === 'summary' && state.user?.role === 'BENDAHARA') { renderSummaryView(); return; }
+    }
+
+    // ========================= DATA SISWA =========================
+
+    function renderStudentsView() {
+      const canClass = state.user.role === 'BENDAHARA';
+      const html = `
+        <div class="section-head"><div><h2>${canClass?'Data Siswa':'Murid '+escapeHtml(normalizeClassLabel(state.user.kelas))}</h2><p>${state.students.length} data aktif</p></div>${canClass?`<button class="btn btn-primary btn-sm" onclick="openPaymentSearch()">${icon('plus')} Catat Pembayaran</button>`:''}</div>
+        <section class="card card-pad">
+          <div class="toolbar ${canClass?'three':''}">
+            <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="studentSearch" class="input" placeholder="Cari nama atau NISN" oninput="filterStudentsView()"></div>
+            ${canClass ? `<div class="select-badge-wrap"><select id="studentClass" class="select" onchange="filterStudentsView()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>` : ''}
+            <div></div>
+          </div>
+          <div id="studentList" class="student-list"></div>
+        </section>`;
+      renderStaffShell(html);
+      filterStudentsView();
+    }
+
+    function studentRowHtml(s, paymentMode=false) {
+      return `<button class="student-row" onclick="openStudentDetail('${escapeHtml(s.idSiswa)}', ${paymentMode})">
+        <span class="avatar">${escapeHtml(initials(s.nama).toUpperCase())}</span>
+        <span class="student-main"><strong>${escapeHtml(s.nama)}</strong><span class="student-meta"><span>${escapeHtml(normalizeClassLabel(s.kelas))}</span><span>•</span><span>NISN ${escapeHtml(s.nisn)}</span>${Number.isFinite(s.paidMonths)?`<span>•</span><span>${s.paidMonths}/12 lunas</span>`:''}</span></span>
+        <span class="chev">${icon('chevron')}</span>
+      </button>`;
+    }
+
+    function filterStudentsView() {
+      const q = (document.getElementById('studentSearch')?.value || '').toLowerCase().trim();
+      const k = document.getElementById('studentClass')?.value || '';
+      const list = state.students.filter(s => (!q || s.nama.toLowerCase().includes(q) || s.nisn.toLowerCase().includes(q)) && (!k || s.kelas===k));
+      const target = document.getElementById('studentList');
+      if (target) target.innerHTML = list.length ? list.map(studentRowHtml).join('') : emptyHtml('Siswa tidak ditemukan','Coba kata pencarian atau kelas yang lain.');
+    }
+
+    // ========================= CATAT PEMBAYARAN =========================
+
+    function openPaymentSearch() {
+      state.paymentSelection = [];
+      state.paymentSelectionStudent = '';
+      state.paymentDate = todayJayapuraIso();
+      if (!state.students.length) {
+        toast('Data siswa belum tersedia. Tekan Refresh untuk mengambil data terbaru.', 'warning');
+        return;
+      }
+      openModal(`
+        <div class="modal-head"><div><h3>Catat Pembayaran</h3><p>Cari siswa, lalu pilih bulan Pembayaran Komite.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body">
+          ${queueCount()?`<div class="sync-notice">${icon('clock')} <span><strong>${queueCount()} pembayaran menunggu sinkronisasi.</strong> Anda tetap dapat mencatat pembayaran berikutnya.</span></div>`:''}
+          <div class="toolbar three">
+            <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="paySearch" class="input" placeholder="Cari nama atau NISN" oninput="filterPaymentStudents()" autofocus></div>
+            <div class="select-badge-wrap"><select id="payClass" class="select" onchange="filterPaymentStudents()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select><span class="select-arrow-badge">${icon('down')}</span></div>
+            <div></div>
+          </div>
+          <div id="payStudentList" class="student-list"></div>
+        </div>`, true);
+      filterPaymentStudents();
+      setTimeout(()=>document.getElementById('paySearch')?.focus(),50);
+    }
+
+    function filterPaymentStudents() {
+      const q = (document.getElementById('paySearch')?.value || '').toLowerCase().trim();
+      const k = document.getElementById('payClass')?.value || '';
+      const list = state.students.filter(s => (!q || s.nama.toLowerCase().includes(q) || s.nisn.toLowerCase().includes(q)) && (!k || s.kelas===k)).slice(0,100);
+      const target = document.getElementById('payStudentList');
+      if (target) target.innerHTML = list.length ? list.map(s=>studentRowHtml(s,true)).join('') : emptyHtml('Siswa tidak ditemukan','Periksa nama, NISN, atau kelas.');
+    }
+
+    function openStudentDetail(idSiswa, paymentMode=false) {
+      try {
+        const d = buildLocalStudentDetail(idSiswa) || state.detailCache[idSiswa];
+        if (!d) throw new Error('Data siswa belum tersedia. Tekan Refresh lalu coba lagi.');
+        state.detailCache[idSiswa] = d;
+        state.selectedStudentDetail = d;
+        const isB = state.user.role === 'BENDAHARA';
+        openModal(studentDetailModalHtml(d, paymentMode && isB), true);
+      } catch (err) { toast(err.message,'error'); }
+    }
+
+    function buildLocalStudentDetail(idSiswa) {
+      const s = state.students.find(x => x.idSiswa === idSiswa);
+      if (!s) return null;
+      const serverPayments = (state.payments || []).filter(x => x.idSiswa === idSiswa && String(x.status || 'LUNAS').toUpperCase() === 'LUNAS');
+      const paymentMap = new Map(serverPayments.map(x => [`${x.bulan}-${x.tahun}`, x]));
+      const paidSet = new Set(Array.isArray(s.paidPeriods) ? s.paidPeriods : []);
+      serverPayments.forEach(x => paidSet.add(`${x.bulan}-${x.tahun}`));
+      const pending = getPaymentQueue().filter(x => x.idSiswa === idSiswa);
+      const pendingSet = new Set(pending.map(x => `${x.bulan}-${x.tahun}`));
+      const current = state.config.currentPeriod;
+      const currentIndex = state.config.periods.findIndex(p => p.bulan === current?.bulan && Number(p.tahun) === Number(current?.tahun));
+      const periods = state.config.periods.map((p, index) => {
+        const key = `${p.bulan}-${p.tahun}`;
+        const tx = paymentMap.get(key);
+        const paid = paidSet.has(key);
+        return {
+          bulan:p.bulan, tahun:p.tahun, label:p.label,
+          status: paid ? 'LUNAS' : (currentIndex >= 0 && index <= currentIndex ? 'BELUM_BAYAR' : 'BELUM_JATUH_TEMPO'),
+          nominal:Number(tx?.nominal || state.config.amount || 50000), idTransaksi:tx?.idTransaksi || '', pending:pendingSet.has(key)
+        };
+      });
+      const history = serverPayments.map(x => ({
+        idTransaksi:x.idTransaksi || '', bulan:String(x.bulan || '').toUpperCase(), tahun:Number(x.tahun),
+        nominal:Number(x.nominal || state.config.amount || 50000), tanggalBayar:x.tanggalBayar || '', status:'LUNAS'
+      })).sort((a,b) => {
+        const ai=state.config.periods.findIndex(p=>p.bulan===a.bulan&&Number(p.tahun)===Number(a.tahun));
+        const bi=state.config.periods.findIndex(p=>p.bulan===b.bulan&&Number(p.tahun)===Number(b.tahun));
+        return bi-ai;
+      });
+      const paidMonths=periods.filter(p=>p.status==='LUNAS').length;
+      return {
+        student:{idSiswa:s.idSiswa,nisn:s.nisn,nama:s.nama,kelas:s.kelas},
+        paidMonths, totalMonths:periods.length,
+        paidAmount:history.length ? history.reduce((sum,h)=>sum+Number(h.nominal||0),0) : paidMonths * Number(state.config.amount||50000),
+        periods, history, localData:true
+      };
+    }
+
+    function studentDetailModalHtml(d, paymentMode) {
+      const s = d.student;
+      const pending = getPaymentQueue().filter(x=>x.idSiswa===s.idSiswa).length;
+      if (paymentMode && state.paymentSelectionStudent !== s.idSiswa) {
+        state.paymentSelectionStudent = s.idSiswa;
+        state.paymentSelection = [];
+        state.paymentDate = todayJayapuraIso();
+      }
+      return `
+        <div class="modal-head"><div><h3>${escapeHtml(s.nama)}</h3><p>${escapeHtml(normalizeClassLabel(s.kelas))} • NISN ${escapeHtml(s.nisn)} • ${d.paidMonths}/12 bulan lunas${pending?` • ${pending} menunggu sinkron`:''}</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body">
+          <div class="section-head" style="margin-top:0"><div><h2>Pembayaran ${escapeHtml(state.config.schoolYear)}</h2><p>${paymentMode?'Pilih satu atau beberapa bulan yang akan dicatat.':'Status Pembayaran Komite per bulan.'}</p></div><span class="status-pill ok">${icon('check')} ${money(d.paidAmount)}</span></div>
+          <div class="months-grid">${d.periods.map(p=>monthCardHtml(p, s.idSiswa, paymentMode)).join('')}</div>
+          ${paymentMode ? paymentSelectionPanelHtml(s.idSiswa) : ''}
+          <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>${d.history.length ? d.history.length+' transaksi lunas' : 'Belum ada transaksi'}</p></div></div>
+          <div class="card card-pad">${historyHtml(d.history, state.user.role === 'BENDAHARA')}</div>
+        </div>`;
+    }
+
+    function monthCardHtml(p, idSiswa, paymentMode=false) {
+      const pending = pendingPayment(idSiswa, p.bulan, p.tahun);
+      const lunas = p.status === 'LUNAS';
+      const due = p.status === 'BELUM_BAYAR';
+      const key = `${p.bulan}-${p.tahun}`;
+      const selected = paymentMode && state.paymentSelection.includes(key);
+      const status = pending
+        ? `<span class="status-pill sync">${icon('clock')} Menunggu sinkron</span>`
+        : lunas
+          ? `<span class="status-pill ok">${icon('check')} Lunas</span>`
+          : selected ? `<span class="status-pill selected">${icon('check')} Dipilih</span>`
+          : due ? `<span class="status-pill wait">${icon('clock')} Belum Bayar</span>`
+          : `<span class="status-pill future">${icon('calendar')} Belum Jatuh Tempo</span>`;
+      const selectable = paymentMode && !lunas && !pending;
+      return `<div class="month-card ${lunas?'lunas':''} ${selectable?'selectable':''} ${selected?'selected':''}" ${selectable?`data-pay-key="${escapeHtml(key)}" onclick="togglePaymentMonth('${escapeHtml(idSiswa)}','${escapeHtml(p.bulan)}',${p.tahun})"`:''}>
+        <div><div class="month-name">${escapeHtml(titleCase(p.bulan))}</div><div class="month-year">${p.tahun}</div></div>${status}
+      </div>`;
+    }
+
+    function historyHtml(history, allowCancel=false) {
+      if (!history.length) return emptyHtml('Belum ada pembayaran','Pembayaran yang telah tercatat akan muncul di sini.');
+      return `<div class="history-list">${history.map(h=>`
+        <div class="history-row">
+          <div><strong>${titleCase(h.bulan)} ${h.tahun}</strong><div class="meta">${escapeHtml(h.tanggalBayar)}</div></div>
+          <div class="history-amount"><strong>${money(h.nominal)}</strong><div style="margin-top:6px;display:flex;justify-content:flex-end;gap:6px"><span class="status-pill ok">${icon('check')} Lunas</span>${allowCancel?`<button class="btn btn-soft btn-sm" title="Cetak bukti" onclick="printHistoryReceipt('${escapeHtml(h.idTransaksi)}')">${icon('printer')}</button><button class="btn btn-danger btn-sm" title="Batalkan" onclick="confirmCancel('${escapeHtml(h.idTransaksi)}')">${icon('trash')}</button>`:''}</div></div>
+        </div>`).join('')}</div>`;
+    }
+
+    function paymentSelectionPanelHtml(idSiswa) {
+      const count = state.paymentSelection.length;
+      return `<div class="payment-selection" id="paymentSelectionPanel">
+        <div class="payment-selection-summary"><strong id="paymentSelectionCount">${count ? count+' bulan dipilih' : 'Belum ada bulan dipilih'}</strong><span id="paymentSelectionTotal">${count ? money(count*Number(state.config.amount||50000)) : 'Pilih bulan yang belum lunas'}</span></div>
+        <div class="payment-date-wrap"><label class="label" for="paymentDate">Tanggal Pembayaran</label><input id="paymentDate" class="input" type="date" max="${todayJayapuraIso()}" value="${escapeHtml(state.paymentDate || todayJayapuraIso())}" oninput="validatePaymentDateInput(this)" onchange="validatePaymentDateInput(this)"></div>
+        <button id="saveSelectedPaymentBtn" class="btn btn-primary" ${count?'':'disabled'} onclick="saveSelectedPayments('${escapeHtml(idSiswa)}')">${icon('check')} Simpan</button>
+      </div>`;
+    }
+
+    function validatePaymentDateInput(input) {
+      if (!input) return true;
+      const today = todayJayapuraIso();
+      input.max = today;
+      if (input.value && input.value > today) {
+        input.value = today;
+        state.paymentDate = today;
+        toast('Tanggal pembayaran tidak boleh melebihi hari ini.', 'warning');
+        return false;
+      }
+      state.paymentDate = input.value || today;
+      return true;
+    }
+
+    function togglePaymentMonth(idSiswa, bulan, tahun) {
+      if (state.paymentSelectionStudent !== idSiswa) return;
+      const key = `${bulan}-${tahun}`;
+      const i = state.paymentSelection.indexOf(key);
+      if (i >= 0) state.paymentSelection.splice(i,1); else state.paymentSelection.push(key);
+      const card = document.querySelector(`[data-pay-key="${CSS.escape(key)}"]`);
+      if (card) {
+        card.classList.toggle('selected', state.paymentSelection.includes(key));
+        const pill = card.querySelector('.status-pill');
+        if (pill) pill.outerHTML = state.paymentSelection.includes(key) ? `<span class="status-pill selected">${icon('check')} Dipilih</span>` : `<span class="status-pill ${isPeriodDueLocal({bulan,tahun})?'wait':'future'}">${icon(isPeriodDueLocal({bulan,tahun})?'clock':'calendar')} ${isPeriodDueLocal({bulan,tahun})?'Belum Bayar':'Belum Jatuh Tempo'}</span>`;
+      }
+      updatePaymentSelectionPanel();
+    }
+
+    function updatePaymentSelectionPanel() {
+      const count=state.paymentSelection.length;
+      const countEl=document.getElementById('paymentSelectionCount');
+      const totalEl=document.getElementById('paymentSelectionTotal');
+      const btn=document.getElementById('saveSelectedPaymentBtn');
+      if (countEl) countEl.textContent=count?`${count} bulan dipilih`:'Belum ada bulan dipilih';
+      if (totalEl) totalEl.textContent=count?money(count*Number(state.config.amount||50000)):'Pilih bulan yang belum lunas';
+      if (btn) btn.disabled=!count;
+    }
+
+    function paymentMonthsLabel(keys) {
+      return keys.map(key => {
+        const [bulan,tahun] = key.split('-');
+        return `${titleCase(bulan)} ${tahun}`;
+      }).join(', ');
+    }
+
+    function showPaymentSuccessModal(student, selectedKeys, paymentDate) {
+      const count = selectedKeys.length;
+      const total = count * Number(state.config.amount || 50000);
+      openModal(`
+        <div class="modal-body">
+          <div class="receipt payment-result">
+            <div class="success-mark">${icon('check')}</div>
+            <h3>Pembayaran berhasil dicatat</h3>
+            <p class="payment-result-sub">Data pembayaran sudah tersimpan dengan aman.</p>
+            <div class="receipt-name">${escapeHtml(student.nama)}</div>
+            <div class="receipt-amount">${money(total)}</div>
+            <div class="receipt-details">
+              <div><span>Kelas</span><strong>${escapeHtml(normalizeClassLabel(student.kelas))}</strong></div>
+              <div><span>Periode</span><strong>${escapeHtml(paymentMonthsLabel(selectedKeys))}</strong></div>
+              <div><span>Tanggal Pembayaran</span><strong>${escapeHtml(paymentDate)}</strong></div>
+            </div>
+            <div class="payment-result-actions">
+              <button class="btn btn-primary" onclick="openPaymentSearch()">${icon('arrow')} Lanjut ke Pembayaran Berikutnya</button>
+            </div>
+          </div>
+        </div>`, false);
+    }
+
+    function showPaymentQueuedModal(student, selectedKeys, paymentDate) {
+      const offline = !navigator.onLine;
+      openModal(`
+        <div class="modal-body">
+          <div class="receipt payment-result">
+            <div class="queued-mark">${icon(offline ? 'offline' : 'clock')}</div>
+            <h3>Menunggu sinkronisasi</h3>
+            <p class="payment-result-sub">Pembayaran disimpan sementara di perangkat dan belum dikonfirmasi oleh layanan aplikasi.</p>
+            <div class="receipt-name">${escapeHtml(student.nama)}</div>
+            <div class="receipt-details">
+              <div><span>Periode</span><strong>${escapeHtml(paymentMonthsLabel(selectedKeys))}</strong></div>
+              <div><span>Tanggal Pembayaran</span><strong>${escapeHtml(paymentDate)}</strong></div>
+              <div><span>Status</span><strong>${queueCount()} pembayaran menunggu</strong></div>
+            </div>
+            <div class="payment-result-actions">
+              <button class="btn btn-soft" onclick="openSyncCenter()">${icon('cloud')} Lihat Sinkronisasi</button>
+              <button class="btn btn-primary" onclick="openPaymentSearch()">OK, Lanjut</button>
+            </div>
+          </div>
+        </div>`, false);
+    }
+
+    async function saveSelectedPayments(idSiswa) {
+      const d = state.selectedStudentDetail;
+      const s = d?.student;
+      if (!s || s.idSiswa !== idSiswa) return;
+      if (!state.paymentSelection.length) { toast('Pilih minimal satu bulan pembayaran.', 'warning'); return; }
+      const paymentDate = document.getElementById('paymentDate')?.value || state.paymentDate || todayJayapuraIso();
+      if (!paymentDate) { toast('Pilih tanggal pembayaran.', 'warning'); return; }
+      if (paymentDate > todayJayapuraIso()) { toast('Tanggal pembayaran tidak boleh melebihi hari ini.', 'warning'); return; }
+
+      state.paymentDate = paymentDate;
+      const selectedKeys = state.paymentSelection.slice();
+      const addedClientIds = [];
+      let duplicates = 0;
+
+      selectedKeys.forEach(key => {
+        const [bulan,tahunText] = key.split('-');
+        const result = enqueuePayment(idSiswa,bulan,Number(tahunText),s,paymentDate);
+        if (result.duplicate) duplicates++;
+        else addedClientIds.push(result.item.clientId);
+      });
+
+      state.paymentSelection = [];
+
+      if (!addedClientIds.length) {
+        state.paymentSelectionStudent = '';
+        showPaymentQueuedModal(s, selectedKeys, paymentDate);
+        return;
+      }
+
+      const saveBtn = document.getElementById('saveSelectedPaymentBtn');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = `${icon('clock')} Menyimpan…`;
+      }
+
+      if (!navigator.onLine) {
+        state.paymentSelectionStudent = '';
+        showPaymentQueuedModal(s, selectedKeys, paymentDate);
+        return;
+      }
+
+      try {
+        await syncPaymentQueue({manual:false, suppressSummaryToast:true});
+        let remainingTargets = addedClientIds.filter(id => getPaymentQueue().some(x => x.clientId === id));
+        if (remainingTargets.length && navigator.onLine) {
+          await syncPaymentQueue({manual:false, suppressSummaryToast:true});
+          remainingTargets = addedClientIds.filter(id => getPaymentQueue().some(x => x.clientId === id));
+        }
+
+        state.paymentSelectionStudent = '';
+        if (!remainingTargets.length) showPaymentSuccessModal(s, selectedKeys, paymentDate);
+        else showPaymentQueuedModal(s, selectedKeys, paymentDate);
+      } catch (_) {
+        state.paymentSelectionStudent = '';
+        showPaymentQueuedModal(s, selectedKeys, paymentDate);
+      }
+    }
+
+    function printHistoryReceipt(idTransaksi) {
+      const d = state.selectedStudentDetail;
+      const h = d?.history?.find(x => x.idTransaksi === idTransaksi);
+      if (!d || !h) { toast('Data bukti belum tersedia. Tekan Refresh lalu coba lagi.','warning'); return; }
+      printReceipt({
+        idTransaksi:h.idTransaksi,
+        student:d.student,
+        bulan:h.bulan,
+        tahun:h.tahun,
+        nominal:h.nominal,
+        tanggalBayar:h.tanggalBayar,
+        waktuBayar:h.waktuBayar,
+        status:'LUNAS'
+      });
+    }
+
+    function printReceipt(tx) {
+      const w = window.open('', '_blank', 'width=520,height=720');
+      if (!w) { toast('Izinkan pop-up browser untuk mencetak bukti.','warning'); return; }
+      w.document.write(`<!doctype html><html><head><title>Bukti Pembayaran Komite</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#16314d}main{max-width:420px;margin:auto;border:1px solid #dce6ef;border-radius:18px;padding:24px}h2{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#65758a;font-size:12px}.amount{text-align:center;font-size:30px;font-weight:700;margin:20px 0}.row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf1f5;font-size:12px}.foot{text-align:center;color:#738395;font-size:10px;margin-top:20px}@media print{body{padding:0}main{border:0}}
+
+</style></head><body><main><h2>Komite SMP Negeri 3 Jayapura</h2><div class="sub">Bukti Pembayaran Komite</div><div class="amount">${money(tx.nominal)}</div><div class="row"><span>Nama</span><strong>${escapeHtml(tx.student.nama)}</strong></div><div class="row"><span>Kelas</span><strong>${escapeHtml(normalizeClassLabel(tx.student.kelas))}</strong></div><div class="row"><span>Periode</span><strong>${titleCase(tx.bulan)} ${tx.tahun}</strong></div><div class="row"><span>Tanggal</span><strong>${escapeHtml(tx.tanggalBayar)}</strong></div><div class="row"><span>Status</span><strong>LUNAS</strong></div><div class="foot">SMP Negeri 3 Jayapura • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div></main><script>window.onload=()=>{window.print()}<\/script></body></html>`);
+      w.document.close();
+    }
+
+    function confirmCancel(idTransaksi) {
+      openModal(`
+        <div class="modal-head"><div><h3>Batalkan pembayaran?</h3><p>Pembayaran akan dibatalkan dan tetap tercatat dalam riwayat.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body"><div class="card card-pad"><p style="margin:0;color:var(--muted);font-size:13px;line-height:1.5">Gunakan hanya bila Bendahara salah mencatat pembayaran. Riwayat pembatalan tetap tersimpan.</p></div></div>
+        <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Tidak</button><button class="btn btn-danger" onclick="cancelPayment('${escapeHtml(idTransaksi)}')">${icon('trash')} Ya, Batalkan</button></div>`);
+    }
+
+    async function cancelPayment(idTransaksi) {
+      try {
+        const record = (state.payments || []).find(x => x.idTransaksi === idTransaksi);
+        const idSiswa = record?.idSiswa || state.selectedStudentDetail?.student?.idSiswa;
+        await api('cancelPayment', {token:state.token,idTransaksi}, {loadingText:'Membatalkan pembayaran…'});
+        toast('Pembayaran berhasil dibatalkan.', 'success');
+        if (record) {
+          state.payments = state.payments.filter(x => x.idTransaksi !== idTransaksi);
+          const listStudent = state.students.find(x => x.idSiswa === record.idSiswa);
+          if (listStudent) {
+            const key = `${record.bulan}-${record.tahun}`;
+            listStudent.paidPeriods = (listStudent.paidPeriods || []).filter(x => x !== key);
+            listStudent.paidMonths = listStudent.paidPeriods.length;
+            listStudent.unpaidMonths = Math.max(0,(state.config.periods||[]).length-listStudent.paidMonths);
+          }
+        }
+        if (idSiswa) {
+          const d = buildLocalStudentDetail(idSiswa);
+          if (d) {
+            state.detailCache[idSiswa] = d;
+            state.selectedStudentDetail = d;
+          }
+        }
+        const local=buildLocalSummaryData();
+        state.summary=local;
+        state.dashboard={user:state.user,scope:local.scope,stats:summaryStatsFromSummary(local.summary),config:state.config};
+        saveStaffSnapshot();
+        if (idSiswa && state.selectedStudentDetail) openModal(studentDetailModalHtml(state.selectedStudentDetail, false), true); else closeModal();
+      } catch (err) { toast(err.message,'error'); }
+    }
+
+    // ========================= REKAP =========================
+
+    function renderSummaryView() {
+      const html = `
+        ${periodControlsHtml()}
+        <div class="section-head"><div><h2>Rekap Pembayaran</h2><p>Ringkasan Pembayaran Komite sesuai periode dan kelas yang dipilih.</p></div><button class="btn btn-soft btn-sm" onclick="downloadSummaryCsv()">${icon('download')} Unduh CSV</button></div>
+        <section class="card card-pad"><div id="summaryBody">${summaryBodyHtml(state.summary)}</div></section>`;
+      renderStaffShell(html);
+    }
+
+    function summaryBodyHtml(data) {
+      const s = data?.summary || {};
+      const scope = data?.scope || {};
+      const many = (scope.periods?.length || 1) > 1;
+      return `<div class="summary-grid">
+        <div class="metric"><span>Siswa</span><strong>${s.totalStudents||0}</strong></div>
+        <div class="metric"><span>${many?'Pembayaran Lunas':'Lunas'}</span><strong style="color:var(--green)">${s.paid||0}${many?`/${s.totalSlots||0}`:''}</strong></div>
+        <div class="metric"><span>Belum</span><strong style="color:var(--orange)">${s.unpaid||0}</strong></div>
+        <div class="metric"><span>Terkumpul</span><strong style="font-size:19px">${money(s.totalAmount||0)}</strong></div>
+      </div>
+      <div class="section-head"><div><h2>Daftar Siswa</h2><p>${escapeHtml(scope.label || '')} • ${escapeHtml(data?.kelas || 'SEMUA')}${Number(s.future||0)>0?` • ${s.future} pembayaran belum jatuh tempo`:''}</p></div><span class="status-pill ok">${s.percentage||0}% lunas</span></div>
+      ${summaryStudentsHtml(s.students || [], false)}`;
+    }
+
+    function summaryStudentsHtml(list, preview=false) {
+      const rows = preview ? list.slice(0,6) : list;
+      if (!rows.length) return emptyHtml('Belum ada siswa','Belum ada data siswa yang tersedia.');
+      const many = (state.summary?.scope?.periods?.length || 1) > 1;
+      return `<div class="student-list" style="margin-top:0">${rows.map(x=>{
+        let cls = 'future', txt = 'Belum Jatuh Tempo', ic = 'calendar';
+        if (x.status === 'LUNAS') { cls='ok'; txt = many ? `${x.paidMonths}/${x.totalMonths} lunas` : 'Lunas'; ic='check'; }
+        else if (x.status === 'BELUM_BAYAR') { cls='wait'; txt = many ? `${x.paidMonths}/${x.totalMonths} lunas` : 'Belum'; ic='clock'; }
+        else if (x.status === 'SEBAGIAN') { cls='sync'; txt=`${x.paidMonths}/${x.totalMonths} lunas`; ic='clock'; }
+        return `<button class="student-row" onclick="openStudentDetail('${escapeHtml(x.idSiswa)}',false)"><span class="avatar">${escapeHtml(initials(x.nama).toUpperCase())}</span><span class="student-main"><strong>${escapeHtml(x.nama)}</strong><span class="student-meta">${escapeHtml(x.kelas)} • NISN ${escapeHtml(x.nisn)}</span></span><span class="status-pill ${cls}">${icon(ic)} ${escapeHtml(txt)}</span></button>`;
+      }).join('')}</div>`;
+    }
+
+    function downloadSummaryCsv() {
+      const d = state.summary;
+      if (!d?.summary?.students) { toast('Rekap belum tersedia.','warning'); return; }
+      const many = (d.scope?.periods?.length || 1) > 1;
+      const rows = many
+        ? [['NISN','NAMA_SISWA','KELAS','PERIODE','LUNAS','TOTAL_BULAN','STATUS']]
+        : [['NISN','NAMA_SISWA','KELAS','PERIODE','STATUS']];
+      d.summary.students.forEach(s => {
+        if (many) rows.push([s.nisn,s.nama,s.kelas,d.scope.label,s.paidMonths,s.totalMonths,s.status]);
+        else rows.push([s.nisn,s.nama,s.kelas,d.scope.label,s.status]);
+      });
+      const csv = '\ufeff' + rows.map(r => r.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Rekap_Komite_${String(d.scope.label||'Periode').replace(/\s+/g,'_')}_${(d.kelas||'SEMUA').replace(/\s+/g,'_')}.csv`;
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+      toast('Rekap CSV berhasil dibuat.','success');
+    }
+
+    // ========================= SISWA =========================
+
+    function renderStudentApp(detail) {
+      const d = detail || state.selectedStudentDetail;
+      const s = d.student;
+      document.getElementById('app').innerHTML = `${topbar()}<main class="page main">
+        <section class="hero student-profile-hero">
+          <div>
+            <div class="hero-kicker">Pembayaran Komite • ${escapeHtml(normalizeClassLabel(s.kelas))}</div>
+            <div class="hero-title">${escapeHtml(s.nama)}</div>
+            <div class="hero-sub">NISN ${escapeHtml(s.nisn)} • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div>
+            <div class="student-progress-inline">${d.paidMonths}/${d.totalMonths} Bulan Lunas</div>
+            <div class="amount">${money(d.paidAmount)}</div><div class="amount-label">Total telah dibayar</div>
+          </div>
+          <div class="paid-circle"><div><strong>${d.paidMonths}/${d.totalMonths}</strong><span>Bulan Lunas</span></div></div>
+        </section>
+        <div class="section-head"><div><h2>Status Pembayaran</h2><p>${escapeHtml(state.config.startMonth)} — ${escapeHtml(state.config.endMonth)}</p></div><span class="status-pill ok">${money(state.config.amount)} / bulan</span></div>
+        <div class="months-grid">${d.periods.map(p=>monthCardHtml(p,s.idSiswa,false)).join('')}</div>
+        <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>Transaksi Pembayaran Komite yang sudah lunas.</p></div></div>
+        <section class="card card-pad">${historyHtml(d.history,false)}</section>
+        ${treasurerAccountsHtml()}
+      </main>`;
+    }
+
+    function emptyHtml(title, sub) {
+      return `<div class="empty"><div class="empty-icon">${icon('search')}</div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(sub)}</span></div>`;
+    }
+
+    // ========================= RESTORE / NETWORK EVENTS =========================
+
+    async function restoreSession() {
+      if (!state.token || !state.user) return false;
+      if (state.user.role === 'SISWA') {
+        const snap = loadStudentSnapshot();
+        if (snap?.detail) {
+          state.config = Object.assign({}, state.config, snap.config || {});
+          state.config.classes = (state.config.classes || []).map(c=>Object.assign({},c,{nama:normalizeClassLabel(c.nama)}));
+          state.selectedStudentDetail = snap.detail;
+          state.detailCache[snap.detail.student.idSiswa] = snap.detail;
+          renderStudentApp(snap.detail);
+        }
+        if (!navigator.onLine) {
+          if (snap?.detail) return true;
+          return false;
+        }
+        try {
+          const d = await api('studentDetail', {token:state.token}, {silent:true, timeout:15000});
+          state.selectedStudentDetail = d;
+          state.detailCache[d.student.idSiswa] = d;
+          saveStudentSnapshot(d);
+          renderStudentApp(d);
+          return true;
+        } catch (err) {
+          if (isSessionError(err.message)) { clearSession(false); return false; }
+          if (snap?.detail) return true;
+          return false;
+        }
+      }
+
+      const snap = loadStaffSnapshot();
+      if (snap) {
+        state.config = Object.assign({}, state.config, snap.config || {});
+        state.students = snap.students || [];
+        state.payments = snap.payments || [];
+        state.summary = snap.summary || null;
+        state.dashboard = snap.dashboard || null;
+        state.scopeMode = snap.scopeMode || 'MONTH';
+        state.scopeMonthIndex = Number.isFinite(snap.scopeMonthIndex) ? snap.scopeMonthIndex : 0;
+        state.scopeClass = snap.scopeClass || '';
+        rememberCurrentSummary();
+        renderStaffShell();
+      }
+      if (!navigator.onLine) {
+        if (snap) {
+          return true;
+        }
+        return false;
+      }
+
+      try {
+        const data = await api('staffBootstrap', Object.assign({token:state.token}, scopePayload(false)), {silent:true, timeout:19000});
+        applyBootstrap(data, true);
+        renderCurrentStaffView();
+        if (state.user.role === 'BENDAHARA') setTimeout(() => syncPaymentQueue(), 350);
+        return true;
+      } catch (err) {
+        if (isSessionError(err.message)) { clearSession(false); return false; }
+        if (snap) return true;
+        return false;
+      }
+    }
+
+    async function boot() {
+      if (!state.token || !state.user) {
+        renderLogin();
+        loadPublicConfig().then(() => { if (!state.user) renderLogin(); });
+        updateSyncIndicator();
+        return;
+      }
+      const restored = await restoreSession();
+      if (!restored) renderLogin();
+      updateSyncIndicator();
+      loadPublicConfig().catch(()=>{});
+    }
+
+    window.addEventListener('online', () => {
+      updateSyncIndicator();
+      if (state.user?.role === 'BENDAHARA') syncPaymentQueue();
+    });
+
+    window.addEventListener('offline', () => {
+      updateSyncIndicator();
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && navigator.onLine && state.user?.role === 'BENDAHARA' && queueCount()) syncPaymentQueue();
+    });
+
+    boot();
+
+  </script>
+</body>
+</html>

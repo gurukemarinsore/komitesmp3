@@ -379,6 +379,80 @@
       .hero { padding: 20px 24px; }
       .hero-stats { margin-top: 15px; }
     }
+
+    /* ===== Revisi 1.01: periode, refresh, sinkronisasi, toast gesture ===== */
+    .status-pill.sync { background: #edf6ff; color: var(--blue); }
+
+    .refresh-btn.spinning svg { animation: spin .75s linear infinite; }
+
+    .sync-chip {
+      min-height: 38px; border: 1px solid var(--line); border-radius: 999px; padding: 0 11px;
+      display: inline-flex; align-items: center; gap: 7px; background: white; color: var(--muted);
+      font-size: 11px; font-weight: 650; transition: .18s ease;
+    }
+    .sync-chip svg { width: 16px; height: 16px; }
+    .sync-chip.ok { color: var(--green); background: var(--green-soft); border-color: #d4efe4; }
+    .sync-chip.pending { color: var(--orange); background: var(--orange-soft); border-color: #ffe2ba; }
+    .sync-chip.offline { color: var(--red); background: var(--red-soft); border-color: #ffd9df; }
+
+    .period-panel {
+      margin-top: 18px; padding: 12px; border: 1px solid var(--line); border-radius: 20px;
+      background: rgba(255,255,255,.97); box-shadow: var(--shadow-soft); transition: opacity .18s ease;
+    }
+    .period-panel.busy { opacity: .62; pointer-events: none; }
+    .period-segment {
+      display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 5px; padding: 5px;
+      background: #eef3f8; border-radius: 15px;
+    }
+    .period-segment button {
+      min-height: 39px; border: 0; border-radius: 11px; background: transparent; color: var(--muted);
+      font-size: 12px; font-weight: 650; transition: .16s ease;
+    }
+    .period-segment button.active { color: var(--blue); background: white; box-shadow: 0 4px 14px rgba(25,65,110,.08); }
+    .period-row { display: grid; grid-template-columns: minmax(0,1fr) 190px; gap: 10px; align-items: center; margin-top: 10px; }
+    .period-nav { min-height: 46px; display: grid; grid-template-columns: 42px minmax(0,1fr) 42px; align-items: center; border: 1px solid var(--line); border-radius: 14px; background: #fbfdff; }
+    .period-arrow { width: 42px; height: 42px; border: 0; background: transparent; display: grid; place-items: center; color: var(--blue); border-radius: 12px; }
+    .period-arrow:disabled { color: #b9c5d0; opacity: .55; }
+    .period-arrow svg { width: 18px; height: 18px; }
+    .period-label, .period-static { text-align: center; font-weight: 680; letter-spacing: -.01em; }
+    .period-static { min-height: 46px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 14px; background: #fbfdff; }
+    .period-class { min-height: 46px; }
+    .period-class-readonly { min-height: 46px; display: grid; place-items: center; color: var(--muted); border: 1px solid var(--line); border-radius: 14px; background: #fbfdff; font-size: 13px; }
+
+    .sync-notice {
+      display: flex; align-items: center; gap: 10px; padding: 11px 13px; margin-bottom: 12px;
+      border: 1px solid #d8ebff; border-radius: 14px; background: #f1f8ff; color: var(--blue); font-size: 12px;
+    }
+    .sync-notice svg { width: 18px; height: 18px; flex: 0 0 auto; }
+    .sync-notice span { color: var(--muted); }
+    .sync-notice strong { color: var(--blue); }
+
+    .toast {
+      position: relative; grid-template-columns: 34px minmax(0,1fr); padding: 12px 42px 12px 11px;
+      touch-action: none; user-select: none; will-change: transform, opacity;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+    .toast.dragging { transition: none !important; cursor: grabbing; }
+    .toast-copy { min-width: 0; }
+    .toast-close { position: absolute; top: 6px; right: 6px; }
+
+    @media (max-width: 860px) {
+      .sync-chip span { display: none; }
+      .sync-chip { width: 42px; height: 42px; min-height: 42px; padding: 0; justify-content: center; border-radius: 14px; }
+      .period-row { grid-template-columns: minmax(0,1fr) 150px; }
+    }
+
+    @media (max-width: 600px) {
+      .period-panel { margin-top: 12px; padding: 9px; border-radius: 17px; }
+      .period-segment { grid-template-columns: repeat(2,1fr); }
+      .period-segment button { min-height: 37px; font-size: 11px; }
+      .period-row { grid-template-columns: 1fr; gap: 7px; }
+      .period-class, .period-class-readonly { min-height: 43px; }
+      .top-actions { gap: 5px; }
+      .icon-btn, .sync-chip { width: 39px; height: 39px; min-height: 39px; border-radius: 12px; }
+      .brand-title { max-width: 170px; }
+    }
+
   </style>
 </head>
 <body>
@@ -394,6 +468,14 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'PASTE_URL_APPS_SCRIPT_DI_SINI';
+    const APP_REVISION = 'Revisi 1.01';
+    const STORAGE = {
+      TOKEN: 'komite_token',
+      USER: 'komite_user',
+      QUEUE: 'komite_payment_queue_v1',
+      STAFF_SNAPSHOT: 'komite_staff_snapshot_v1',
+      STUDENT_SNAPSHOT: 'komite_student_snapshot_v1'
+    };
 
     const DEFAULT_CONFIG = {
       appName: 'Komite SMP Negeri 3 Jayapura',
@@ -408,19 +490,28 @@
         ['JANUARI',2027],['FEBRUARI',2027],['MARET',2027],['APRIL',2027],['MEI',2027],['JUNI',2027]
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'VII '+x})),
-      currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'}
+      currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
+      revision: '1.01'
     };
 
     const state = {
       config: DEFAULT_CONFIG,
-      token: localStorage.getItem('komite_token') || '',
-      user: safeJson(localStorage.getItem('komite_user')),
+      token: localStorage.getItem(STORAGE.TOKEN) || '',
+      user: safeJson(localStorage.getItem(STORAGE.USER)),
       loginRole: 'SISWA',
       currentView: 'home',
       students: [],
       summary: null,
       dashboard: null,
-      selectedStudentDetail: null
+      selectedStudentDetail: null,
+      detailCache: {},
+      summaryCache: {},
+      scopeMode: 'MONTH',
+      scopeMonthIndex: 0,
+      scopeClass: '',
+      syncing: false,
+      refreshBusy: false,
+      silentRefreshTimer: null
     };
 
     const icons = {
@@ -432,6 +523,8 @@
       search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
       logout: '<path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>',
       chevron: '<path d="m9 18 6-6-6-6"/>',
+      left: '<path d="m15 18-6-6 6-6"/>',
+      right: '<path d="m9 18 6-6-6-6"/>',
       check: '<path d="m5 12 4 4L19 6"/>',
       clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
       info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
@@ -443,9 +536,11 @@
       user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
       trash: '<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="m7 7 1 14h8l1-14"/><path d="M10 11v6M14 11v6"/>',
       printer: '<path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/>',
-      menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
       calendar: '<path d="M6 3v3M18 3v3"/><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/>',
-      arrow: '<path d="M5 12h14"/><path d="m14 7 5 5-5 5"/>'
+      arrow: '<path d="M5 12h14"/><path d="m14 7 5 5-5 5"/>',
+      refresh: '<path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M6.1 9a7 7 0 0 1 11.5-2.6L20 11"/><path d="m4 13 2.4 4.6A7 7 0 0 0 18 15"/>',
+      cloud: '<path d="M17.5 19H7a5 5 0 1 1 1.2-9.85A6.5 6.5 0 0 1 20 12.5 3.5 3.5 0 0 1 17.5 19Z"/><path d="m9.5 14 1.7 1.7 3.6-4"/>',
+      offline: '<path d="M17.5 19H7a5 5 0 0 1-1.6-9.74"/><path d="M8.2 6.7A6.5 6.5 0 0 1 20 12.5c0 .3 0 .6-.1.9"/><path d="M3 3l18 18"/>'
     };
 
     function icon(name, cls='') {
@@ -478,8 +573,20 @@
       return /^https:\/\/.+\/exec(?:\?.*)?$/.test(API_URL) && !API_URL.includes('PASTE_URL');
     }
 
+    function isSessionError(message) {
+      return /sesi (tidak valid|telah berakhir)/i.test(String(message || ''));
+    }
+
+    function isNetworkLikeError(err) {
+      const m = String(err?.message || err || '');
+      return !navigator.onLine || /fetch|network|failed|abort|timeout|terhubung/i.test(m);
+    }
+
     async function api(action, data = {}, opts = {}) {
       if (!isApiConfigured()) throw new Error('URL Apps Script belum dipasang di index.html.');
+      const timeout = Number(opts.timeout || 18000);
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
       if (!opts.silent) loading(true, opts.loadingText || 'Memuat data…');
       try {
         const payload = Object.assign({ action }, data);
@@ -487,7 +594,8 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
           body: new URLSearchParams({ payload: JSON.stringify(payload) }),
-          redirect: 'follow'
+          redirect: 'follow',
+          signal: controller.signal
         });
         const text = await res.text();
         let json;
@@ -496,25 +604,28 @@
         if (!json.ok) throw new Error(json.message || 'Permintaan gagal.');
         return json.data;
       } catch (err) {
-        const msg = err?.message || 'Tidak dapat terhubung ke backend.';
-        if (/sesi/i.test(msg)) {
+        const mapped = err?.name === 'AbortError' ? new Error('Koneksi ke server terlalu lama.') : err;
+        if (isSessionError(mapped?.message)) {
           clearSession(false);
           renderLogin();
         }
-        throw err;
+        throw mapped;
       } finally {
+        clearTimeout(timer);
         if (!opts.silent) loading(false);
       }
     }
 
     function loading(show, text='Memuat data…') {
-      document.getElementById('loadingText').textContent = text;
-      document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
+      const label = document.getElementById('loadingText');
+      const overlay = document.getElementById('loadingOverlay');
+      if (label) label.textContent = text;
+      if (overlay) overlay.classList.toggle('hidden', !show);
     }
 
-    function toast(message, type='info', title='') {
+    function toast(message, type='info', title='', duration) {
       const container = document.getElementById('toastContainer');
-      const id = 't' + Date.now() + Math.random().toString(36).slice(2,6);
+      if (!container) return;
       const map = {
         success: {icon:'check', title:'Berhasil'},
         error: {icon:'alert', title:'Terjadi kesalahan'},
@@ -524,11 +635,66 @@
       const m = map[type] || map.info;
       const el = document.createElement('div');
       el.className = `toast ${type}`;
-      el.id = id;
-      el.innerHTML = `<div class="toast-icon">${icon(m.icon)}</div><div><strong>${escapeHtml(title || m.title)}</strong><p>${escapeHtml(message)}</p></div><button class="toast-close" aria-label="Tutup">${icon('x')}</button>`;
-      el.querySelector('button').onclick = () => el.remove();
+      el.innerHTML = `<div class="toast-icon">${icon(m.icon)}</div><div class="toast-copy"><strong>${escapeHtml(title || m.title)}</strong><p>${escapeHtml(message)}</p></div><button class="toast-close" aria-label="Tutup">${icon('x')}</button>`;
       container.appendChild(el);
-      setTimeout(() => { if (el.isConnected) el.remove(); }, type === 'error' ? 5200 : 3600);
+
+      let timer = setTimeout(() => dismissToast(el, 'fade'), Number(duration || (type === 'error' ? 5600 : type === 'warning' ? 4800 : 3900)));
+      el._toastTimer = timer;
+      el.querySelector('.toast-close').addEventListener('click', e => {
+        e.stopPropagation();
+        dismissToast(el, 'right');
+      });
+      attachToastGesture(el);
+    }
+
+    function attachToastGesture(el) {
+      let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false;
+      el.addEventListener('pointerdown', e => {
+        if (e.target.closest('.toast-close')) return;
+        dragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        dx = 0; dy = 0;
+        el.classList.add('dragging');
+        try { el.setPointerCapture(e.pointerId); } catch (_) {}
+        if (el._toastTimer) clearTimeout(el._toastTimer);
+      });
+      el.addEventListener('pointermove', e => {
+        if (!dragging) return;
+        dx = e.clientX - startX;
+        dy = Math.min(0, e.clientY - startY);
+        const opacity = Math.max(.28, 1 - Math.max(Math.abs(dx) / 210, Math.abs(dy) / 150));
+        el.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+        el.style.opacity = String(opacity);
+      });
+      const finish = e => {
+        if (!dragging) return;
+        dragging = false;
+        el.classList.remove('dragging');
+        try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+        if (Math.abs(dx) >= 68) dismissToast(el, dx < 0 ? 'left' : 'right');
+        else if (dy <= -48) dismissToast(el, 'up');
+        else {
+          el.style.transform = '';
+          el.style.opacity = '';
+          el._toastTimer = setTimeout(() => dismissToast(el, 'fade'), 2400);
+        }
+      };
+      el.addEventListener('pointerup', finish);
+      el.addEventListener('pointercancel', finish);
+    }
+
+    function dismissToast(el, direction='fade') {
+      if (!el || !el.isConnected || el.dataset.closing === '1') return;
+      el.dataset.closing = '1';
+      if (el._toastTimer) clearTimeout(el._toastTimer);
+      el.classList.remove('dragging');
+      el.style.transition = 'transform .22s ease, opacity .22s ease';
+      if (direction === 'left') el.style.transform = 'translate3d(-120%,0,0)';
+      else if (direction === 'right') el.style.transform = 'translate3d(120%,0,0)';
+      else el.style.transform = 'translate3d(0,-28px,0)';
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 230);
     }
 
     function openModal(html, large=false) {
@@ -545,8 +711,8 @@
     function setSession(token, user) {
       state.token = token;
       state.user = user;
-      localStorage.setItem('komite_token', token);
-      localStorage.setItem('komite_user', JSON.stringify(user));
+      localStorage.setItem(STORAGE.TOKEN, token);
+      localStorage.setItem(STORAGE.USER, JSON.stringify(user));
     }
 
     function clearSession(showToast=true) {
@@ -555,8 +721,11 @@
       state.students = [];
       state.summary = null;
       state.dashboard = null;
-      localStorage.removeItem('komite_token');
-      localStorage.removeItem('komite_user');
+      state.selectedStudentDetail = null;
+      state.detailCache = {};
+      state.summaryCache = {};
+      localStorage.removeItem(STORAGE.TOKEN);
+      localStorage.removeItem(STORAGE.USER);
       if (showToast) toast('Anda telah keluar dari aplikasi.', 'info');
     }
 
@@ -566,13 +735,222 @@
       renderLogin();
     }
 
-    async function loadPublicConfig() {
-      if (!isApiConfigured()) return;
+    function saveStaffSnapshot() {
+      if (!state.user || !['BENDAHARA','WALI'].includes(state.user.role)) return;
       try {
-        const data = await api('publicConfig', {}, {silent:true});
+        localStorage.setItem(STORAGE.STAFF_SNAPSHOT, JSON.stringify({
+          userKey: state.user.idUser || state.user.username,
+          savedAt: Date.now(),
+          config: state.config,
+          students: state.students,
+          summary: state.summary,
+          dashboard: state.dashboard,
+          scopeMode: state.scopeMode,
+          scopeMonthIndex: state.scopeMonthIndex,
+          scopeClass: state.scopeClass
+        }));
+      } catch (_) {}
+    }
+
+    function loadStaffSnapshot() {
+      const snap = safeJson(localStorage.getItem(STORAGE.STAFF_SNAPSHOT));
+      if (!snap || !state.user) return null;
+      const key = state.user.idUser || state.user.username;
+      return snap.userKey === key ? snap : null;
+    }
+
+    function saveStudentSnapshot(detail) {
+      if (!state.user || state.user.role !== 'SISWA') return;
+      try { localStorage.setItem(STORAGE.STUDENT_SNAPSHOT, JSON.stringify({nisn:state.user.nisn, savedAt:Date.now(), config:state.config, detail})); } catch (_) {}
+    }
+
+    function loadStudentSnapshot() {
+      const snap = safeJson(localStorage.getItem(STORAGE.STUDENT_SNAPSHOT));
+      return snap && state.user?.nisn === snap.nisn ? snap : null;
+    }
+
+    async function loadPublicConfig() {
+      if (!isApiConfigured() || !navigator.onLine) return;
+      try {
+        const data = await api('publicConfig', {}, {silent:true, timeout:10000});
         state.config = Object.assign({}, DEFAULT_CONFIG, data || {});
       } catch (_) {}
     }
+
+    // ========================= ANTREAN PEMBAYARAN OFFLINE =========================
+
+    function getPaymentQueue() {
+      const q = safeJson(localStorage.getItem(STORAGE.QUEUE));
+      return Array.isArray(q) ? q : [];
+    }
+
+    function savePaymentQueue(queue) {
+      localStorage.setItem(STORAGE.QUEUE, JSON.stringify(queue));
+      updateSyncIndicator();
+    }
+
+    function queueCount() { return getPaymentQueue().length; }
+
+    function pendingPayment(idSiswa, bulan, tahun) {
+      return getPaymentQueue().find(x => x.idSiswa === idSiswa && x.bulan === bulan && Number(x.tahun) === Number(tahun)) || null;
+    }
+
+    function makeClientTransactionId() {
+      const random = (globalThis.crypto?.getRandomValues ? Array.from(crypto.getRandomValues(new Uint32Array(2))).map(n=>n.toString(36)).join('') : Math.random().toString(36).slice(2,14));
+      return `TRX-LOCAL-${Date.now().toString(36)}-${random}`.toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,64);
+    }
+
+    function enqueuePayment(idSiswa, bulan, tahun, student) {
+      const queue = getPaymentQueue();
+      const existing = queue.find(x => x.idSiswa === idSiswa && x.bulan === bulan && Number(x.tahun) === Number(tahun));
+      if (existing) return {item:existing, duplicate:true};
+      const item = {
+        clientId: makeClientTransactionId(),
+        idSiswa,
+        bulan,
+        tahun:Number(tahun),
+        student: {nama:student?.nama || '', nisn:student?.nisn || '', kelas:student?.kelas || ''},
+        createdAt: Date.now(),
+        attempts: 0,
+        lastError: ''
+      };
+      queue.push(item);
+      savePaymentQueue(queue);
+      return {item, duplicate:false};
+    }
+
+    function removeQueueItem(clientId) {
+      savePaymentQueue(getPaymentQueue().filter(x => x.clientId !== clientId));
+    }
+
+    function updateQueueFailure(clientId, message) {
+      const queue = getPaymentQueue();
+      const item = queue.find(x => x.clientId === clientId);
+      if (item) {
+        item.attempts = Number(item.attempts || 0) + 1;
+        item.lastError = String(message || '');
+        item.lastAttemptAt = Date.now();
+        savePaymentQueue(queue);
+      }
+    }
+
+    function syncChipHtml() {
+      if (state.user?.role !== 'BENDAHARA') return '';
+      const count = queueCount();
+      const offline = !navigator.onLine;
+      const cls = offline ? 'offline' : count ? 'pending' : 'ok';
+      const ic = offline ? 'offline' : count ? 'clock' : 'cloud';
+      const text = offline ? (count ? `${count} tertunda` : 'Offline') : (count ? `${count} tertunda` : 'Sinkron');
+      return `<button id="syncChip" class="sync-chip ${cls}" onclick="syncPaymentQueue({manual:true})" title="Status sinkronisasi">${icon(ic)}<span>${escapeHtml(text)}</span></button>`;
+    }
+
+    function updateSyncIndicator() {
+      const old = document.getElementById('syncChip');
+      if (old && state.user?.role === 'BENDAHARA') {
+        const wrap = document.createElement('div');
+        wrap.innerHTML = syncChipHtml();
+        old.replaceWith(wrap.firstElementChild);
+      }
+    }
+
+    async function syncPaymentQueue({manual=false}={}) {
+      if (state.syncing || state.user?.role !== 'BENDAHARA' || !state.token) return 0;
+      const queue = getPaymentQueue();
+      if (!queue.length) {
+        if (manual) toast('Tidak ada pembayaran yang menunggu sinkronisasi.', 'info', 'Semua sudah sinkron');
+        updateSyncIndicator();
+        return 0;
+      }
+      if (!navigator.onLine) {
+        if (manual) toast(`${queue.length} pembayaran tetap aman di perangkat dan akan dikirim saat internet tersedia.`, 'warning', 'Masih offline');
+        updateSyncIndicator();
+        return 0;
+      }
+
+      state.syncing = true;
+      updateSyncIndicator();
+      let synced = 0;
+      let hadNetworkFailure = false;
+      try {
+        for (const item of getPaymentQueue()) {
+          try {
+            const tx = await api('addPayment', {
+              token: state.token,
+              idSiswa: item.idSiswa,
+              bulan: item.bulan,
+              tahun: item.tahun,
+              clientTransactionId: item.clientId
+            }, {silent:true, timeout:10000});
+
+            removeQueueItem(item.clientId);
+            synced++;
+            applyServerPaymentLocally(tx);
+            toast(`Pembayaran ${tx.student.nama} • ${titleCase(tx.bulan)} ${tx.tahun} sudah tersimpan di server.`, 'success', 'Tersimpan di server', 4300);
+          } catch (err) {
+            const message = err?.message || 'Gagal mengirim pembayaran.';
+            if (/sudah tercatat lunas/i.test(message)) {
+              removeQueueItem(item.clientId);
+              synced++;
+              toast(`${item.student.nama || 'Siswa'} • ${titleCase(item.bulan)} ${item.tahun} sudah tercatat di server.`, 'info', 'Sudah tercatat');
+              continue;
+            }
+            updateQueueFailure(item.clientId, message);
+            if (isSessionError(message)) {
+              toast(message, 'error');
+              break;
+            }
+            if (isNetworkLikeError(err)) hadNetworkFailure = true;
+            if (manual || Number(item.attempts || 0) === 0) {
+              toast('Pembayaran belum sampai ke server. Data tetap tersimpan di perangkat dan akan dicoba lagi otomatis.', 'warning', 'Menunggu sinkronisasi', 5200);
+            }
+            break;
+          }
+        }
+      } finally {
+        state.syncing = false;
+        updateSyncIndicator();
+      }
+
+      if (synced > 0 && queueCount() === 0) scheduleSilentStaffRefresh();
+      if (manual && hadNetworkFailure) toast('Koneksi belum stabil. Pembayaran yang belum terkirim tetap tersimpan di perangkat.', 'warning', 'Sinkronisasi belum selesai');
+      return synced;
+    }
+
+    function applyServerPaymentLocally(tx) {
+      if (!tx?.student?.idSiswa) return;
+      delete state.detailCache[tx.student.idSiswa];
+      state.summaryCache = {};
+      if (state.selectedStudentDetail?.student?.idSiswa === tx.student.idSiswa) {
+        const d = state.selectedStudentDetail;
+        const p = d.periods.find(x => x.bulan === tx.bulan && Number(x.tahun) === Number(tx.tahun));
+        if (p && p.status !== 'LUNAS') {
+          p.status = 'LUNAS';
+          p.nominal = tx.nominal;
+          p.idTransaksi = tx.idTransaksi;
+          if (!d.history.some(h => h.idTransaksi === tx.idTransaksi)) d.history.unshift({
+            idTransaksi:tx.idTransaksi, bulan:tx.bulan, tahun:tx.tahun, nominal:tx.nominal,
+            tanggalBayar:tx.tanggalBayar, waktuBayar:tx.waktuBayar, status:'LUNAS'
+          });
+          d.paidMonths = d.periods.filter(x => x.status === 'LUNAS').length;
+          d.paidAmount = d.history.reduce((sum,h)=>sum+Number(h.nominal||0),0);
+        }
+      }
+    }
+
+    function scheduleSilentStaffRefresh() {
+      if (state.user?.role !== 'BENDAHARA') return;
+      clearTimeout(state.silentRefreshTimer);
+      state.silentRefreshTimer = setTimeout(async () => {
+        if (!navigator.onLine || state.syncing) return;
+        try {
+          const data = await api('staffBootstrap', Object.assign({token:state.token}, scopePayload(false)), {silent:true, timeout:15000});
+          applyBootstrap(data, true);
+          renderCurrentStaffView();
+        } catch (_) {}
+      }, 650);
+    }
+
+    // ========================= LOGIN =========================
 
     function renderLogin() {
       const app = document.getElementById('app');
@@ -625,14 +1003,12 @@
                   <button class="btn btn-primary login-btn" type="submit">Masuk ${icon('arrow')}</button>
                 </form>
               `}
-              <div class="login-foot">${escapeHtml(state.config.appName)}<br>Data pembayaran dikelola melalui Google Spreadsheet.</div>
+              <div class="login-foot">${escapeHtml(state.config.appName)} • ${APP_REVISION}<br>Data pembayaran dikelola melalui Google Spreadsheet.</div>
             </div>
           </section>
         </div>`;
 
-      if (!isApiConfigured()) {
-        setTimeout(() => toast('Pasang URL Web App Apps Script pada konstanta API_URL sebelum digunakan.', 'warning', 'Backend belum dihubungkan'), 250);
-      }
+      if (!isApiConfigured()) setTimeout(() => toast('Pasang URL Web App Apps Script pada konstanta API_URL sebelum digunakan.', 'warning', 'Backend belum dihubungkan'), 250);
     }
 
     function switchLoginRole(role) {
@@ -649,13 +1025,14 @@
           username: document.getElementById('username').value.trim(),
           password: document.getElementById('password').value,
           expectedRole
-        }, {loadingText:'Memeriksa akun…'});
+        }, {loadingText:'Memeriksa akun dan menyiapkan data…', timeout:22000});
         if (data.user.role !== expectedRole) throw new Error(`Akun ini adalah akun ${data.user.role === 'WALI' ? 'Wali Kelas' : 'Bendahara'}. Pilih jenis login yang sesuai.`);
-        state.config = Object.assign({}, state.config, data.config || {});
         setSession(data.token, data.user);
-        toast(`Selamat datang, ${data.user.nama}.`, 'success', 'Login berhasil');
+        applyBootstrap(data.bootstrap, false);
         state.currentView = 'home';
-        await renderStaffApp();
+        renderStaffShell();
+        toast(`Selamat datang, ${data.user.nama}.`, 'success', 'Login berhasil');
+        if (data.user.role === 'BENDAHARA') setTimeout(() => syncPaymentQueue(), 300);
       } catch (err) {
         toast(err.message || 'Login gagal.', 'error');
       }
@@ -668,6 +1045,8 @@
         state.config = Object.assign({}, state.config, data.config || {});
         setSession(data.token, data.user);
         state.selectedStudentDetail = data.detail;
+        state.detailCache[data.detail.student.idSiswa] = data.detail;
+        saveStudentSnapshot(data.detail);
         toast(`Halo, ${data.user.nama}.`, 'success', 'Data ditemukan');
         renderStudentApp(data.detail);
       } catch (err) {
@@ -675,14 +1054,18 @@
       }
     }
 
+    // ========================= SHELL / REFRESH =========================
+
     function topbar() {
       return `<div class="topbar-wrap"><div class="page topbar">
         <div class="brand">
           <div class="brand-mark">${icon('shield')}</div>
-          <div class="brand-text"><div class="brand-title">${escapeHtml(state.config.appName)}</div><div class="brand-sub">${escapeHtml(state.config.schoolYear)}</div></div>
+          <div class="brand-text"><div class="brand-title">${escapeHtml(state.config.appName)}</div><div class="brand-sub">${escapeHtml(state.config.schoolYear)} • ${APP_REVISION}</div></div>
         </div>
         <div class="top-actions">
+          ${syncChipHtml()}
           <div class="user-pill">${icon('user')}<div><strong>${escapeHtml(state.user?.nama || '')}</strong>${state.user?.kelas ? ' • '+escapeHtml(state.user.kelas) : ''}</div></div>
+          <button id="refreshBtn" class="icon-btn refresh-btn ${state.refreshBusy?'spinning':''}" onclick="refreshCurrentData()" title="Perbarui data" aria-label="Perbarui data">${icon('refresh')}</button>
           <button class="icon-btn" onclick="logout()" title="Keluar" aria-label="Keluar">${icon('logout')}</button>
         </div>
       </div></div>`;
@@ -704,37 +1087,187 @@
       return `<nav class="bottom-nav">${items.map(([view,ic,label]) => `<button class="${state.currentView===view?'active':''}" onclick="navigate('${view}')">${icon(ic)}<span>${label}</span></button>`).join('')}</nav>`;
     }
 
-    async function renderStaffApp() {
-      try {
-        const dashboard = await api('dashboard', {token:state.token}, {loadingText:'Menyiapkan dashboard…'});
-        state.dashboard = dashboard;
-        state.config = Object.assign({}, state.config, dashboard.config || {});
-        renderStaffShell();
-        if (state.user?.role === 'WALI') loadWaliPreview();
-      } catch (err) {
-        toast(err.message || 'Dashboard gagal dimuat.', 'error');
-      }
-    }
-
     function renderStaffShell(contentHtml='') {
       const app = document.getElementById('app');
       app.innerHTML = `${topbar()}${desktopNav()}<main class="page main" id="mainContent">${contentHtml || renderHomeContent()}</main>${bottomNav()}`;
+      updateSyncIndicator();
     }
+
+    function renderCurrentStaffView() {
+      if (!state.user || state.user.role === 'SISWA') return;
+      if (state.currentView === 'students') renderStudentsView();
+      else if (state.currentView === 'summary' && state.user.role === 'BENDAHARA') renderSummaryView();
+      else renderStaffShell();
+    }
+
+    async function refreshCurrentData(silent=false) {
+      if (state.refreshBusy || !state.user) return;
+      state.refreshBusy = true;
+      const btn = document.getElementById('refreshBtn');
+      btn?.classList.add('spinning');
+      try {
+        if (state.user.role === 'BENDAHARA') await syncPaymentQueue({manual:false});
+        if (!navigator.onLine) throw new Error('Tidak ada koneksi internet. Data terakhir tetap ditampilkan.');
+
+        if (state.user.role === 'SISWA') {
+          const d = await api('studentDetail', {token:state.token, force:true}, {silent:true, timeout:16000});
+          state.selectedStudentDetail = d;
+          state.detailCache[d.student.idSiswa] = d;
+          saveStudentSnapshot(d);
+          renderStudentApp(d);
+        } else {
+          const data = await api('staffBootstrap', Object.assign({token:state.token, force:true}, scopePayload(false)), {silent:true, timeout:20000});
+          applyBootstrap(data, true);
+          renderCurrentStaffView();
+        }
+        if (!silent) toast('Data terbaru berhasil diambil dari server.', 'success', 'Data diperbarui');
+      } catch (err) {
+        if (!silent) toast(err.message || 'Data belum dapat diperbarui.', 'warning', 'Refresh gagal');
+      } finally {
+        state.refreshBusy = false;
+        document.getElementById('refreshBtn')?.classList.remove('spinning');
+        updateSyncIndicator();
+      }
+    }
+
+    // ========================= PERIODE / REKAP =========================
+
+    function currentScopePeriod() {
+      const periods = state.config.periods || [];
+      return periods[state.scopeMonthIndex] || state.config.currentPeriod || periods[0];
+    }
+
+    function setDefaultScopeFromConfig() {
+      const p = state.config.currentPeriod || state.config.periods?.[0];
+      const index = state.config.periods.findIndex(x => x.bulan === p?.bulan && Number(x.tahun) === Number(p?.tahun));
+      state.scopeMode = 'MONTH';
+      state.scopeMonthIndex = index >= 0 ? index : 0;
+      state.scopeClass = '';
+    }
+
+    function scopePayload(force=false) {
+      const p = currentScopePeriod();
+      return {
+        mode: state.scopeMode,
+        bulan: p?.bulan || '',
+        tahun: p?.tahun || '',
+        kelas: state.user?.role === 'BENDAHARA' ? state.scopeClass : '',
+        force: !!force
+      };
+    }
+
+    function summaryCacheKey() {
+      const p = currentScopePeriod();
+      return [state.scopeMode, p?.bulan || '', p?.tahun || '', state.user?.role === 'BENDAHARA' ? state.scopeClass : state.user?.kelas || ''].join('|');
+    }
+
+    function rememberCurrentSummary() {
+      if (state.summary) state.summaryCache[summaryCacheKey()] = state.summary;
+    }
+
+    function applyBootstrap(data, preserveScope=true) {
+      if (!data) return;
+      state.config = Object.assign({}, DEFAULT_CONFIG, data.config || state.config || {});
+      state.students = Array.isArray(data.students) ? data.students : state.students;
+      state.dashboard = data.dashboard || state.dashboard;
+      state.summary = data.summary || state.summary;
+      state.detailCache = preserveScope ? state.detailCache : {};
+      state.summaryCache = preserveScope ? state.summaryCache : {};
+
+      const scope = data.summary?.scope || data.dashboard?.scope;
+      if (scope) {
+        state.scopeMode = scope.mode || 'MONTH';
+        const anchor = scope.anchor || scope.periods?.[0];
+        const idx = state.config.periods.findIndex(p => p.bulan === anchor?.bulan && Number(p.tahun) === Number(anchor?.tahun));
+        if (idx >= 0) state.scopeMonthIndex = idx;
+      } else if (!preserveScope) setDefaultScopeFromConfig();
+      if (state.user?.role === 'BENDAHARA') state.scopeClass = data.summary?.kelas === 'SEMUA' ? '' : (data.summary?.kelas || state.scopeClass || '');
+      rememberCurrentSummary();
+      saveStaffSnapshot();
+    }
+
+    function periodControlsHtml() {
+      const p = currentScopePeriod();
+      const isMonth = state.scopeMode === 'MONTH';
+      const isB = state.user?.role === 'BENDAHARA';
+      const modes = [['MONTH','Bulan'],['SEM1','Semester 1'],['SEM2','Semester 2'],['YEAR','Tahun Ajaran']];
+      const scopeLabel = state.summary?.scope?.label || state.dashboard?.scope?.label || (isMonth ? p?.label : state.scopeMode);
+      return `<section class="period-panel" id="periodPanel">
+        <div class="period-segment">${modes.map(([mode,label])=>`<button class="${state.scopeMode===mode?'active':''}" onclick="changeScopeMode('${mode}')">${label}</button>`).join('')}</div>
+        <div class="period-row">
+          ${isMonth ? `<div class="period-nav"><button class="period-arrow" onclick="moveScopeMonth(-1)" ${state.scopeMonthIndex<=0?'disabled':''}>${icon('left')}</button><div class="period-label">${escapeHtml(p?.label || '')}</div><button class="period-arrow" onclick="moveScopeMonth(1)" ${state.scopeMonthIndex>=state.config.periods.length-1?'disabled':''}>${icon('right')}</button></div>` : `<div class="period-static">${escapeHtml(scopeLabel)}</div>`}
+          ${isB ? `<select class="select period-class" onchange="changeScopeClass(this.value)"><option value="" ${!state.scopeClass?'selected':''}>Semua Kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}" ${state.scopeClass===c.nama?'selected':''}>${escapeHtml(c.nama)}</option>`).join('')}</select>` : `<div class="period-class-readonly">${escapeHtml(state.user?.kelas || '')}</div>`}
+        </div>
+      </section>`;
+    }
+
+    async function changeScopeMode(mode) {
+      if (!['MONTH','SEM1','SEM2','YEAR'].includes(mode) || mode === state.scopeMode) return;
+      state.scopeMode = mode;
+      await loadScopeSummary();
+    }
+
+    async function moveScopeMonth(delta) {
+      if (state.scopeMode !== 'MONTH') return;
+      const next = Math.max(0, Math.min(state.config.periods.length - 1, state.scopeMonthIndex + Number(delta || 0)));
+      if (next === state.scopeMonthIndex) return;
+      state.scopeMonthIndex = next;
+      await loadScopeSummary();
+    }
+
+    async function changeScopeClass(value) {
+      if (state.user?.role !== 'BENDAHARA') return;
+      state.scopeClass = value || '';
+      await loadScopeSummary();
+    }
+
+    async function loadScopeSummary(force=false) {
+      const key = summaryCacheKey();
+      if (!force && state.summaryCache[key]) {
+        state.summary = state.summaryCache[key];
+        state.dashboard = {user:state.user, scope:state.summary.scope, stats:summaryStatsFromSummary(state.summary.summary), config:state.config};
+        renderCurrentStaffView();
+        return;
+      }
+
+      document.getElementById('periodPanel')?.classList.add('busy');
+      try {
+        const data = await api('summary', Object.assign({token:state.token}, scopePayload(force)), {silent:true, timeout:17000});
+        state.summary = data;
+        state.dashboard = {user:state.user, scope:data.scope, stats:summaryStatsFromSummary(data.summary), config:state.config};
+        state.summaryCache[key] = data;
+        saveStaffSnapshot();
+        renderCurrentStaffView();
+      } catch (err) {
+        toast(err.message || 'Rekap belum dapat diperbarui.', 'warning');
+      } finally {
+        document.getElementById('periodPanel')?.classList.remove('busy');
+      }
+    }
+
+    function summaryStatsFromSummary(s) {
+      return {totalStudents:s?.totalStudents||0,totalSlots:s?.totalSlots||0,paid:s?.paid||0,unpaid:s?.unpaid||0,future:s?.future||0,fullyPaidStudents:s?.fullyPaidStudents||0,percentage:s?.percentage||0,totalAmount:s?.totalAmount||0};
+    }
+
+    function scopeIsMonth() { return state.scopeMode === 'MONTH'; }
 
     function renderHomeContent() {
       const d = state.dashboard;
-      const s = d?.stats || {totalStudents:0,paid:0,unpaid:0,percentage:0,totalAmount:0};
-      const p = d?.period || state.config.currentPeriod;
+      const s = d?.stats || summaryStatsFromSummary(state.summary?.summary);
       const isB = state.user?.role === 'BENDAHARA';
+      const label = d?.scope?.label || state.summary?.scope?.label || currentScopePeriod()?.label || '';
+      const periodCount = state.summary?.scope?.periods?.length || d?.scope?.periods?.length || 1;
+      const paidLabel = scopeIsMonth() ? 'Lunas' : 'Pembayaran Lunas';
       return `
+        ${periodControlsHtml()}
         <section class="hero">
           <div class="hero-kicker">${isB ? 'Dashboard Bendahara' : 'Dashboard Wali Kelas • '+escapeHtml(state.user.kelas || '')}</div>
-          <div class="hero-title">${titleCase(p.bulan)} ${p.tahun}</div>
-          <div class="hero-sub">Status Pembayaran Komite • ${money(state.config.amount)} per siswa</div>
+          <div class="hero-title">${escapeHtml(label)}</div>
+          <div class="hero-sub">Status Pembayaran Komite • ${money(state.config.amount)} per siswa${Number(s.future||0)>0 ? ` • ${s.future} belum jatuh tempo` : ''}</div>
           <div class="hero-stats">
-            <div class="hero-stat"><small>${isB?'Siswa':'Murid'}</small><strong>${s.totalStudents}</strong></div>
-            <div class="hero-stat"><small>Lunas</small><strong>${s.paid}</strong></div>
-            <div class="hero-stat"><small>Belum</small><strong>${s.unpaid}</strong></div>
+            <div class="hero-stat"><small>${isB?'Siswa':'Murid'}</small><strong>${s.totalStudents||0}</strong></div>
+            <div class="hero-stat"><small>${paidLabel}</small><strong>${s.paid||0}${periodCount>1?`/${s.totalSlots||0}`:''}</strong></div>
+            <div class="hero-stat"><small>Belum</small><strong>${s.unpaid||0}</strong></div>
           </div>
         </section>
         ${isB ? `
@@ -742,53 +1275,37 @@
           <div class="action-grid">
             <button class="action-card primary" onclick="openPaymentSearch()"><span class="action-icon">${icon('plus')}</span><strong>Catat Pembayaran</strong><span>Cari siswa dan pilih bulan</span></button>
             <button class="action-card" onclick="navigate('students')"><span class="action-icon">${icon('users')}</span><strong>Data Siswa</strong><span>Lihat status pembayaran</span></button>
-            <button class="action-card" onclick="navigate('summary')"><span class="action-icon">${icon('chart')}</span><strong>Rekap</strong><span>Per bulan dan kelas</span></button>
+            <button class="action-card" onclick="navigate('summary')"><span class="action-icon">${icon('chart')}</span><strong>Rekap</strong><span>Bulan, semester, tahun ajaran</span></button>
           </div>
         ` : `
-          <div class="section-head"><div><h2>Kelas ${escapeHtml(state.user.kelas || '')}</h2><p>Lihat status Pembayaran Komite murid di kelas Anda.</p></div><button class="btn btn-soft btn-sm" onclick="navigate('students')">Lihat semua ${icon('arrow')}</button></div>
-          <div id="waliPreview" class="card card-pad"><div class="empty"><span class="spinner" style="display:inline-block"></span></div></div>
+          <div class="section-head"><div><h2>Kelas ${escapeHtml(state.user.kelas || '')}</h2><p>${escapeHtml(label)} • status murid pada periode yang dipilih.</p></div><button class="btn btn-soft btn-sm" onclick="navigate('students')">Lihat semua ${icon('arrow')}</button></div>
+          <div class="card card-pad">${summaryStudentsHtml(state.summary?.summary?.students || [], true)}</div>
         `}`;
     }
 
     async function navigate(view) {
       state.currentView = view;
-      if (view === 'home') {
-        await renderStaffApp();
-        if (state.user?.role === 'WALI') loadWaliPreview();
-        return;
-      }
-      renderStaffShell('<div class="card card-pad"><div class="empty">Memuat…</div></div>');
-      if (view === 'students') await renderStudentsView();
-      if (view === 'summary') await renderSummaryView();
+      if (view === 'home') { renderStaffShell(); return; }
+      if (view === 'students') { renderStudentsView(); return; }
+      if (view === 'summary' && state.user?.role === 'BENDAHARA') { renderSummaryView(); return; }
     }
 
-    async function loadWaliPreview() {
-      try {
-        const list = await api('listStudents', {token:state.token, kelas:state.user.kelas}, {silent:true});
-        const target = document.getElementById('waliPreview');
-        if (!target) return;
-        const show = list.slice(0,6);
-        target.innerHTML = show.length ? `<div class="student-list" style="margin-top:0">${show.map(studentRowHtml).join('')}</div>` : emptyHtml('Belum ada data murid','Isi data siswa pada sheet SISWA.');
-      } catch (err) { toast(err.message,'error'); }
-    }
+    // ========================= DATA SISWA =========================
 
-    async function renderStudentsView() {
-      try {
-        state.students = await api('listStudents', {token:state.token}, {loadingText:'Memuat data siswa…'});
-        const canClass = state.user.role === 'BENDAHARA';
-        const html = `
-          <div class="section-head"><div><h2>${canClass?'Data Siswa':'Murid '+escapeHtml(state.user.kelas)}</h2><p>${state.students.length} data aktif</p></div>${canClass?`<button class="btn btn-primary btn-sm" onclick="openPaymentSearch()">${icon('plus')} Catat Pembayaran</button>`:''}</div>
-          <section class="card card-pad">
-            <div class="toolbar ${canClass?'three':''}">
-              <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="studentSearch" class="input" placeholder="Cari nama atau NISN" oninput="filterStudentsView()"></div>
-              ${canClass ? `<select id="studentClass" class="select" onchange="filterStudentsView()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select>` : ''}
-              <div></div>
-            </div>
-            <div id="studentList" class="student-list"></div>
-          </section>`;
-        renderStaffShell(html);
-        filterStudentsView();
-      } catch (err) { toast(err.message || 'Data siswa gagal dimuat.','error'); }
+    function renderStudentsView() {
+      const canClass = state.user.role === 'BENDAHARA';
+      const html = `
+        <div class="section-head"><div><h2>${canClass?'Data Siswa':'Murid '+escapeHtml(state.user.kelas)}</h2><p>${state.students.length} data aktif • tersimpan di cache aplikasi</p></div>${canClass?`<button class="btn btn-primary btn-sm" onclick="openPaymentSearch()">${icon('plus')} Catat Pembayaran</button>`:''}</div>
+        <section class="card card-pad">
+          <div class="toolbar ${canClass?'three':''}">
+            <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="studentSearch" class="input" placeholder="Cari nama atau NISN" oninput="filterStudentsView()"></div>
+            ${canClass ? `<select id="studentClass" class="select" onchange="filterStudentsView()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select>` : ''}
+            <div></div>
+          </div>
+          <div id="studentList" class="student-list"></div>
+        </section>`;
+      renderStaffShell(html);
+      filterStudentsView();
     }
 
     function studentRowHtml(s, paymentMode=false) {
@@ -807,61 +1324,103 @@
       if (target) target.innerHTML = list.length ? list.map(studentRowHtml).join('') : emptyHtml('Siswa tidak ditemukan','Coba kata pencarian atau kelas yang lain.');
     }
 
-    async function openPaymentSearch() {
-      try {
-        if (!state.students.length) state.students = await api('listStudents', {token:state.token}, {loadingText:'Memuat siswa…'});
-        openModal(`
-          <div class="modal-head"><div><h3>Catat Pembayaran</h3><p>Cari siswa, lalu pilih bulan Pembayaran Komite.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
-          <div class="modal-body">
-            <div class="toolbar three">
-              <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="paySearch" class="input" placeholder="Cari nama atau NISN" oninput="filterPaymentStudents()" autofocus></div>
-              <select id="payClass" class="select" onchange="filterPaymentStudents()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select>
-              <div></div>
-            </div>
-            <div id="payStudentList" class="student-list"></div>
-          </div>`, true);
-        filterPaymentStudents();
-        setTimeout(()=>document.getElementById('paySearch')?.focus(),50);
-      } catch (err) { toast(err.message,'error'); }
+    // ========================= CATAT PEMBAYARAN =========================
+
+    function openPaymentSearch() {
+      if (!state.students.length) {
+        toast('Data siswa belum tersedia. Tekan Refresh untuk mengambil data terbaru.', 'warning');
+        return;
+      }
+      openModal(`
+        <div class="modal-head"><div><h3>Catat Pembayaran</h3><p>Cari siswa, lalu pilih bulan Pembayaran Komite.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-body">
+          ${queueCount()?`<div class="sync-notice">${icon('clock')} <span><strong>${queueCount()} pembayaran menunggu sinkronisasi.</strong> Anda tetap dapat mencatat pembayaran berikutnya.</span></div>`:''}
+          <div class="toolbar three">
+            <div class="field-wrap"><span class="field-icon">${icon('search')}</span><input id="paySearch" class="input" placeholder="Cari nama atau NISN" oninput="filterPaymentStudents()" autofocus></div>
+            <select id="payClass" class="select" onchange="filterPaymentStudents()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select>
+            <div></div>
+          </div>
+          <div id="payStudentList" class="student-list"></div>
+        </div>`, true);
+      filterPaymentStudents();
+      setTimeout(()=>document.getElementById('paySearch')?.focus(),50);
     }
 
     function filterPaymentStudents() {
       const q = (document.getElementById('paySearch')?.value || '').toLowerCase().trim();
       const k = document.getElementById('payClass')?.value || '';
-      const list = state.students.filter(s => (!q || s.nama.toLowerCase().includes(q) || s.nisn.toLowerCase().includes(q)) && (!k || s.kelas===k)).slice(0,80);
+      const list = state.students.filter(s => (!q || s.nama.toLowerCase().includes(q) || s.nisn.toLowerCase().includes(q)) && (!k || s.kelas===k)).slice(0,100);
       const target = document.getElementById('payStudentList');
       if (target) target.innerHTML = list.length ? list.map(s=>studentRowHtml(s,true)).join('') : emptyHtml('Siswa tidak ditemukan','Periksa nama, NISN, atau kelas.');
     }
 
-    async function openStudentDetail(idSiswa, paymentMode=false) {
+    async function openStudentDetail(idSiswa, paymentMode=false, force=false) {
       try {
-        const d = await api('studentDetail', {token:state.token,idSiswa}, {loadingText:'Memuat pembayaran siswa…'});
+        let d = !force ? state.detailCache[idSiswa] : null;
+        if (!d && !navigator.onLine) d = buildLocalStudentDetail(idSiswa);
+        if (!d) {
+          try {
+            d = await api('studentDetail', {token:state.token,idSiswa,force}, {loadingText:'Memuat pembayaran siswa…', timeout:16000});
+          } catch (err) {
+            if (isNetworkLikeError(err)) d = buildLocalStudentDetail(idSiswa);
+            if (!d) throw err;
+          }
+          state.detailCache[idSiswa] = d;
+        }
         state.selectedStudentDetail = d;
         const isB = state.user.role === 'BENDAHARA';
         openModal(studentDetailModalHtml(d, paymentMode && isB), true);
       } catch (err) { toast(err.message,'error'); }
     }
 
+    function buildLocalStudentDetail(idSiswa) {
+      const s = state.students.find(x => x.idSiswa === idSiswa);
+      if (!s) return null;
+      const paidSet = new Set(Array.isArray(s.paidPeriods) ? s.paidPeriods : []);
+      const current = state.config.currentPeriod;
+      const currentIndex = state.config.periods.findIndex(p => p.bulan === current?.bulan && Number(p.tahun) === Number(current?.tahun));
+      const periods = state.config.periods.map((p, index) => {
+        const key = `${p.bulan}-${p.tahun}`;
+        const paid = paidSet.has(key);
+        return {
+          bulan:p.bulan, tahun:p.tahun, label:p.label,
+          status: paid ? 'LUNAS' : (currentIndex >= 0 && index <= currentIndex ? 'BELUM_BAYAR' : 'BELUM_JATUH_TEMPO'),
+          nominal:Number(state.config.amount||50000), idTransaksi:''
+        };
+      });
+      return {
+        student:{idSiswa:s.idSiswa,nisn:s.nisn,nama:s.nama,kelas:s.kelas},
+        paidMonths:periods.filter(p=>p.status==='LUNAS').length,
+        totalMonths:periods.length,
+        paidAmount:periods.filter(p=>p.status==='LUNAS').length * Number(state.config.amount||50000),
+        periods, history:[], offlineApprox:true
+      };
+    }
+
     function studentDetailModalHtml(d, paymentMode) {
       const s = d.student;
+      const pending = getPaymentQueue().filter(x=>x.idSiswa===s.idSiswa).length;
       return `
-        <div class="modal-head"><div><h3>${escapeHtml(s.nama)}</h3><p>${escapeHtml(s.kelas)} • NISN ${escapeHtml(s.nisn)} • ${d.paidMonths}/12 bulan lunas</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
+        <div class="modal-head"><div><h3>${escapeHtml(s.nama)}</h3><p>${escapeHtml(s.kelas)} • NISN ${escapeHtml(s.nisn)} • ${d.paidMonths}/12 bulan lunas${pending?` • ${pending} menunggu sinkron`:''}</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
         <div class="modal-body">
           <div class="section-head" style="margin-top:0"><div><h2>Pembayaran ${escapeHtml(state.config.schoolYear)}</h2><p>${paymentMode?'Pilih bulan yang akan dibayar.':'Status Pembayaran Komite per bulan.'}</p></div><span class="status-pill ok">${icon('check')} ${money(d.paidAmount)}</span></div>
           <div class="months-grid">${d.periods.map(p=>monthCardHtml(p, s.idSiswa, paymentMode)).join('')}</div>
-          <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>${d.history.length ? d.history.length+' transaksi lunas' : 'Belum ada transaksi'}</p></div></div>
+          <div class="section-head"><div><h2>Riwayat Pembayaran</h2><p>${d.offlineApprox ? 'Riwayat lengkap tersedia saat online' : (d.history.length ? d.history.length+' transaksi lunas' : 'Belum ada transaksi')}</p></div></div>
           <div class="card card-pad">${historyHtml(d.history, state.user.role === 'BENDAHARA')}</div>
         </div>`;
     }
 
     function monthCardHtml(p, idSiswa, paymentMode=false) {
+      const pending = pendingPayment(idSiswa, p.bulan, p.tahun);
       const lunas = p.status === 'LUNAS';
       const due = p.status === 'BELUM_BAYAR';
-      const status = lunas
-        ? `<span class="status-pill ok">${icon('check')} Lunas</span>`
-        : due ? `<span class="status-pill wait">${icon('clock')} Belum Bayar</span>`
-        : `<span class="status-pill future">${icon('calendar')} Belum Jatuh Tempo</span>`;
-      const clickable = paymentMode && !lunas;
+      const status = pending
+        ? `<span class="status-pill sync">${icon('clock')} Menunggu sinkron</span>`
+        : lunas
+          ? `<span class="status-pill ok">${icon('check')} Lunas</span>`
+          : due ? `<span class="status-pill wait">${icon('clock')} Belum Bayar</span>`
+          : `<span class="status-pill future">${icon('calendar')} Belum Jatuh Tempo</span>`;
+      const clickable = paymentMode && !lunas && !pending;
       return `<div class="month-card ${clickable?'clickable':''}" ${clickable?`onclick="confirmPayment('${escapeHtml(idSiswa)}','${escapeHtml(p.bulan)}',${p.tahun})"`:''}>
         <div><div class="month-name">${escapeHtml(p.bulan.slice(0,3))}</div><div class="month-year">${p.tahun}</div></div>${status}
       </div>`;
@@ -872,7 +1431,7 @@
       return `<div class="history-list">${history.map(h=>`
         <div class="history-row">
           <div><strong>${titleCase(h.bulan)} ${h.tahun}</strong><div class="meta">${escapeHtml(h.tanggalBayar)} • ${escapeHtml(h.waktuBayar || '')}<br><span style="font-size:10px">${escapeHtml(h.idTransaksi)}</span></div></div>
-          <div class="history-amount"><strong>${money(h.nominal)}</strong><div style="margin-top:6px;display:flex;justify-content:flex-end;gap:6px"><span class="status-pill ok">${icon('check')} Lunas</span>${allowCancel?`<button class="btn btn-danger btn-sm" title="Batalkan" onclick="confirmCancel('${escapeHtml(h.idTransaksi)}')">${icon('trash')}</button>`:''}</div></div>
+          <div class="history-amount"><strong>${money(h.nominal)}</strong><div style="margin-top:6px;display:flex;justify-content:flex-end;gap:6px"><span class="status-pill ok">${icon('check')} Lunas</span>${allowCancel?`<button class="btn btn-soft btn-sm" title="Cetak bukti" onclick="printHistoryReceipt('${escapeHtml(h.idTransaksi)}')">${icon('printer')}</button><button class="btn btn-danger btn-sm" title="Batalkan" onclick="confirmCancel('${escapeHtml(h.idTransaksi)}')">${icon('trash')}</button>`:''}</div></div>
         </div>`).join('')}</div>`;
     }
 
@@ -881,7 +1440,7 @@
       const s = d?.student;
       if (!s || s.idSiswa !== idSiswa) return;
       openModal(`
-        <div class="modal-head"><div><h3>Konfirmasi Pembayaran</h3><p>Periksa sebelum disimpan.</p></div><button class="icon-btn" onclick="openStudentDetail('${escapeHtml(idSiswa)}',true)">${icon('x')}</button></div>
+        <div class="modal-head"><div><h3>Konfirmasi Pembayaran</h3><p>Setelah ditekan, pencatatan langsung masuk antrean dan tidak perlu menunggu server.</p></div><button class="icon-btn" onclick="openStudentDetail('${escapeHtml(idSiswa)}',true)">${icon('x')}</button></div>
         <div class="modal-body">
           <div class="receipt">
             <div class="success-mark" style="color:var(--blue);background:#edf6ff">${icon('receipt')}</div>
@@ -894,37 +1453,37 @@
         <div class="modal-actions"><button class="btn btn-ghost" onclick="openStudentDetail('${escapeHtml(idSiswa)}',true)">Kembali</button><button class="btn btn-primary" onclick="savePayment('${escapeHtml(idSiswa)}','${escapeHtml(bulan)}',${tahun})">${icon('check')} Simpan Pembayaran</button></div>`);
     }
 
-    async function savePayment(idSiswa, bulan, tahun) {
-      try {
-        const tx = await api('addPayment', {token:state.token,idSiswa,bulan,tahun}, {loadingText:'Menyimpan pembayaran…'});
-        toast(`Pembayaran Komite ${titleCase(bulan)} ${tahun} berhasil disimpan.`, 'success');
-        state.students = [];
-        const fresh = await api('studentDetail', {token:state.token,idSiswa}, {silent:true});
-        state.selectedStudentDetail = fresh;
-        showReceipt(tx);
-        refreshDashboardSilent();
-      } catch (err) { toast(err.message,'error'); }
+    function savePayment(idSiswa, bulan, tahun) {
+      const d = state.selectedStudentDetail;
+      const s = d?.student;
+      if (!s || s.idSiswa !== idSiswa) return;
+      const result = enqueuePayment(idSiswa, bulan, tahun, s);
+      if (result.duplicate) {
+        toast(`Pembayaran ${titleCase(bulan)} ${tahun} sudah berada dalam antrean sinkronisasi.`, 'warning', 'Sudah diantrikan');
+        openPaymentSearch();
+        return;
+      }
+
+      openPaymentSearch();
+      if (navigator.onLine) toast(`Pembayaran ${s.nama} • ${titleCase(bulan)} ${tahun} sudah dicatat di perangkat dan sedang dikirim.`, 'info', 'Mengirim ke server');
+      else toast(`Pembayaran ${s.nama} • ${titleCase(bulan)} ${tahun} tersimpan sementara di perangkat. Akan dikirim otomatis saat internet tersedia.`, 'warning', 'Tersimpan di perangkat', 5600);
+      syncPaymentQueue();
     }
 
-    function showReceipt(tx) {
-      openModal(`
-        <div class="modal-head"><div><h3>Bukti Pembayaran</h3><p>Transaksi berhasil dicatat.</p></div><button class="icon-btn" onclick="closeModal()">${icon('x')}</button></div>
-        <div class="modal-body">
-          <div class="receipt">
-            <div class="success-mark">${icon('check')}</div>
-            <h3>Pembayaran Berhasil</h3>
-            <div class="receipt-name">${escapeHtml(tx.student.nama)}</div>
-            <div style="color:var(--muted);font-size:12px">${escapeHtml(tx.student.kelas)} • NISN ${escapeHtml(tx.student.nisn)}</div>
-            <div class="receipt-amount">${money(tx.nominal)}</div>
-            <div style="color:var(--muted);font-size:13px">Komite ${titleCase(tx.bulan)} ${tx.tahun}</div>
-            <div class="receipt-details">
-              <div><span>No. Transaksi</span><strong>${escapeHtml(tx.idTransaksi)}</strong></div>
-              <div><span>Tanggal</span><strong>${escapeHtml(tx.tanggalBayar)} • ${escapeHtml(tx.waktuBayar)}</strong></div>
-              <div><span>Status</span><strong style="color:var(--green)">LUNAS</strong></div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-actions"><button class="btn btn-ghost" onclick='printReceipt(${JSON.stringify(tx).replace(/'/g,"&#39;")})'>${icon('printer')} Cetak Bukti</button><button class="btn btn-primary" onclick="closeModal()">Selesai</button></div>`);
+    function printHistoryReceipt(idTransaksi) {
+      const d = state.selectedStudentDetail;
+      const h = d?.history?.find(x => x.idTransaksi === idTransaksi);
+      if (!d || !h) { toast('Data bukti belum tersedia. Tekan Refresh lalu coba lagi.','warning'); return; }
+      printReceipt({
+        idTransaksi:h.idTransaksi,
+        student:d.student,
+        bulan:h.bulan,
+        tahun:h.tahun,
+        nominal:h.nominal,
+        tanggalBayar:h.tanggalBayar,
+        waktuBayar:h.waktuBayar,
+        status:'LUNAS'
+      });
     }
 
     function printReceipt(tx) {
@@ -946,71 +1505,74 @@
         const idSiswa = state.selectedStudentDetail?.student?.idSiswa;
         await api('cancelPayment', {token:state.token,idTransaksi}, {loadingText:'Membatalkan transaksi…'});
         toast('Transaksi berhasil dibatalkan dan jejaknya tetap tersimpan.', 'success');
-        state.students = [];
-        if (idSiswa) await openStudentDetail(idSiswa, false); else closeModal();
-        refreshDashboardSilent();
+        state.detailCache = {};
+        state.summaryCache = {};
+        if (navigator.onLine) {
+          const data = await api('staffBootstrap', Object.assign({token:state.token}, scopePayload(false)), {silent:true});
+          applyBootstrap(data, true);
+        }
+        if (idSiswa) await openStudentDetail(idSiswa, false, true); else closeModal();
       } catch (err) { toast(err.message,'error'); }
     }
 
-    async function refreshDashboardSilent() {
-      try { state.dashboard = await api('dashboard', {token:state.token}, {silent:true}); } catch (_) {}
-    }
+    // ========================= REKAP =========================
 
-    async function renderSummaryView() {
-      try {
-        const p = state.config.currentPeriod || state.config.periods[0];
-        const data = await api('summary', {token:state.token,bulan:p.bulan,tahun:p.tahun}, {loadingText:'Menyiapkan rekap…'});
-        state.summary = data;
-        const periodValue = `${data.period.bulan}|${data.period.tahun}`;
-        const html = `
-          <div class="section-head"><div><h2>Rekap Pembayaran</h2><p>Ringkasan Pembayaran Komite per bulan.</p></div><button class="btn btn-soft btn-sm" onclick="downloadSummaryCsv()">${icon('download')} Unduh CSV</button></div>
-          <section class="card card-pad">
-            <div class="toolbar three">
-              <div><label class="label">Bulan</label><select id="summaryPeriod" class="select" onchange="reloadSummary()">${state.config.periods.map(x=>`<option value="${x.bulan}|${x.tahun}" ${periodValue===x.bulan+'|'+x.tahun?'selected':''}>${escapeHtml(x.label)}</option>`).join('')}</select></div>
-              <div><label class="label">Kelas</label><select id="summaryClass" class="select" onchange="reloadSummary()"><option value="">Semua kelas</option>${state.config.classes.map(c=>`<option value="${escapeHtml(c.nama)}">${escapeHtml(c.nama)}</option>`).join('')}</select></div>
-              <div></div>
-            </div>
-            <div id="summaryBody">${summaryBodyHtml(data)}</div>
-          </section>`;
-        renderStaffShell(html);
-      } catch (err) { toast(err.message,'error'); }
+    function renderSummaryView() {
+      const html = `
+        ${periodControlsHtml()}
+        <div class="section-head"><div><h2>Rekap Pembayaran</h2><p>Ringkasan Pembayaran Komite sesuai periode dan kelas yang dipilih.</p></div><button class="btn btn-soft btn-sm" onclick="downloadSummaryCsv()">${icon('download')} Unduh CSV</button></div>
+        <section class="card card-pad"><div id="summaryBody">${summaryBodyHtml(state.summary)}</div></section>`;
+      renderStaffShell(html);
     }
 
     function summaryBodyHtml(data) {
-      const s = data.summary;
+      const s = data?.summary || {};
+      const scope = data?.scope || {};
+      const many = (scope.periods?.length || 1) > 1;
       return `<div class="summary-grid">
-        <div class="metric"><span>Siswa</span><strong>${s.totalStudents}</strong></div>
-        <div class="metric"><span>Lunas</span><strong style="color:var(--green)">${s.paid}</strong></div>
-        <div class="metric"><span>Belum</span><strong style="color:var(--orange)">${s.unpaid}</strong></div>
-        <div class="metric"><span>Terkumpul</span><strong style="font-size:19px">${money(s.totalAmount)}</strong></div>
+        <div class="metric"><span>Siswa</span><strong>${s.totalStudents||0}</strong></div>
+        <div class="metric"><span>${many?'Pembayaran Lunas':'Lunas'}</span><strong style="color:var(--green)">${s.paid||0}${many?`/${s.totalSlots||0}`:''}</strong></div>
+        <div class="metric"><span>Belum</span><strong style="color:var(--orange)">${s.unpaid||0}</strong></div>
+        <div class="metric"><span>Terkumpul</span><strong style="font-size:19px">${money(s.totalAmount||0)}</strong></div>
       </div>
-      <div class="section-head"><div><h2>Daftar Siswa</h2><p>${escapeHtml(data.period.label)} • ${escapeHtml(data.kelas || 'SEMUA')}</p></div><span class="status-pill ok">${s.percentage}% lunas</span></div>
-      <div class="student-list">${s.students?.length ? s.students.map(x=>`<button class="student-row" onclick="openStudentDetail('${escapeHtml(x.idSiswa)}',false)"><span class="avatar">${escapeHtml(initials(x.nama).toUpperCase())}</span><span class="student-main"><strong>${escapeHtml(x.nama)}</strong><span class="student-meta">${escapeHtml(x.kelas)} • NISN ${escapeHtml(x.nisn)}</span></span><span class="status-pill ${x.status==='LUNAS'?'ok':'wait'}">${icon(x.status==='LUNAS'?'check':'clock')} ${x.status==='LUNAS'?'Lunas':'Belum'}</span></button>`).join('') : emptyHtml('Belum ada siswa','Isi data pada sheet SISWA.')}</div>`;
+      <div class="section-head"><div><h2>Daftar Siswa</h2><p>${escapeHtml(scope.label || '')} • ${escapeHtml(data?.kelas || 'SEMUA')}${Number(s.future||0)>0?` • ${s.future} pembayaran belum jatuh tempo`:''}</p></div><span class="status-pill ok">${s.percentage||0}% lunas</span></div>
+      ${summaryStudentsHtml(s.students || [], false)}`;
     }
 
-    async function reloadSummary() {
-      try {
-        const [bulan,tahun] = document.getElementById('summaryPeriod').value.split('|');
-        const kelas = document.getElementById('summaryClass').value;
-        const data = await api('summary', {token:state.token,bulan,tahun:Number(tahun),kelas}, {loadingText:'Memperbarui rekap…'});
-        state.summary = data;
-        document.getElementById('summaryBody').innerHTML = summaryBodyHtml(data);
-      } catch (err) { toast(err.message,'error'); }
+    function summaryStudentsHtml(list, preview=false) {
+      const rows = preview ? list.slice(0,6) : list;
+      if (!rows.length) return emptyHtml('Belum ada siswa','Isi data pada sheet SISWA.');
+      const many = (state.summary?.scope?.periods?.length || 1) > 1;
+      return `<div class="student-list" style="margin-top:0">${rows.map(x=>{
+        let cls = 'future', txt = 'Belum Jatuh Tempo', ic = 'calendar';
+        if (x.status === 'LUNAS') { cls='ok'; txt = many ? `${x.paidMonths}/${x.totalMonths} lunas` : 'Lunas'; ic='check'; }
+        else if (x.status === 'BELUM_BAYAR') { cls='wait'; txt = many ? `${x.paidMonths}/${x.totalMonths} lunas` : 'Belum'; ic='clock'; }
+        else if (x.status === 'SEBAGIAN') { cls='sync'; txt=`${x.paidMonths}/${x.totalMonths} lunas`; ic='clock'; }
+        return `<button class="student-row" onclick="openStudentDetail('${escapeHtml(x.idSiswa)}',false)"><span class="avatar">${escapeHtml(initials(x.nama).toUpperCase())}</span><span class="student-main"><strong>${escapeHtml(x.nama)}</strong><span class="student-meta">${escapeHtml(x.kelas)} • NISN ${escapeHtml(x.nisn)}</span></span><span class="status-pill ${cls}">${icon(ic)} ${escapeHtml(txt)}</span></button>`;
+      }).join('')}</div>`;
     }
 
     function downloadSummaryCsv() {
       const d = state.summary;
       if (!d?.summary?.students) { toast('Rekap belum tersedia.','warning'); return; }
-      const rows = [['NISN','NAMA_SISWA','KELAS','BULAN','TAHUN','STATUS']];
-      d.summary.students.forEach(s => rows.push([s.nisn,s.nama,s.kelas,d.period.bulan,d.period.tahun,s.status]));
+      const many = (d.scope?.periods?.length || 1) > 1;
+      const rows = many
+        ? [['NISN','NAMA_SISWA','KELAS','PERIODE','LUNAS','TOTAL_BULAN','STATUS']]
+        : [['NISN','NAMA_SISWA','KELAS','PERIODE','STATUS']];
+      d.summary.students.forEach(s => {
+        if (many) rows.push([s.nisn,s.nama,s.kelas,d.scope.label,s.paidMonths,s.totalMonths,s.status]);
+        else rows.push([s.nisn,s.nama,s.kelas,d.scope.label,s.status]);
+      });
       const csv = '\ufeff' + rows.map(r => r.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');
       const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `Rekap_Komite_${d.period.bulan}_${d.period.tahun}_${(d.kelas||'SEMUA').replace(/\s+/g,'_')}.csv`;
+      a.download = `Rekap_Komite_${String(d.scope.label||'Periode').replace(/\s+/g,'_')}_${(d.kelas||'SEMUA').replace(/\s+/g,'_')}.csv`;
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
       toast('Rekap CSV berhasil dibuat.','success');
     }
+
+    // ========================= SISWA =========================
 
     function renderStudentApp(detail) {
       const d = detail || state.selectedStudentDetail;
@@ -1036,32 +1598,97 @@
       return `<div class="empty"><div class="empty-icon">${icon('search')}</div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(sub)}</span></div>`;
     }
 
+    // ========================= RESTORE / NETWORK EVENTS =========================
+
     async function restoreSession() {
       if (!state.token || !state.user) return false;
-      try {
-        if (state.user.role === 'SISWA') {
-          const d = await api('studentDetail', {token:state.token}, {silent:true});
-          state.selectedStudentDetail = d;
-          renderStudentApp(d);
-        } else {
-          await renderStaffApp();
-          if (state.user.role === 'WALI') loadWaliPreview();
+      if (state.user.role === 'SISWA') {
+        const snap = loadStudentSnapshot();
+        if (snap?.detail) {
+          state.config = Object.assign({}, state.config, snap.config || {});
+          state.selectedStudentDetail = snap.detail;
+          state.detailCache[snap.detail.student.idSiswa] = snap.detail;
+          renderStudentApp(snap.detail);
         }
+        if (!navigator.onLine) {
+          if (snap?.detail) { toast('Menampilkan data terakhir karena perangkat sedang offline.', 'warning', 'Mode offline'); return true; }
+          return false;
+        }
+        try {
+          const d = await api('studentDetail', {token:state.token}, {silent:true, timeout:15000});
+          state.selectedStudentDetail = d;
+          state.detailCache[d.student.idSiswa] = d;
+          saveStudentSnapshot(d);
+          renderStudentApp(d);
+          return true;
+        } catch (err) {
+          if (isSessionError(err.message)) { clearSession(false); return false; }
+          if (snap?.detail) return true;
+          return false;
+        }
+      }
+
+      const snap = loadStaffSnapshot();
+      if (snap) {
+        state.config = Object.assign({}, state.config, snap.config || {});
+        state.students = snap.students || [];
+        state.summary = snap.summary || null;
+        state.dashboard = snap.dashboard || null;
+        state.scopeMode = snap.scopeMode || 'MONTH';
+        state.scopeMonthIndex = Number.isFinite(snap.scopeMonthIndex) ? snap.scopeMonthIndex : 0;
+        state.scopeClass = snap.scopeClass || '';
+        rememberCurrentSummary();
+        renderStaffShell();
+      }
+      if (!navigator.onLine) {
+        if (snap) {
+          toast('Menampilkan data terakhir. Pembayaran baru tetap dapat dicatat dan akan disinkronkan saat internet kembali.', 'warning', 'Mode offline', 6200);
+          return true;
+        }
+        return false;
+      }
+
+      try {
+        const data = await api('staffBootstrap', Object.assign({token:state.token}, scopePayload(false)), {silent:true, timeout:19000});
+        applyBootstrap(data, true);
+        renderCurrentStaffView();
+        if (state.user.role === 'BENDAHARA') setTimeout(() => syncPaymentQueue(), 350);
         return true;
-      } catch (_) {
-        clearSession(false);
+      } catch (err) {
+        if (isSessionError(err.message)) { clearSession(false); return false; }
+        if (snap) return true;
         return false;
       }
     }
 
     async function boot() {
       await loadPublicConfig();
+      if (!state.scopeMonthIndex && state.config?.currentPeriod) {
+        const idx = state.config.periods.findIndex(p=>p.bulan===state.config.currentPeriod.bulan && Number(p.tahun)===Number(state.config.currentPeriod.tahun));
+        if (idx >= 0) state.scopeMonthIndex = idx;
+      }
       const restored = await restoreSession();
       if (!restored) renderLogin();
-      else if (state.user?.role === 'WALI') loadWaliPreview();
+      updateSyncIndicator();
     }
 
+    window.addEventListener('online', () => {
+      updateSyncIndicator();
+      if (state.user) toast('Internet kembali tersedia. Data yang tertunda akan disinkronkan.', 'info', 'Koneksi kembali');
+      if (state.user?.role === 'BENDAHARA') syncPaymentQueue();
+    });
+
+    window.addEventListener('offline', () => {
+      updateSyncIndicator();
+      if (state.user) toast('Koneksi terputus. Data terakhir tetap dapat dilihat, dan pembayaran Bendahara akan diantrikan di perangkat.', 'warning', 'Mode offline', 5600);
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && navigator.onLine && state.user?.role === 'BENDAHARA' && queueCount()) syncPaymentQueue();
+    });
+
     boot();
+
   </script>
 </body>
 </html>
