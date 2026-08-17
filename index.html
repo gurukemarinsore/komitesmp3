@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="theme-color" content="#ffffff" />
   <meta name="color-scheme" content="light" />
   <title>Komite SMP Negeri 3 Jayapura</title>
@@ -1637,26 +1637,6 @@
       }
     }
 
-    /* Keyboard/numpad mobile: login sheet mengikuti visual viewport yang benar-benar terlihat. */
-    @media (max-width: 960px) {
-      .login-panel {
-        bottom:var(--login-keyboard-gap, 0px);
-        max-height:calc(var(--login-vvh, 100dvh) - 8px);
-        scroll-padding-top:22px;
-        scroll-padding-bottom:calc(88px + var(--safe-bottom));
-      }
-      .login-panel .login-box {
-        padding-bottom:2px;
-      }
-      .login-panel input,
-      .login-panel select,
-      .login-panel textarea,
-      .login-panel button {
-        scroll-margin-block:80px;
-      }
-    }
-
-
 
     /* ===== Versi 1.17: koreksi slogan dan wrapping deskripsi hero HP ===== */
     @media (max-width: 600px) and (orientation: portrait) {
@@ -1680,19 +1660,20 @@
         word-break: normal;
       }
     }
-
-    /* ===== Versi 1.17: stabilisasi keyboard/numpad login mobile ===== */
-    @media (max-width: 960px) {
-      .login-panel {
-        transition:
-          transform .28s cubic-bezier(.22,.78,.24,1),
-          opacity .2s ease,
-          visibility .28s ease,
-          bottom .18s ease-out,
-          max-height .18s ease-out;
-      }
     }
 
+
+    /* ===== Versi 1.18: keyboard mobile kembali natural/sederhana ===== */
+    @media (max-width: 960px) {
+      .login-panel {
+        bottom: 0 !important;
+        max-height: calc(100dvh - 8px) !important;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scroll-padding-bottom: calc(24px + var(--safe-bottom));
+        transition: transform .28s cubic-bezier(.22,.78,.24,1), opacity .2s ease, visibility .28s ease !important;
+      }
+    }
 </style>
 </head>
 <body>
@@ -1708,7 +1689,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.17';
+    const APP_REVISION = 'Versi 1.18';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -1731,7 +1712,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.17'
+      revision: '1.18'
     };
 
     const state = {
@@ -2432,99 +2413,35 @@
       if (!isApiConfigured()) setTimeout(() => toast('Konfigurasi layanan belum lengkap.', 'warning', 'Belum siap digunakan'), 250);
     }
 
-    let loginViewportTimer = 0;
-    let loginViewportLastHeight = 0;
-    let loginViewportLastGap = 0;
-
     function openLoginSheet() {
       state.loginSheetOpen = true;
       document.querySelector('.login-page')?.classList.add('login-sheet-open');
-      installLoginViewportHandling();
-      applyLoginVisualViewport(false);
-      // Mobile: jangan auto-focus saat sheet sedang naik. Biarkan transisi selesai dulu
-      // dan keyboard hanya muncul setelah pengguna benar-benar menyentuh input.
+      // Tunggu animasi bottom-sheet selesai, lalu fokuskan input pertama.
+      // Browser/OS menangani keyboard dan pergeseran viewport secara native.
+      window.setTimeout(() => {
+        const input = document.querySelector('.login-panel .input');
+        if (input) {
+          try { input.focus(); } catch (_) {}
+        }
+      }, 320);
     }
 
     function closeLoginSheet() {
       state.loginSheetOpen = false;
       document.querySelector('.login-page')?.classList.remove('login-sheet-open');
-      clearTimeout(loginViewportTimer);
-      document.documentElement.style.removeProperty('--login-vvh');
-      document.documentElement.style.removeProperty('--login-keyboard-gap');
-      loginViewportLastHeight = 0;
-      loginViewportLastGap = 0;
-    }
-
-    function keepLoginFieldVisible(target) {
-      if (!target || !target.closest?.('.login-panel')) return;
-      const panel = target.closest('.login-panel');
-      const panelRect = panel.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      const safeTop = panelRect.top + 18;
-      const safeBottom = panelRect.bottom - 24;
-      let delta = 0;
-      if (targetRect.top < safeTop) delta = targetRect.top - safeTop;
-      else if (targetRect.bottom > safeBottom) delta = targetRect.bottom - safeBottom;
-      if (Math.abs(delta) > 2) panel.scrollBy({top: delta, left: 0, behavior: 'auto'});
-    }
-
-    function applyLoginVisualViewport(ensureField=true) {
-      const vv = window.visualViewport;
-      if (!vv) return;
-      const root = document.documentElement;
-      const visibleHeight = Math.max(240, Math.round(vv.height));
-      const keyboardGap = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
-
-      // Hindari repaint kecil berulang selama animasi keyboard/browser toolbar.
-      if (Math.abs(visibleHeight - loginViewportLastHeight) >= 4 || !loginViewportLastHeight) {
-        root.style.setProperty('--login-vvh', `${visibleHeight}px`);
-        loginViewportLastHeight = visibleHeight;
-      }
-      if (Math.abs(keyboardGap - loginViewportLastGap) >= 4 || (!loginViewportLastGap && keyboardGap)) {
-        root.style.setProperty('--login-keyboard-gap', `${keyboardGap}px`);
-        loginViewportLastGap = keyboardGap;
-      }
-
-      if (!state.loginSheetOpen || !ensureField) return;
-      const active = document.activeElement;
-      if (active && /^(INPUT|SELECT|TEXTAREA)$/.test(active.tagName)) {
-        window.requestAnimationFrame(() => keepLoginFieldVisible(active));
-      }
-    }
-
-    function scheduleLoginViewportUpdate(delay=120, ensureField=true) {
-      clearTimeout(loginViewportTimer);
-      loginViewportTimer = window.setTimeout(() => applyLoginVisualViewport(ensureField), delay);
-    }
-
-    function installLoginViewportHandling() {
-      if (window.__komiteLoginViewportInstalled) return;
-      window.__komiteLoginViewportInstalled = true;
-      const vv = window.visualViewport;
-      // Resize saja. Listener visualViewport.scroll sengaja tidak dipakai karena dapat
-      // membuat feedback loop kecil saat keyboard/browser toolbar sedang bergerak.
-      vv?.addEventListener('resize', () => scheduleLoginViewportUpdate(110, true), {passive:true});
-      window.addEventListener('orientationchange', () => scheduleLoginViewportUpdate(180, true), {passive:true});
-      document.addEventListener('focusin', (event) => {
-        if (!event.target.closest?.('.login-panel')) return;
-        // Tunggu animasi keyboard settle, lalu koreksi posisi sekali tanpa smooth-scroll.
-        scheduleLoginViewportUpdate(180, true);
-      });
-      document.addEventListener('focusout', (event) => {
-        if (!event.target.closest?.('.login-panel')) return;
-        scheduleLoginViewportUpdate(160, false);
-      });
     }
 
     function switchLoginRole(role) {
       if (role === state.loginRole) return;
       state.loginRole = role;
       renderLogin();
-      // Auto-focus hanya di desktop. Di HP/tablet, fokus otomatis dapat memicu keyboard
-      // saat bottom-sheet masih bertransisi dan terasa seperti bergetar.
-      if (window.matchMedia('(min-width: 961px)').matches) {
-        setTimeout(() => document.querySelector('.input')?.focus({preventScroll:true}), 20);
-      }
+      // Setelah role berganti, fokuskan input baru secara normal agar keyboard tetap siap dipakai.
+      window.setTimeout(() => {
+        const input = document.querySelector('.login-panel .input');
+        if (input) {
+          try { input.focus(); } catch (_) {}
+        }
+      }, 100);
     }
 
     function togglePasswordVisibility() {
