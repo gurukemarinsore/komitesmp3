@@ -1656,6 +1656,30 @@
       }
     }
 
+
+
+    /* ===== Versi 1.16: koreksi slogan dan wrapping deskripsi hero HP ===== */
+    @media (max-width: 600px) and (orientation: portrait) {
+      .login-copy h1 {
+        font-size: clamp(31px, 9.5vw, 37px) !important;
+        line-height: 1.04;
+        letter-spacing: -.042em;
+      }
+      .login-copy h1 .login-copy-mobile {
+        white-space: nowrap;
+      }
+      .login-copy p,
+      .login-copy p .login-copy-mobile {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        overflow-wrap: normal;
+        word-break: normal;
+      }
+    }
 </style>
 </head>
 <body>
@@ -1671,7 +1695,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.15';
+    const APP_REVISION = 'Versi 1.16';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -1694,7 +1718,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.15'
+      revision: '1.16'
     };
 
     const state = {
@@ -2344,7 +2368,7 @@
           <section class="login-art">
             <div class="login-brand">
               <div class="brand-mark brand-mark-logo">${appLogo()}</div>
-              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px"><span class="login-brand-sub-desktop">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</span><span class="login-brand-sub-mobile">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)} • Versi 1.15</span></div></div>
+              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px"><span class="login-brand-sub-desktop">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</span><span class="login-brand-sub-mobile">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)} • Versi 1.16</span></div></div>
             </div>
             <div class="login-copy">
               <h1><span class="login-copy-desktop">Ringkas.<br>Aman.<br>Mudah dipantau.</span><span class="login-copy-mobile">Ringkas.<br>Aman.<br>Mudah dipantau.</span></h1>
