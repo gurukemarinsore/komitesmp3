@@ -1581,6 +1581,81 @@
       .action-grid.wali-print { grid-template-columns:1fr; }
     }
 
+
+
+    /* ===== Versi 1.15: koreksi penerapan Revisi 1.14 ===== */
+
+    /* Loading: teks dan animasi garis berada di tengah. */
+    .loader-card #loadingText {
+      display:block;
+      width:100%;
+      text-align:center !important;
+      align-self:center;
+    }
+    .loader-stream-track {
+      margin-inline:auto;
+    }
+
+    /* Heading daftar siswa Wali: rekap semester cukup melalui ikon printer. */
+    .wali-student-heading {
+      align-items:center;
+    }
+    .wali-recap-inline-btn {
+      flex:0 0 auto;
+      color:var(--blue);
+      background:#f4f9ff;
+      border-color:#d9eaff;
+    }
+    .wali-recap-inline-btn svg {
+      width:18px;
+      height:18px;
+    }
+
+    /* Desktop: native select kelas kembali rata kiri dan punya ruang untuk ikon panah. */
+    @media (min-width: 861px) {
+      .select-badge-wrap .select,
+      .period-class {
+        text-align:left !important;
+        text-align-last:left !important;
+        padding-left:16px !important;
+        padding-right:54px !important;
+      }
+      .select-badge-wrap .select option,
+      .period-class option {
+        text-align:left;
+      }
+    }
+
+    /* HP: slogan dibuat lebih kecil dan tiap frasa tidak boleh pecah. */
+    @media (max-width: 600px) and (orientation: portrait) {
+      .login-copy h1 {
+        font-size:clamp(30px, 9.3vw, 36px) !important;
+        line-height:1.04;
+      }
+      .login-copy-mobile {
+        white-space:nowrap;
+      }
+    }
+
+    /* Keyboard/numpad mobile: login sheet mengikuti visual viewport yang benar-benar terlihat. */
+    @media (max-width: 960px) {
+      .login-panel {
+        bottom:var(--login-keyboard-gap, 0px);
+        max-height:calc(var(--login-vvh, 100dvh) - 8px);
+        scroll-padding-top:22px;
+        scroll-padding-bottom:calc(88px + var(--safe-bottom));
+      }
+      .login-panel .login-box {
+        padding-bottom:2px;
+      }
+      .login-panel input,
+      .login-panel select,
+      .login-panel textarea,
+      .login-panel button {
+        scroll-margin-block:80px;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -1596,7 +1671,7 @@
     // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT /exec
     // ==========================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwGnX_NSuKpyMf30_nZdKTLlyL_BHXbat8rRdAhxweAva3qUaiu3lmaroemJdlys-v9zQ/exec';
-    const APP_REVISION = 'Versi 1.14';
+    const APP_REVISION = 'Versi 1.15';
     const STORAGE = {
       TOKEN: 'komite_token',
       USER: 'komite_user',
@@ -1619,7 +1694,7 @@
       ].map(([bulan,tahun]) => ({bulan,tahun,label: titleCase(bulan) + ' ' + tahun})),
       classes: 'ABCDEFGHIJ'.split('').map(x => ({id:'K07'+x,nama:'7'+x})),
       currentPeriod: {bulan:'AGUSTUS',tahun:2026,label:'Agustus 2026'},
-      revision: '1.14'
+      revision: '1.15'
     };
 
     const state = {
@@ -2269,7 +2344,7 @@
           <section class="login-art">
             <div class="login-brand">
               <div class="brand-mark brand-mark-logo">${appLogo()}</div>
-              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px"><span class="login-brand-sub-desktop">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</span><span class="login-brand-sub-mobile">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)} • Versi 1.14</span></div></div>
+              <div><strong>${escapeHtml(state.config.schoolName)}</strong><div style="opacity:.68;font-size:12px;margin-top:2px"><span class="login-brand-sub-desktop">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)}</span><span class="login-brand-sub-mobile">Pembayaran Komite • ${escapeHtml(state.config.schoolYear)} • Versi 1.15</span></div></div>
             </div>
             <div class="login-copy">
               <h1><span class="login-copy-desktop">Ringkas.<br>Aman.<br>Mudah dipantau.</span><span class="login-copy-mobile">Ringkas.<br>Aman.<br>Mudah dipantau.</span></h1>
@@ -3401,77 +3476,6 @@
       if (!w) { toast('Izinkan pop-up browser untuk mencetak bukti.','warning'); return; }
       w.document.write(`<!doctype html><html><head><title>Bukti Pembayaran Komite</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#16314d}main{max-width:420px;margin:auto;border:1px solid #dce6ef;border-radius:18px;padding:24px}h2{text-align:center;margin:0 0 4px}.sub{text-align:center;color:#65758a;font-size:12px}.amount{text-align:center;font-size:30px;font-weight:700;margin:20px 0}.row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf1f5;font-size:12px}.foot{text-align:center;color:#738395;font-size:10px;margin-top:20px}@media print{body{padding:0}main{border:0}}
 
-
-    /* ===== Versi 1.14 ===== */
-
-    /* Loading: teks dan animasi garis berada di tengah. */
-    .loader-card #loadingText {
-      text-align:center;
-      width:100%;
-    }
-    .loader-stream-track {
-      margin-inline:auto;
-    }
-
-    /* Heading daftar siswa Wali: rekap semester cukup melalui ikon printer. */
-    .wali-student-heading {
-      align-items:center;
-    }
-    .wali-recap-inline-btn {
-      flex:0 0 auto;
-      color:var(--blue);
-      background:#f4f9ff;
-      border-color:#d9eaff;
-    }
-    .wali-recap-inline-btn svg {
-      width:18px;
-      height:18px;
-    }
-
-    /* Desktop: native select kelas kembali rata kiri dan punya ruang untuk ikon panah. */
-    @media (min-width: 861px) {
-      .select-badge-wrap .select,
-      .period-class {
-        text-align:left !important;
-        text-align-last:left !important;
-        padding-left:16px !important;
-        padding-right:54px !important;
-      }
-      .select-badge-wrap .select option,
-      .period-class option {
-        text-align:left;
-      }
-    }
-
-    /* HP: slogan sedikit diperkecil agar "Mudah dipantau." tetap satu baris. */
-    @media (max-width: 600px) and (orientation: portrait) {
-      .login-copy h1 {
-        font-size:clamp(31px, 9.7vw, 38px);
-        line-height:1.04;
-      }
-      .login-copy-mobile {
-        white-space:nowrap;
-      }
-    }
-
-    /* Keyboard/numpad mobile: login sheet mengikuti visual viewport yang benar-benar terlihat. */
-    @media (max-width: 960px) {
-      .login-panel {
-        bottom:var(--login-keyboard-gap, 0px);
-        max-height:calc(var(--login-vvh, 100dvh) - 8px);
-        scroll-padding-top:22px;
-        scroll-padding-bottom:calc(88px + var(--safe-bottom));
-      }
-      .login-panel .login-box {
-        padding-bottom:2px;
-      }
-      .login-panel input,
-      .login-panel select,
-      .login-panel textarea,
-      .login-panel button {
-        scroll-margin-block:80px;
-      }
-    }
 
 </style></head><body><main><h2>Komite SMP Negeri 3 Jayapura</h2><div class="sub">Bukti Pembayaran Komite</div><div class="amount">${money(tx.nominal)}</div><div class="row"><span>Nama</span><strong>${escapeHtml(tx.student.nama)}</strong></div><div class="row"><span>Kelas</span><strong>${escapeHtml(normalizeClassLabel(tx.student.kelas))}</strong></div><div class="row"><span>Periode</span><strong>${titleCase(tx.bulan)} ${tx.tahun}</strong></div><div class="row"><span>Tanggal</span><strong>${escapeHtml(tx.tanggalBayar)}</strong></div><div class="row"><span>Status</span><strong>LUNAS</strong></div><div class="foot">SMP Negeri 3 Jayapura • Tahun Pelajaran ${escapeHtml(state.config.schoolYear)}</div></main><script>window.onload=()=>{window.print()}<\/script></body></html>`);
       w.document.close();
